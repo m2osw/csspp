@@ -649,6 +649,11 @@ int main(int argc, char *argv[])
         std::cerr << "fatal error: there is an error on your command line, an exception occurred: " << e.what() << std::endl;
         exit(1);
     }
+    catch(advgetopt::getopt_exception_default const & e)
+    {
+        std::cerr << "fatal error: there is an error on your command line, you used a parameter without a value and there is no default. The exception says: " << e.what() << std::endl;
+        exit(1);
+    }
 }
 
 // Local Variables:
