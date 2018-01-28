@@ -1,5 +1,5 @@
 // CSS Preprocessor -- Test Suite
-// Copyright (C) 2015-2017  Made to Order Software Corp.
+// Copyright (c) 2015-2018  Made to Order Software Corp.  All Rights Reserved
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -2431,7 +2431,7 @@ TEST_CASE("Assemble C++ comment", "[assembler] [comment]")
         ++i)
     {
         std::stringstream ss;
-        ss << "// Copyright (c) 2015  Made to Order Software Corp. -- Assembler Test Version {$_csspp_version} -- @preserve\n"
+        ss << "// Copyright (c) 2015-2018  Made to Order Software Corp.  All Rights Reserved. -- Assembler Test Version {$_csspp_version} -- @preserve\n"
            << "body.error { color: red }\n";
         csspp::position pos("test.css");
         csspp::lexer::pointer_t l(new csspp::lexer(ss, pos));
@@ -2462,7 +2462,7 @@ TEST_CASE("Assemble C++ comment", "[assembler] [comment]")
         {
         case csspp::output_mode_t::COMPACT:
             REQUIRE(out.str() ==
-"/* Copyright (c) 2015  Made to Order Software Corp. -- Assembler Test Version " CSSPP_VERSION " -- @preserve */\n"
+"/* Copyright (c) 2015-2018  Made to Order Software Corp.  All Rights Reserved. -- Assembler Test Version " CSSPP_VERSION " -- @preserve */\n"
 "body.error { color: red }\n"
 + csspp_test::get_close_comment()
                 );
@@ -2470,7 +2470,7 @@ TEST_CASE("Assemble C++ comment", "[assembler] [comment]")
 
         case csspp::output_mode_t::COMPRESSED:
             REQUIRE(out.str() ==
-"/* Copyright (c) 2015  Made to Order Software Corp. -- Assembler Test Version " CSSPP_VERSION " -- @preserve */\n"
+"/* Copyright (c) 2015-2018  Made to Order Software Corp.  All Rights Reserved. -- Assembler Test Version " CSSPP_VERSION " -- @preserve */\n"
 "body.error{color:red}\n"
 + csspp_test::get_close_comment()
                 );
@@ -2478,7 +2478,7 @@ TEST_CASE("Assemble C++ comment", "[assembler] [comment]")
 
         case csspp::output_mode_t::EXPANDED:
             REQUIRE(out.str() ==
-"/* Copyright (c) 2015  Made to Order Software Corp. -- Assembler Test Version " CSSPP_VERSION " -- @preserve */\n"
+"/* Copyright (c) 2015-2018  Made to Order Software Corp.  All Rights Reserved. -- Assembler Test Version " CSSPP_VERSION " -- @preserve */\n"
 "body.error\n"
 "{\n"
 "  color: red;\n"
@@ -2489,7 +2489,7 @@ TEST_CASE("Assemble C++ comment", "[assembler] [comment]")
 
         case csspp::output_mode_t::TIDY:
             REQUIRE(out.str() ==
-"/* Copyright (c) 2015  Made to Order Software Corp. -- Assembler Test Version " CSSPP_VERSION " -- @preserve */\n"
+"/* Copyright (c) 2015-2018  Made to Order Software Corp.  All Rights Reserved. -- Assembler Test Version" CSSPP_VERSION " -- @preserve */\n"
 "body.error{color:red}\n"
 + csspp_test::get_close_comment()
                 );
@@ -2506,7 +2506,7 @@ TEST_CASE("Assemble C++ comment", "[assembler] [comment]")
         ++i)
     {
         std::stringstream ss;
-        ss << "// Copyright (c) 2015  Made to Order Software Corp.\n"
+        ss << "// Copyright (c) 2015-2018  Made to Order Software Corp.  All Rights Reserved.\n"
            << "// Assembler Test\n"
            << "// @preserve\n"
            << "body.error { color: red }\n";
@@ -2539,7 +2539,7 @@ TEST_CASE("Assemble C++ comment", "[assembler] [comment]")
         {
         case csspp::output_mode_t::COMPACT:
             REQUIRE(out.str() ==
-"/* Copyright (c) 2015  Made to Order Software Corp.\n"
+"/* Copyright (c) 2015-2018  Made to Order Software Corp.  All Rights Reserved.\n"
 " * Assembler Test\n"
 " * @preserve\n"
 " */\n"
@@ -2550,7 +2550,7 @@ TEST_CASE("Assemble C++ comment", "[assembler] [comment]")
 
         case csspp::output_mode_t::COMPRESSED:
             REQUIRE(out.str() ==
-"/* Copyright (c) 2015  Made to Order Software Corp.\n"
+"/* Copyright (c) 2015-2018  Made to Order Software Corp.  All Rights Reserved.\n"
 " * Assembler Test\n"
 " * @preserve\n"
 " */\n"
@@ -2561,7 +2561,7 @@ TEST_CASE("Assemble C++ comment", "[assembler] [comment]")
 
         case csspp::output_mode_t::EXPANDED:
             REQUIRE(out.str() ==
-"/* Copyright (c) 2015  Made to Order Software Corp.\n"
+"/* Copyright (c) 2015-2018  Made to Order Software Corp.  All Rights Reserved.\n"
 " * Assembler Test\n"
 " * @preserve\n"
 " */\n"
@@ -2575,7 +2575,7 @@ TEST_CASE("Assemble C++ comment", "[assembler] [comment]")
 
         case csspp::output_mode_t::TIDY:
             REQUIRE(out.str() ==
-"/* Copyright (c) 2015  Made to Order Software Corp.\n"
+"/* Copyright (c) 2015-2018  Made to Order Software Corp.  All Rights Reserved.\n"
 " * Assembler Test\n"
 " * @preserve\n"
 " */\n"

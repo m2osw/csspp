@@ -1,6 +1,7 @@
 csspp (1.0.18.0~xenial) xenial; urgency=high
 
   * Added a catch so csspp will properly exit on that exception.
+  * Bumped copyright notice to 2018.
 
  -- Alexis Wilke <alexis@m2osw.com>  Sun, 28 Jan 2018 03:35:42 -0700
 

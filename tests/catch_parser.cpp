@@ -1,5 +1,5 @@
 // CSS Preprocessor -- Test Suite
-// Copyright (C) 2015-2017  Made to Order Software Corp.
+// Copyright (c) 2015-2018  Made to Order Software Corp.  All Rights Reserved
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -200,7 +200,7 @@ TEST_CASE("Simple stylesheets", "[parser] [stylesheet] [rules]")
         std::stringstream ss;
         ss << "// $Id: ...$\n"
            << "div { border: 1px; }\n"
-           << "/* @preserve Copyright (c) 2015  Made to Order Software Corp. */";
+           << "/* @preserve Copyright (c) 2015-2018  Made to Order Software Corp.  All Rights Reserved. */";
         csspp::position pos("test.css");
         csspp::lexer::pointer_t l(new csspp::lexer(ss, pos));
 
@@ -223,7 +223,7 @@ TEST_CASE("Simple stylesheets", "[parser] [stylesheet] [rules]")
 "        COLON\n"
 "        WHITESPACE\n"
 "        INTEGER \"px\" I:1\n"
-"  COMMENT \"@preserve Copyright (c) 2015  Made to Order Software Corp.\" I:1\n"
+"  COMMENT \"@preserve Copyright (c) 2015-2018  Made to Order Software Corp.  All Rights Reserved.\" I:1\n"
 
             );
 
