@@ -1,3 +1,9 @@
+csspp (1.0.18.1~xenial) xenial; urgency=high
+
+  * Fixed the protocol to the snapwebsites.org.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Thu,  8 Feb 2018 00:56:41 -0700
+
 csspp (1.0.18.0~xenial) xenial; urgency=high
 
   * Added a catch so csspp will properly exit on that exception.
