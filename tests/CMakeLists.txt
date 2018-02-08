@@ -1,6 +1,6 @@
 #
 # File:
-#      CMakeLists.txt
+#      tests/CMakeLists.txt
 #
 # Description:
 #      Build csspp tests.
@@ -11,6 +11,9 @@
 # License:
 #      CSS Preprocessor -- Test Suite
 #      Copyright (c) 2015-2018  Made to Order Software Corp.  All Rights Reserved
+#
+#      https://snapwebsites.org/
+#      contact@m2osw.com
 #
 #      This library is free software; you can redistribute it and/or
 #      modify it under the terms of the GNU Lesser General Public

@@ -298,7 +298,7 @@
 	<body>
 		<div class="menu">
 			<a href="/"><strong>CSS Preprocessor</strong></a>
-			<a href="http://snapwebsites.org/project/csspp">Project</a>
+			<a href="https://snapwebsites.org/project/csspp">Project</a>
 			<a href="https://sourceforge.net/projects/csspp">Downloads</a>
 			<a rel="nofollow" href="https://sourceforge.net/p/csspp/link/">Source Repository</a>
 			<a rel="nofollow" href="https://sourceforge.net/p/csspp/tickets/">Support</a>
@@ -370,7 +370,7 @@
 						extensions offered by <b>CSS Preprocessor</b>). The library
 						can then validate the code and output it back compressed
 						or beautified. The
-						<a href="http://snapwebsites.org/">Snap! Websites</a> project
+						<a href="https://snapwebsites.org/">Snap! Websites</a> project
 						uses the library to automatically compress all the CSS files
 						uploaded on any website, making it really easy to have an
 						optimized website.
@@ -406,7 +406,7 @@
 						<div class="license-item gpl"><a rel="nofollow"
 							href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html">GNU<br/>GPL v2</a></div>
 						<div class="license-item"><a rel="nofollow"
-							href="http://opensource.org/"><img
+							href="https://opensource.org/"><img
 							src="images/open-source-initiative-logo.png" width="72" height="82"/></a></div>
 						<div style="clear: both;"></div>
 					</div>
@@ -419,7 +419,7 @@
 		</div>
 		<div class="transparent-copyright-placeholder"></div>
 		<div class="copyright">
-			<strong>CSS Preprocessor</strong> &mdash; Copyright &copy; 2015-2017 by <span class="company"><a href="http://www.m2osw.com/">Made to Order Software Corporation</a></span>
+			<strong>CSS Preprocessor</strong> &mdash; Copyright &copy; 2015-2017 by <span class="company"><a href="https://www.m2osw.com/">Made to Order Software Corporation</a></span>
 		</div>
 		<script>
 			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
