@@ -53,6 +53,7 @@ if( DOXYGEN_FOUND )
     
         add_custom_target(sample.css
             DEPENDS ${CSSPP_TOOL}
+            COMMAND ldd ${CMAKE_BINARY_DIR}/src/csspp
             COMMAND ${CSSPP_TOOL}
                 -I ${CMAKE_SOURCE_DIR}/scripts ${CMAKE_BINARY_DIR}/scripts
                 --debug --style expanded --output sample.css
