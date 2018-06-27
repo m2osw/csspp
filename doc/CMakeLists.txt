@@ -54,11 +54,14 @@ if( DOXYGEN_FOUND )
         add_custom_target(sample.css
             DEPENDS ${CSSPP_TOOL}
             COMMAND ldd ${CMAKE_BINARY_DIR}/src/csspp
-            COMMAND ${CSSPP_TOOL}
+            COMMAND LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.2 ${CMAKE_BINARY_DIR}/src/csspp
                 -I ${CMAKE_SOURCE_DIR}/scripts ${CMAKE_BINARY_DIR}/scripts
                 --debug --style expanded --output sample.css
                 ${CMAKE_CURRENT_SOURCE_DIR}/sample.scss
         )
+        # Somehow cmake doesn't recognize this on if it's not the very
+        # first variable!?
+        # COMMAND ${CSSPP_TOOL}
     endif()
 endif()
 
