@@ -1,3 +1,9 @@
+csspp (1.0.18.2~xenial) xenial; urgency=high
+
+  * Bump version to recompile with the -fsanitizer flags.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Tue, 26 Jun 2018 20:03:27 -0800
+
 csspp (1.0.18.1~xenial) xenial; urgency=high
 
   * Fixed the protocol to the snapwebsites.org.
