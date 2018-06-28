@@ -53,15 +53,26 @@ if( DOXYGEN_FOUND )
     
         add_custom_target(sample.css
             DEPENDS ${CSSPP_TOOL}
-            COMMAND ldd ${CMAKE_BINARY_DIR}/src/csspp
-            COMMAND LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.2 ${CMAKE_BINARY_DIR}/src/csspp
+            COMMAND ${CSSPP_TOOL}
                 -I ${CMAKE_SOURCE_DIR}/scripts ${CMAKE_BINARY_DIR}/scripts
                 --debug --style expanded --output sample.css
                 ${CMAKE_CURRENT_SOURCE_DIR}/sample.scss
         )
-        # Somehow cmake doesn't recognize this on if it's not the very
-        # first variable!?
-        # COMMAND ${CSSPP_TOOL}
+        #
+        # Somehow cmake doesn't recognize the CSSPP_TOOL variable if it's
+        # not the very first variable on the command line!?
+        #
+        #   COMMAND ${CSSPP_TOOL}
+        #
+        # Commands when -fsanitize=... is in effect in a build
+        # (It is not required to have these to build locally, only to build
+        # on a build system with the debuild environment.)
+        #
+        #   COMMAND ldd ${CMAKE_BINARY_DIR}/src/csspp
+        #   COMMAND LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.2 ${CMAKE_BINARY_DIR}/src/csspp
+        #
+        # Note: the ldd command is used to determine the full path to the libasan.so library
+        #
     endif()
 endif()
 
