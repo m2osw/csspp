@@ -38,6 +38,9 @@ enum class error_mode_t
 
 typedef uint32_t            error_count_t;
 
+// the bare pointer is problematic with effective c++
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Weffc++"
 class error
 {
 public:
@@ -71,7 +74,7 @@ private:
     void                    reset();
 
     position                f_position;
-    std::stringstream       f_message;
+    std::stringstream       f_message = std::stringstream();
     std::ostream *          f_error = nullptr;
     error_count_t           f_error_count = 0;
     error_count_t           f_warning_count = 0;
@@ -80,6 +83,7 @@ private:
     bool                    f_show_debug = false;
     bool                    f_verbose = false;
 };
+#pragma GCC diagnostic pop
 
 class safe_error_t
 {
@@ -92,15 +96,20 @@ private:
     error_count_t           f_warning_count = 0;
 };
 
+
 class safe_error_stream_t
 {
 public:
-    safe_error_stream_t(std::ostream & err_stream);
-    ~safe_error_stream_t();
+                            safe_error_stream_t(std::ostream & err_stream);
+                            safe_error_stream_t(safe_error_stream_t const & rhs) = delete;
+                            ~safe_error_stream_t();
+
+    safe_error_stream_t &   operator = (safe_error_stream_t const & rhs) = delete;
 
 private:
     std::ostream *          f_error = nullptr;
 };
+
 
 class error_happened_t
 {

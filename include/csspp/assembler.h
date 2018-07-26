@@ -50,9 +50,9 @@ private:
     void                    output_string(std::string const & str);
     void                    output_url(std::string const & str);
 
-    std::shared_ptr<assembler_impl> f_impl;
+    std::shared_ptr<assembler_impl> f_impl = std::shared_ptr<assembler_impl>();
     std::ostream &                  f_out;
-    node::pointer_t                 f_root;
+    node::pointer_t                 f_root = node::pointer_t();
 };
 
 } // namespace csspp

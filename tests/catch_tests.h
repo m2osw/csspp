@@ -43,7 +43,7 @@ public:
     void                    expected_error(std::string const & msg, char const * filename, int line);
 
 private:
-    std::stringstream       m_error_message;
+    std::stringstream       m_error_message = std::stringstream();
     bool                    m_verbose = false;
 };
 
@@ -63,8 +63,8 @@ public:
     csspp::range_value_t    get_range() const;
 
 private:
-    csspp::wide_char_t      f_start;
-    csspp::wide_char_t      f_end;
+    csspp::wide_char_t      f_start = csspp::wide_char_t();
+    csspp::wide_char_t      f_end = csspp::wide_char_t();
 };
 
 // this compares two resulting trees, line by line

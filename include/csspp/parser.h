@@ -53,8 +53,8 @@ private:
     node::pointer_t         block(node::pointer_t b, node_type_t closing_token);
     node::pointer_t         block_list(node::pointer_t b);
 
-    lexer::pointer_t        f_lexer;
-    node::pointer_t         f_last_token;
+    lexer::pointer_t        f_lexer = lexer::pointer_t();
+    node::pointer_t         f_last_token = node::pointer_t();
 };
 
 } // namespace csspp

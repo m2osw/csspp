@@ -1,3 +1,9 @@
+csspp (1.0.19.0~xenial) xenial; urgency=high
+
+  * Made code -Weffc++ compatible.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Wed, 25 Jul 2018 18:24:25 -0800
+
 csspp (1.0.18.7~xenial) xenial; urgency=high
 
   * Bump version to recompile, trying again as it failed with an ASAN error.

@@ -50,7 +50,8 @@ private:
     typedef std::vector<std::string>                string_vector_t;
     typedef std::map<std::string, node::pointer_t>  validator_script_vector_t;
 
-    class compiler_state_t : public expression_variables_interface
+    class compiler_state_t
+        : public expression_variables_interface
     {
     public:
         void                        set_root(node::pointer_t root);
@@ -75,10 +76,10 @@ private:
         std::string                 find_file(std::string const & script_name);
 
     private:
-        string_vector_t             f_paths;
+        string_vector_t             f_paths = string_vector_t();
         bool                        f_empty_on_undefined_variable = false;
-        node::pointer_t             f_root;
-        node_vector_t               f_parents;
+        node::pointer_t             f_root = node::pointer_t();
+        node_vector_t               f_parents = node_vector_t();
     };
 
     void                    add_header_and_footer();
@@ -119,11 +120,11 @@ private:
     void                    add_validation_variable(std::string const & variable_name, node::pointer_t value);
     bool                    run_validation(bool check_only);
 
-    compiler_state_t            f_state;
+    compiler_state_t            f_state = compiler_state_t();
 
-    validator_script_vector_t   f_validator_scripts;            // caching scripts
-    node::pointer_t             f_current_validation_script;    // last script selected by set_validator_script()
-    node::pointer_t             f_return_result;
+    validator_script_vector_t   f_validator_scripts = validator_script_vector_t();  // caching scripts
+    node::pointer_t             f_current_validation_script = node::pointer_t();    // last script selected by set_validator_script()
+    node::pointer_t             f_return_result = node::pointer_t();
     bool                        f_compiler_validating = false;
     bool                        f_no_logo = false;
 };

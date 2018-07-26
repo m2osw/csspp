@@ -7229,9 +7229,9 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
                 }
             }
 
-            char const *                            f_selector;
-            std::vector<std::string>                f_variable;
-            std::vector<std::string>                f_result;
+            std::string                             f_selector = std::string();
+            std::vector<std::string>                f_variable = std::vector<std::string>();
+            std::vector<std::string>                f_result = std::vector<std::string>();
         };
         mixin_info_t * start[5];
         start[0] = new mixin_info_t("*", nullptr, "WHITESPACE", "MULTIPLY");

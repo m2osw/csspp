@@ -117,7 +117,12 @@ int32_t constexpr mix_node_types(node_type_t a, node_type_t b)
     return static_cast<int32_t>(a) * 65536 + static_cast<int32_t>(b);
 }
 
-class node : public std::enable_shared_from_this<node>
+// the std::enable_shared_from_this<>() has no virtual dtor
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Weffc++"
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+class node
+    : public std::enable_shared_from_this<node>
 {
 public:
     typedef std::shared_ptr<node>   pointer_t;
@@ -194,12 +199,13 @@ private:
     bool                f_boolean = false;
     integer_t           f_integer = 0;
     decimal_number_t    f_decimal_number = 0.0;
-    std::string         f_string;
-    std::string         f_lowercase_string;
-    list_t              f_children;
-    variable_table_t    f_variables;
-    flag_table_t        f_flags;
+    std::string         f_string = std::string();
+    std::string         f_lowercase_string = std::string();
+    list_t              f_children = list_t();
+    variable_table_t    f_variables = variable_table_t();
+    flag_table_t        f_flags = flag_table_t();
 };
+#pragma GCC diagnostic pop
 
 typedef std::vector<node::pointer_t>    node_vector_t;
 

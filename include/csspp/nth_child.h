@@ -43,7 +43,7 @@ public:
     std::string             to_string() const;
 
 private:
-    std::string             f_error;
+    std::string             f_error = std::string();
     repeat_integer_t        f_a = 1;
     repeat_integer_t        f_b = 0;
 };

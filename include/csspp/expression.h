@@ -31,6 +31,9 @@ public:
     virtual node::pointer_t execute_user_function(node::pointer_t func) = 0;
 };
 
+// bare pointer problem
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Weffc++"
 class expression
 {
 public:
@@ -145,14 +148,15 @@ private:
 
     node::pointer_t     excecute_function(node::pointer_t func);
 
-    node::pointer_t                     f_node;
+    node::pointer_t                     f_node = node::pointer_t();
     size_t                              f_pos = 0;
     size_t                              f_start = static_cast<size_t>(-1);
-    node::pointer_t                     f_current;
-    variable_vector_t                   f_variables;
+    node::pointer_t                     f_current = node::pointer_t();
+    variable_vector_t                   f_variables = variable_vector_t();
     bool                                f_divide_font_metrics = false;
     expression_variables_interface *    f_variable_handler = nullptr;
 };
+#pragma GCC diagnostic pop
 
 } // namespace csspp
 #endif
