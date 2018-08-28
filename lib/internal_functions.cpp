@@ -1803,7 +1803,7 @@ node::pointer_t expression::internal_function__unit(node::pointer_t func)
     // unit(number)
     decimal_number_t n;
     node::pointer_t number(internal_function__get_number_or_percent(func, 0, n));
-    if(number)
+    if(number != nullptr)
     {
         node::pointer_t unit(new node(node_type_t::STRING, func->get_position()));
         if(number->is(node_type_t::PERCENT))
