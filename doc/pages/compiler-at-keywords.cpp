@@ -31,7 +31,7 @@
 //
 
 
-/** \page at_keywords CSS Preprocessor @-keywords
+/** \page at_keywords CSS Preprocessor &At;-keywords
  * \tableofcontents
  *
  * \section at_charset @charset "utf-8";
@@ -213,7 +213,7 @@
  * The error and warning counters do not get touched when an informational
  * message is output.
  *
- * \section at_mixin @mixin \<identifer> { ... }
+ * \section at_mixin @mixin \<identifier> { ... }
  *
  * The \@mixin comes from SASS. It is a way to declare a \em complex
  * variable. Although csspp does not require it, we have it to be
