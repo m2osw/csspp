@@ -553,7 +553,7 @@
  * This is similar to the + operator (\ref selector_next), only F can be
  * any sibling after E.
  *
- * \section grammar Grammar used to parse the selectors
+ * \section selector_grammar Grammar used to parse the selectors
  *
  * The definition of the grammar appears in CSS 3, the selectors:
  *
