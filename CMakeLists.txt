@@ -42,11 +42,7 @@ enable_testing()
 
 ## Include support modules
 ##
-#if( NOT CMAKE_MODULE_PATH )
-#    set( CMAKE_MODULE_PATH ${CMAKE_PREFIX_PATH}/share/cmake )
-#endif()
-
-set( CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH} )
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 find_package( AdvGetOpt        REQUIRED )
 find_package( SnapCMakeModules REQUIRED )
