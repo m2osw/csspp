@@ -34,6 +34,7 @@ project(csspp-tool)
 
 include_directories(
     ${ADVGETOPT_INCLUDE_DIRS}
+    ${LIBEXCEPT_INCLUDE_DIRS}
 )
 
 add_executable(${PROJECT_NAME}
@@ -43,6 +44,7 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     csspp
     ${ADVGETOPT_LIBRARIES}
+    ${LIBEXCEPT_LIBRARIES}
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -50,8 +52,10 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 install(
-    TARGETS ${PROJECT_NAME}
-    DESTINATION bin
+    TARGETS
+        ${PROJECT_NAME}
+    DESTINATION
+        bin
 )
 
 # Local Variables:

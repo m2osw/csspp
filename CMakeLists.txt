@@ -45,6 +45,7 @@ enable_testing()
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 find_package( AdvGetOpt        REQUIRED )
+find_package( LibExcept        REQUIRED )
 find_package( SnapCMakeModules REQUIRED )
 find_package( SnapDoxygen )
 

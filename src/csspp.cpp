@@ -231,6 +231,7 @@
 #include "csspp/parser.h"
 
 #include <advgetopt/advgetopt.h>
+#include <advgetopt/exception.h>
 
 #include <cstdlib>
 #include <fstream>
