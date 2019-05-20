@@ -242,136 +242,142 @@
 namespace
 {
 
-std::vector<std::string> const g_configuration_files; // Empty
-
 void free_char(char * ptr)
 {
     free(ptr);
 }
 
-advgetopt::getopt::option const g_options[] =
+constexpr advgetopt::option g_options[] =
 {
     {
-        '\0',
-        advgetopt::getopt::GETOPT_FLAG_SHOW_USAGE_ON_ERROR,
-        nullptr,
-        nullptr,
-        "Usage: %p [-<opt>] [file.css ...] [-o out.css]",
-        advgetopt::getopt::argument_mode_t::help_argument
-    },
-    {
-        '\0',
-        advgetopt::getopt::GETOPT_FLAG_SHOW_USAGE_ON_ERROR,
-        nullptr,
-        nullptr,
-        "where -<opt> is one or more of:",
-        advgetopt::getopt::argument_mode_t::help_argument
-    },
-    {
         'a',
-        0,
+        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_REQUIRED | advgetopt::GETOPT_FLAG_MULTIPLE,
         "args",
         nullptr,
         "define values in the $_csspp_args variable map",
-        advgetopt::getopt::argument_mode_t::required_multiple_argument
+        nullptr
     },
     {
         'd',
-        0,
+        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_FLAG,
         "debug",
         nullptr,
         "show all messages, including @debug messages",
-        advgetopt::getopt::argument_mode_t::no_argument
+        nullptr
     },
     {
         'h',
-        0,
+        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_FLAG,
         "help",
         nullptr,
         "display this help screen",
-        advgetopt::getopt::argument_mode_t::no_argument
+        nullptr
     },
     {
         'I',
-        0,
-        nullptr,
+        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_MULTIPLE,
+        "include",
         nullptr,
         "specify a path to various user defined CSS files; \"-\" to clear the list (i.e. \"-I -\")",
-        advgetopt::getopt::argument_mode_t::required_multiple_argument
+        nullptr
     },
     {
         '\0',
-        0,
+        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_FLAG,
         "no-logo",
         nullptr,
         "prevent the \"logo\" from appearing in the output file",
-        advgetopt::getopt::argument_mode_t::no_argument
+        nullptr
     },
     {
         'o',
-        advgetopt::getopt::GETOPT_FLAG_SHOW_USAGE_ON_ERROR,
+        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_SHOW_USAGE_ON_ERROR,
         "output",
-        nullptr,
+        "out.css",
         "save the results in the specified file",
-        advgetopt::getopt::argument_mode_t::required_argument
+        nullptr
     },
     {
         'p',
-        0,
+        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_FLAG,
         "precision",
         nullptr,
         "define the number of digits to use after the decimal point, defaults to 3; note that for percent values, the precision is always 2.",
-        advgetopt::getopt::argument_mode_t::no_argument
+        nullptr
     },
     {
         'q',
-        0,
+        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_FLAG,
         "quiet",
         nullptr,
         "suppress @info and @warning messages",
-        advgetopt::getopt::argument_mode_t::no_argument
+        nullptr
     },
     {
         's',
-        0,
+        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_REQUIRED,
         "style",
         nullptr,
         "output style: compressed, tidy, compact, expanded",
-        advgetopt::getopt::argument_mode_t::required_argument
+        nullptr
     },
     {
         '\0',
-        advgetopt::getopt::GETOPT_FLAG_SHOW_USAGE_ON_ERROR,
+        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_FLAG | advgetopt::GETOPT_FLAG_SHOW_USAGE_ON_ERROR,
         "version",
         nullptr,
         "show the version of the snapdb executable",
-        advgetopt::getopt::argument_mode_t::no_argument
+        nullptr
     },
     {
         '\0',
-        0,
+        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_FLAG,
         "Werror",
         nullptr,
         "make warnings count as errors",
-        advgetopt::getopt::argument_mode_t::no_argument
+        nullptr
     },
     {
         '\0',
-        advgetopt::getopt::GETOPT_FLAG_SHOW_USAGE_ON_ERROR,
-        nullptr,
+        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_MULTIPLE | advgetopt::GETOPT_FLAG_DEFAULT_OPTION | advgetopt::GETOPT_FLAG_SHOW_USAGE_ON_ERROR,
+        "--",
         nullptr,
         "[file.css ...]; use stdin if no filename specified",
-        advgetopt::getopt::argument_mode_t::default_multiple_argument
+        nullptr
     },
     {
         '\0',
-        0,
+        advgetopt::GETOPT_FLAG_END,
         nullptr,
         nullptr,
         nullptr,
-        advgetopt::getopt::argument_mode_t::end_of_options
+        nullptr
     }
 };
+
+// TODO: once we have stdc++20, remove all defaults
+#pragma GCC diagnostic ignored "-Wpedantic"
+advgetopt::options_environment const g_options_environment =
+{
+    .f_project_name = "csspp",
+    .f_options = g_options,
+    .f_options_files_directory = nullptr,
+    .f_environment_variable_name = "CSSPPFLAGS",
+    .f_configuration_files = nullptr,
+    .f_configuration_filename = nullptr,
+    .f_configuration_directories = nullptr,
+    .f_environment_flags = 0,
+    .f_help_header = "Usage: %p [-<opt>] [file.css ...] [-o out.css]\n"
+                     "where -<opt> is one or more of:",
+    .f_help_footer = nullptr,
+    .f_version = CSSPP_VERSION,
+    .f_license = nullptr,
+    .f_copyright = nullptr,
+    //.f_build_date = __DATE__,
+    //.f_build_time = __TIME__
+};
+
+
 
 class pp
 {
@@ -386,7 +392,7 @@ private:
 };
 
 pp::pp(int argc, char * argv[])
-    : f_opt(new advgetopt::getopt(argc, argv, g_options, g_configuration_files, nullptr))
+    : f_opt(new advgetopt::getopt(g_options_environment, argc, argv))
 {
     if(f_opt->is_defined("version"))
     {
@@ -396,7 +402,7 @@ pp::pp(int argc, char * argv[])
 
     if(f_opt->is_defined("help"))
     {
-        f_opt->usage(advgetopt::getopt::status_t::no_error, "csspp");
+        std::cerr << f_opt->usage();
         exit(0);
     }
 
