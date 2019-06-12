@@ -1,3 +1,9 @@
+csspp (1.0.22.0~xenial) xenial; urgency=high
+
+  * Added in=C++ to the MAPPING_EXTENSION.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Tue, 11 Jun 2019 23:44:54 -0800
+
 csspp (1.0.21.0~xenial) xenial; urgency=high
 
   * Updated to work with the newer version of advgetopt.
