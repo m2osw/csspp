@@ -8,7 +8,8 @@ Build-Depends: catch (>= 1.0),
     graphviz,
     libadvgetopt-dev (>= 1.1.11.2~xenial),
     libexcept-dev (>= 1.0.5.0~xenial),
-    snapcmakemodules (>= 1.0.35.3~xenial)
+    snapcmakemodules (>= 1.0.35.3~xenial),
+    snapdev (>= 1.1.2.0~xenial)
 Standards-Version: 3.9.4
 Section: libs
 Homepage: https://snapwebsites.org/
