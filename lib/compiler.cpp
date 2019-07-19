@@ -1958,7 +1958,9 @@ void compiler::replace_variables(node::pointer_t n)
             f_state.get_previous_parent()->remove_child(n);
             break;
         }
-        /*FALLTRHOUGH*/
+#if __cplusplus >= 201700
+        [[fallthrough]];
+#endif
     case node_type_t::AT_KEYWORD:
     case node_type_t::ARG:
     case node_type_t::COMPONENT_VALUE:
