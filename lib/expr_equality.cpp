@@ -122,7 +122,9 @@ node_type_t equality_operator(node::pointer_t n)
                 return node_type_t::NOT_EQUAL;
             }
         }
-        /*PASSTHROUGH*/
+#if __cplusplus >= 201700
+        [[fallthrough]];
+#endif
     default:
         return node_type_t::UNKNOWN;
 
