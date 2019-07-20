@@ -47,7 +47,7 @@ void free_char(char * ptr)
 TEST_CASE("Compile set_date_time_variables() called too soon", "[compiler] [invalid]")
 {
         csspp::compiler c;
-        REQUIRE_THROWS_AS(c.set_date_time_variables(csspp_test::get_now()), csspp::csspp_exception_logic);
+        REQUIRE_THROWS_AS(c.set_date_time_variables(csspp_test::get_now()), csspp::csspp_exception_logic &);
 }
 
 TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
@@ -4826,7 +4826,7 @@ TEST_CASE("Invalid node", "[compiler] [invalid]")
             c.add_path(csspp_test::get_script_path());
             c.add_path(csspp_test::get_version_script_path());
 
-            REQUIRE_THROWS_AS(c.compile(true), csspp::csspp_exception_unexpected_token);
+            REQUIRE_THROWS_AS(c.compile(true), csspp::csspp_exception_unexpected_token &);
 
             REQUIRE(c.get_root() == n);
         }
@@ -10537,7 +10537,7 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
 //        c.clear_paths();
 //        c.add_path(".");
 //
-//        REQUIRE_THROWS_AS(c.compile(true), csspp::csspp_exception_exit);
+//        REQUIRE_THROWS_AS(c.compile(true), csspp::csspp_exception_exit &);
 //
 //        // TODO: use an RAII class instead
 //        rmdir("pseudo-nth-functions.scss"); // in case you run more than once

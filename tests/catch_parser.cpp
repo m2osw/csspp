@@ -3262,7 +3262,7 @@ TEST_CASE("Invalid argify", "[parser] [stylesheet]")
                     break;
 
                 }
-                REQUIRE_THROWS_AS(csspp::parser::argify(component_value, w), csspp::csspp_exception_logic);
+                REQUIRE_THROWS_AS(csspp::parser::argify(component_value, w), csspp::csspp_exception_logic &);
             }
         }
 

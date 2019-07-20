@@ -92,8 +92,8 @@ TEST_CASE("Node types", "[node] [type]")
             break;
 
         default:
-            REQUIRE_THROWS_AS(n->set_boolean(true), csspp::csspp_exception_logic);
-            REQUIRE_THROWS_AS(n->get_boolean(), csspp::csspp_exception_logic);
+            REQUIRE_THROWS_AS(n->set_boolean(true), csspp::csspp_exception_logic &);
+            REQUIRE_THROWS_AS(n->get_boolean(), csspp::csspp_exception_logic &);
             break;
 
         }
@@ -123,8 +123,8 @@ TEST_CASE("Node types", "[node] [type]")
             break;
 
         default:
-            REQUIRE_THROWS_AS(n->set_integer(123), csspp::csspp_exception_logic);
-            REQUIRE_THROWS_AS(n->get_integer(), csspp::csspp_exception_logic);
+            REQUIRE_THROWS_AS(n->set_integer(123), csspp::csspp_exception_logic &);
+            REQUIRE_THROWS_AS(n->get_integer(), csspp::csspp_exception_logic &);
             break;
 
         }
@@ -153,8 +153,8 @@ TEST_CASE("Node types", "[node] [type]")
             break;
 
         default:
-            REQUIRE_THROWS_AS(n->set_decimal_number(3.14159), csspp::csspp_exception_logic);
-            REQUIRE_THROWS_AS(n->get_decimal_number(), csspp::csspp_exception_logic);
+            REQUIRE_THROWS_AS(n->set_decimal_number(3.14159), csspp::csspp_exception_logic &);
+            REQUIRE_THROWS_AS(n->get_decimal_number(), csspp::csspp_exception_logic &);
             break;
 
         }
@@ -205,8 +205,8 @@ TEST_CASE("Node types", "[node] [type]")
             break;
 
         default:
-            REQUIRE_THROWS_AS(n->set_string("add"), csspp::csspp_exception_logic);
-            REQUIRE_THROWS_AS(n->get_string(), csspp::csspp_exception_logic);
+            REQUIRE_THROWS_AS(n->set_string("add"), csspp::csspp_exception_logic &);
+            REQUIRE_THROWS_AS(n->get_string(), csspp::csspp_exception_logic &);
             break;
 
         }
@@ -238,8 +238,8 @@ TEST_CASE("Node types", "[node] [type]")
                 break;
 
             default:
-                REQUIRE_THROWS_AS(n->set_color(c), csspp::csspp_exception_logic);
-                REQUIRE_THROWS_AS(n->get_color(), csspp::csspp_exception_logic);
+                REQUIRE_THROWS_AS(n->set_color(c), csspp::csspp_exception_logic &);
+                REQUIRE_THROWS_AS(n->get_color(), csspp::csspp_exception_logic &);
                 break;
 
             }
@@ -289,14 +289,14 @@ TEST_CASE("Node types", "[node] [type]")
             break;
 
         default:
-            REQUIRE_THROWS_AS(n->set_font_size(12.5), csspp::csspp_exception_logic);
-            REQUIRE_THROWS_AS(n->get_font_size(), csspp::csspp_exception_logic);
-            REQUIRE_THROWS_AS(n->set_line_height(24.3), csspp::csspp_exception_logic);
-            REQUIRE_THROWS_AS(n->get_line_height(), csspp::csspp_exception_logic);
-            REQUIRE_THROWS_AS(n->set_dim1("px"), csspp::csspp_exception_logic);
-            REQUIRE_THROWS_AS(n->get_dim1(), csspp::csspp_exception_logic);
-            REQUIRE_THROWS_AS(n->set_dim2("%"), csspp::csspp_exception_logic);
-            REQUIRE_THROWS_AS(n->get_dim2(), csspp::csspp_exception_logic);
+            REQUIRE_THROWS_AS(n->set_font_size(12.5), csspp::csspp_exception_logic &);
+            REQUIRE_THROWS_AS(n->get_font_size(), csspp::csspp_exception_logic &);
+            REQUIRE_THROWS_AS(n->set_line_height(24.3), csspp::csspp_exception_logic &);
+            REQUIRE_THROWS_AS(n->get_line_height(), csspp::csspp_exception_logic &);
+            REQUIRE_THROWS_AS(n->set_dim1("px"), csspp::csspp_exception_logic &);
+            REQUIRE_THROWS_AS(n->get_dim1(), csspp::csspp_exception_logic &);
+            REQUIRE_THROWS_AS(n->set_dim2("%"), csspp::csspp_exception_logic &);
+            REQUIRE_THROWS_AS(n->get_dim2(), csspp::csspp_exception_logic &);
             break;
 
         }
@@ -325,10 +325,10 @@ TEST_CASE("Node types", "[node] [type]")
                 }
                 REQUIRE(n->empty());
                 REQUIRE(n->size() == 0);
-                REQUIRE_THROWS_AS(n->get_child(0), csspp::csspp_exception_overflow);
-                REQUIRE_THROWS_AS(n->get_last_child(), csspp::csspp_exception_overflow);
-                REQUIRE_THROWS_AS(n->remove_child(0), csspp::csspp_exception_overflow);
-                REQUIRE_THROWS_AS(n->remove_child(n), csspp::csspp_exception_logic);
+                REQUIRE_THROWS_AS(n->get_child(0), csspp::csspp_exception_overflow &);
+                REQUIRE_THROWS_AS(n->get_last_child(), csspp::csspp_exception_overflow &);
+                REQUIRE_THROWS_AS(n->remove_child(0), csspp::csspp_exception_overflow &);
+                REQUIRE_THROWS_AS(n->remove_child(n), csspp::csspp_exception_logic &);
 
                 csspp::node::pointer_t child1(new csspp::node(csspp::node_type_t::COMMA, n->get_position()));
                 csspp::node::pointer_t child2(new csspp::node(csspp::node_type_t::EXCLAMATION, n->get_position()));
@@ -345,7 +345,7 @@ TEST_CASE("Node types", "[node] [type]")
                 REQUIRE_FALSE(n->empty());
                 REQUIRE(n->get_last_child() == child1);
                 REQUIRE(n->get_child(0) == child1);
-                REQUIRE_THROWS_AS(n->remove_child(n), csspp::csspp_exception_logic);
+                REQUIRE_THROWS_AS(n->remove_child(n), csspp::csspp_exception_logic &);
 
                 n->add_child(child2);
                 if(w == csspp::node_type_t::LIST)
@@ -357,7 +357,7 @@ TEST_CASE("Node types", "[node] [type]")
                 REQUIRE(n->get_last_child() == child2);
                 REQUIRE(n->get_child(0) == child1);
                 REQUIRE(n->get_child(1) == child2);
-                REQUIRE_THROWS_AS(n->remove_child(n), csspp::csspp_exception_logic);
+                REQUIRE_THROWS_AS(n->remove_child(n), csspp::csspp_exception_logic &);
 
                 if(rand() & 1)
                 {
@@ -381,10 +381,10 @@ TEST_CASE("Node types", "[node] [type]")
                 }
                 REQUIRE(n->empty());
                 REQUIRE(n->size() == 0);
-                REQUIRE_THROWS_AS(n->get_child(0), csspp::csspp_exception_overflow);
-                REQUIRE_THROWS_AS(n->get_last_child(), csspp::csspp_exception_overflow);
-                REQUIRE_THROWS_AS(n->remove_child(0), csspp::csspp_exception_overflow);
-                REQUIRE_THROWS_AS(n->remove_child(n), csspp::csspp_exception_logic);
+                REQUIRE_THROWS_AS(n->get_child(0), csspp::csspp_exception_overflow &);
+                REQUIRE_THROWS_AS(n->get_last_child(), csspp::csspp_exception_overflow &);
+                REQUIRE_THROWS_AS(n->remove_child(0), csspp::csspp_exception_overflow &);
+                REQUIRE_THROWS_AS(n->remove_child(n), csspp::csspp_exception_logic &);
 
                 // test a few more things
                 n->add_child(child1);
@@ -432,15 +432,15 @@ TEST_CASE("Node types", "[node] [type]")
             break;
 
         default:
-            REQUIRE_THROWS_AS(n->empty(), csspp::csspp_exception_logic);
-            REQUIRE_THROWS_AS(n->size(), csspp::csspp_exception_logic);
-            REQUIRE_THROWS_AS(n->clear(), csspp::csspp_exception_logic);
-            REQUIRE_THROWS_AS(n->add_child(n), csspp::csspp_exception_logic);
-            REQUIRE_THROWS_AS(n->remove_child(n), csspp::csspp_exception_logic);
-            REQUIRE_THROWS_AS(n->remove_child(0), csspp::csspp_exception_logic);
-            REQUIRE_THROWS_AS(n->get_child(0), csspp::csspp_exception_logic);
-            REQUIRE_THROWS_AS(n->get_last_child(), csspp::csspp_exception_logic);
-            REQUIRE_THROWS_AS(n->take_over_children_of(0), csspp::csspp_exception_logic);
+            REQUIRE_THROWS_AS(n->empty(), csspp::csspp_exception_logic &);
+            REQUIRE_THROWS_AS(n->size(), csspp::csspp_exception_logic &);
+            REQUIRE_THROWS_AS(n->clear(), csspp::csspp_exception_logic &);
+            REQUIRE_THROWS_AS(n->add_child(n), csspp::csspp_exception_logic &);
+            REQUIRE_THROWS_AS(n->remove_child(n), csspp::csspp_exception_logic &);
+            REQUIRE_THROWS_AS(n->remove_child(0), csspp::csspp_exception_logic &);
+            REQUIRE_THROWS_AS(n->get_child(0), csspp::csspp_exception_logic &);
+            REQUIRE_THROWS_AS(n->get_last_child(), csspp::csspp_exception_logic &);
+            REQUIRE_THROWS_AS(n->take_over_children_of(0), csspp::csspp_exception_logic &);
             break;
 
         }
@@ -489,7 +489,7 @@ TEST_CASE("Invalid tree handling", "[node] [invalid]")
         n->add_child(child1);
 
         // child2, child1 are inverted
-        REQUIRE_THROWS_AS(n->replace_child(child2, child1), csspp::csspp_exception_logic);
+        REQUIRE_THROWS_AS(n->replace_child(child2, child1), csspp::csspp_exception_logic &);
     }
 
     // insert with invalid index
@@ -507,11 +507,11 @@ TEST_CASE("Invalid tree handling", "[node] [invalid]")
         // insert index can be 0 or 1, anything else and it is an overflow
         for(int i(-100); i < 0; ++i)
         {
-            REQUIRE_THROWS_AS(n->insert_child(i, child2), csspp::csspp_exception_overflow);
+            REQUIRE_THROWS_AS(n->insert_child(i, child2), csspp::csspp_exception_overflow &);
         }
         for(int i(2); i <= 100; ++i)
         {
-            REQUIRE_THROWS_AS(n->insert_child(i, child2), csspp::csspp_exception_overflow);
+            REQUIRE_THROWS_AS(n->insert_child(i, child2), csspp::csspp_exception_overflow &);
         }
     }
 
@@ -2105,7 +2105,7 @@ TEST_CASE("Node to string", "[node] [type] [output]")
             // anything else is an error
             default:
                 // other node types generate a throw
-                REQUIRE_THROWS_AS(n->to_string(flags), csspp::csspp_exception_logic);
+                REQUIRE_THROWS_AS(n->to_string(flags), csspp::csspp_exception_logic &);
                 break;
 
             }
@@ -2164,7 +2164,7 @@ TEST_CASE("Node to string ARG with wrong type", "[node] [output] [invalid]")
             a->add_child(p);
 
             // w is not valid as an ARG separator so it throws
-            REQUIRE_THROWS_AS(n->to_string(flags), csspp::csspp_exception_logic);
+            REQUIRE_THROWS_AS(n->to_string(flags), csspp::csspp_exception_logic &);
         }
     }
 

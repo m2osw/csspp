@@ -71,7 +71,7 @@ TEST_CASE("UTF-8 conversions", "[lexer] [unicode]")
     {
         char buf[6];
         csspp::wide_char_t const wc(rand() % 0x1FFFFF);
-        REQUIRE_THROWS_AS(l.wctomb(wc, buf, i), csspp::csspp_exception_overflow);
+        REQUIRE_THROWS_AS(l.wctomb(wc, buf, i), csspp::csspp_exception_overflow &);
     }
 
     // make sure surrogates are not allowed

@@ -3672,7 +3672,7 @@ TEST_CASE("Invalid assembler mode", "[assembler] [mode] [invalid]")
         {
             mode = static_cast<csspp::output_mode_t>(rand());
         }
-        REQUIRE_THROWS_AS(a.output(n, mode), csspp::csspp_exception_logic);
+        REQUIRE_THROWS_AS(a.output(n, mode), csspp::csspp_exception_logic &);
     }
 
     // no error left over
@@ -3727,7 +3727,7 @@ TEST_CASE("Inacceptable nodes", "[assembler] [invalid]")
 
             std::stringstream out;
             csspp::assembler a(out);
-            REQUIRE_THROWS_AS(a.output(root, static_cast<csspp::output_mode_t>(i)), csspp::csspp_exception_logic);
+            REQUIRE_THROWS_AS(a.output(root, static_cast<csspp::output_mode_t>(i)), csspp::csspp_exception_logic &);
         }
     }
 }

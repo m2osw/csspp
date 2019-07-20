@@ -185,13 +185,13 @@ TEST_CASE("Invalid precision", "[csspp] [invalid]")
     // negative not available
     for(int i(-10); i < 0; ++i)
     {
-        REQUIRE_THROWS_AS(csspp::set_precision(i), csspp::csspp_exception_overflow);
+        REQUIRE_THROWS_AS(csspp::set_precision(i), csspp::csspp_exception_overflow &);
     }
 
     // too large not acceptable
     for(int i(11); i <= 20; ++i)
     {
-        REQUIRE_THROWS_AS(csspp::set_precision(i), csspp::csspp_exception_overflow);
+        REQUIRE_THROWS_AS(csspp::set_precision(i), csspp::csspp_exception_overflow &);
     }
 }
 

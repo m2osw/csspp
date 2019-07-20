@@ -342,9 +342,9 @@ TEST_CASE("Unicode range: 1 x '?'", "[unicode-range] [mask]")
 TEST_CASE("Unicode range: invalid start/end values", "[unicode-range] [code-point]")
 {
     // Do a little more?
-    REQUIRE_THROWS_AS(new csspp::unicode_range_t(0x110000, 0x012345), csspp::csspp_exception_overflow);
-    REQUIRE_THROWS_AS(new csspp::unicode_range_t(0x012345, 0x200000), csspp::csspp_exception_overflow);
-    REQUIRE_THROWS_AS(new csspp::unicode_range_t(0x004000, 0x000200), csspp::csspp_exception_overflow);
+    REQUIRE_THROWS_AS(new csspp::unicode_range_t(0x110000, 0x012345), csspp::csspp_exception_overflow &);
+    REQUIRE_THROWS_AS(new csspp::unicode_range_t(0x012345, 0x200000), csspp::csspp_exception_overflow &);
+    REQUIRE_THROWS_AS(new csspp::unicode_range_t(0x004000, 0x000200), csspp::csspp_exception_overflow &);
 
     // no error left over
     REQUIRE_ERRORS("");
