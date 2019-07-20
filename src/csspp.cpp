@@ -225,19 +225,33 @@
  * \endcode
  */
 
-#include "csspp/assembler.h"
-#include "csspp/compiler.h"
-#include "csspp/exceptions.h"
-#include "csspp/parser.h"
+// csspp lib
+//
+#include <csspp/assembler.h>
+#include <csspp/compiler.h>
+#include <csspp/exceptions.h>
+#include <csspp/parser.h>
 
+// advgetopt lib
+//
 #include <advgetopt/advgetopt.h>
 #include <advgetopt/exception.h>
 
+// boost lib
+//
+#include <boost/preprocessor/stringize.hpp>
+
+// C++ lib
+//
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
 
+// C lib
+//
 #include <unistd.h>
+
+
 
 namespace
 {
@@ -263,14 +277,6 @@ constexpr advgetopt::option g_options[] =
         "debug",
         nullptr,
         "show all messages, including @debug messages",
-        nullptr
-    },
-    {
-        'h',
-        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_FLAG,
-        "help",
-        nullptr,
-        "display this help screen",
         nullptr
     },
     {
@@ -323,14 +329,6 @@ constexpr advgetopt::option g_options[] =
     },
     {
         '\0',
-        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_FLAG | advgetopt::GETOPT_FLAG_SHOW_USAGE_ON_ERROR,
-        "version",
-        nullptr,
-        "show the version of the snapdb executable",
-        nullptr
-    },
-    {
-        '\0',
         advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_FLAG,
         "Werror",
         nullptr,
@@ -345,14 +343,7 @@ constexpr advgetopt::option g_options[] =
         "[file.css ...]; use stdin if no filename specified",
         nullptr
     },
-    {
-        '\0',
-        advgetopt::GETOPT_FLAG_END,
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr
-    }
+    advgetopt::end_options()
 };
 
 // TODO: once we have stdc++20, remove all defaults
@@ -366,13 +357,15 @@ advgetopt::options_environment const g_options_environment =
     .f_configuration_files = nullptr,
     .f_configuration_filename = nullptr,
     .f_configuration_directories = nullptr,
-    .f_environment_flags = 0,
+    .f_environment_flags = advgetopt::GETOPT_ENVIRONMENT_FLAG_PROCESS_SYSTEM_PARAMETERS,
     .f_help_header = "Usage: %p [-<opt>] [file.css ...] [-o out.css]\n"
                      "where -<opt> is one or more of:",
-    .f_help_footer = nullptr,
+    .f_help_footer = "%c",
     .f_version = CSSPP_VERSION,
-    .f_license = nullptr,
-    .f_copyright = nullptr,
+    .f_license = "GNU GPL v2",
+    .f_copyright = "Copyright (c) 2015-"
+                   BOOST_PP_STRINGIZE(UTC_BUILD_YEAR)
+                   " by Made to Order Software Corporation -- All Rights Reserved",
     //.f_build_date = __DATE__,
     //.f_build_time = __TIME__
 };
@@ -394,18 +387,6 @@ private:
 pp::pp(int argc, char * argv[])
     : f_opt(new advgetopt::getopt(g_options_environment, argc, argv))
 {
-    if(f_opt->is_defined("version"))
-    {
-        std::cerr << CSSPP_VERSION << std::endl;
-        exit(1);
-    }
-
-    if(f_opt->is_defined("help"))
-    {
-        std::cerr << f_opt->usage();
-        exit(0);
-    }
-
     if(f_opt->is_defined("quiet"))
     {
         csspp::error::instance().set_hide_all(true);
@@ -625,6 +606,10 @@ int main(int argc, char *argv[])
     {
         pp preprocessor(argc, argv);
         return preprocessor.compile();
+    }
+    catch(advgetopt::getopt_exception_exit const & except)
+    {
+        return except.code();
     }
     catch(csspp::csspp_exception_exit const & e)
     {
