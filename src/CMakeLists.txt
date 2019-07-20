@@ -45,6 +45,7 @@ target_link_libraries(${PROJECT_NAME}
     csspp
     ${ADVGETOPT_LIBRARIES}
     ${LIBEXCEPT_LIBRARIES}
+    ${LIBUTF8_LIBRARIES}
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
@@ -54,6 +55,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 install(
     TARGETS
         ${PROJECT_NAME}
+
     DESTINATION
         bin
 )
