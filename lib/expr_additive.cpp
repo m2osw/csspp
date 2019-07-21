@@ -111,7 +111,9 @@ node::pointer_t add(node::pointer_t lhs, node::pointer_t rhs, bool subtract)
     case mix_node_types(node_type_t::DECIMAL_NUMBER, node_type_t::COLOR):
         std::swap(lhs, rhs);
         swapped = true;
-        /*FALLTHROUGH*/
+#if __cplusplus >= 201700
+        [[fallthrough]];
+#endif
     case mix_node_types(node_type_t::COLOR, node_type_t::INTEGER):
     case mix_node_types(node_type_t::COLOR, node_type_t::DECIMAL_NUMBER):
         if(rhs->get_string() == "")

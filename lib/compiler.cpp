@@ -1916,7 +1916,9 @@ void compiler::remove_empty_rules(node::pointer_t n)
             f_state.get_previous_parent()->remove_child(n);
             return;
         }
-        /*FALLTHROUGH*/
+#if __cplusplus >= 201700
+        [[fallthrough]];
+#endif
     case node_type_t::AT_KEYWORD:
     //case node_type_t::ARG:
     case node_type_t::DECLARATION:
@@ -2322,7 +2324,9 @@ void compiler::replace_variable(node::pointer_t parent, node::pointer_t n, size_
 //                break;
 //            }
 //        }
-        /*FALLTHROUGH*/
+#if __cplusplus >= 201700
+        [[fallthrough]];
+#endif
     case node_type_t::OPEN_PARENTHESIS:
     case node_type_t::OPEN_SQUAREBRACKET:
         // in this case we insert the children of 'val'

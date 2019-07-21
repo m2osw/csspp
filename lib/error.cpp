@@ -179,7 +179,9 @@ error & error::operator << (error_mode_t mode)
         {
             break;
         }
-        /*FALLTHROUGH*/
+#if __cplusplus >= 201700
+        [[fallthrough]];
+#endif
     case error_mode_t::ERROR_INFO:
         if(f_hide_all)
         {

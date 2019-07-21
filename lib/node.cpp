@@ -868,7 +868,9 @@ std::string node::to_string(int flags) const
 
     case node_type_t::VARIABLE_FUNCTION:
         out << '$';
-        /*FALLTHROUGH*/
+#if __cplusplus >= 201700
+        [[fallthrough]];
+#endif
     case node_type_t::FUNCTION:
         {
             out << f_string << "(";

@@ -436,7 +436,9 @@ node::pointer_t lexer::next_token()
                 }
                 ungetc(n);
             }
-            /*FALLTHROUGH*/
+#if __cplusplus >= 201700
+            [[fallthrough]];
+#endif
         case '\\':
         case '@':
             {
