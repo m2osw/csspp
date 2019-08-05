@@ -283,7 +283,7 @@ node::pointer_t expression::multiply(node_type_t op, node::pointer_t lhs, node::
     switch(mix_node_types(lhs->get_type(), rhs->get_type()))
     {
     case mix_node_types(node_type_t::INTEGER, node_type_t::STRING):
-        std::swap(lhs, rhs);
+        swap(lhs, rhs);
 #if __cplusplus >= 201700
         [[fallthrough]];
 #endif
@@ -429,7 +429,7 @@ node::pointer_t expression::multiply(node_type_t op, node::pointer_t lhs, node::
                     << error_mode_t::ERROR_ERROR;
             return node::pointer_t();
         }
-        std::swap(lhs, rhs);
+        swap(lhs, rhs);
 #if __cplusplus >= 201700
         [[fallthrough]];
 #endif
@@ -446,7 +446,7 @@ node::pointer_t expression::multiply(node_type_t op, node::pointer_t lhs, node::
                     << error_mode_t::ERROR_ERROR;
             return node::pointer_t();
         }
-        std::swap(lhs, rhs);
+        swap(lhs, rhs);
 #if __cplusplus >= 201700
         [[fallthrough]];
 #endif

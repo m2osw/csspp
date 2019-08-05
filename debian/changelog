@@ -2,6 +2,7 @@ csspp (1.0.23.0~xenial) xenial; urgency=high
 
   * Fixed the fallthrough statements with the C++17 attribute.
   * Added the advgetopt system flags to the csspp command line tool.
+  * Fixed a few std::swap() -> swap() to get the correct call work.
 
  -- Alexis Wilke <alexis@m2osw.com>  Fri, 19 Jul 2019 16:55:48 -0800
 

@@ -673,7 +673,7 @@ void node::take_over_children_of(pointer_t n)
     // in the other node (TBD: should this node have
     // an empty list of children to start with?)
     f_children.clear();
-    std::swap(f_children, n->f_children);
+    swap(f_children, n->f_children);
 }
 
 void node::replace_child(pointer_t o, pointer_t n)
