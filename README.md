@@ -1,4 +1,9 @@
 
+<p align="center">
+<img alt="csspp" title="CSS Preprocessor -- a CSS compiler and compressor"
+src="https://raw.githubusercontent.com/m2osw/csspp/master/doc/images/csspp-logo.png" width="256" height="141"/>
+</p>
+
 # CSS Preprocessor
 
 The CSS language is actually pretty flat and rather cumbersome to maintain.
