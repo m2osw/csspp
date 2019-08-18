@@ -299,9 +299,9 @@
 		<div class="menu">
 			<a href="/"><strong>CSS Preprocessor</strong></a>
 			<a href="https://snapwebsites.org/project/csspp">Project</a>
-			<a href="https://sourceforge.net/projects/csspp">Downloads</a>
-			<a rel="nofollow" href="https://sourceforge.net/p/csspp/link/">Source Repository</a>
-			<a rel="nofollow" href="https://sourceforge.net/p/csspp/tickets/">Support</a>
+			<a href="https://github.com/m2osw/csspp/releases">Downloads</a>
+			<a rel="nofollow" href="https://github.com/m2osw/csspp">Source Repository</a>
+			<a rel="nofollow" href="https://github.com/m2osw/csspp/issues">Support</a>
 			<a href="/documentation/csspp-doc-1.0/">Documentation</a>
 		</div>
 		<div class="transparent-menu-placeholder"></div>
@@ -414,12 +414,17 @@
 			</ul>
 			<div style="clear: both;"></div>
 			<p class="download-button">
-			  <a href="https://sourceforge.net/projects/csspp/files/latest/download" rel="nofollow"><img alt="Download CSS Preprocessor" src="https://a.fsdn.com/con/app/sf-download-button"></a>
+				<ul>
+				  <li><a href="https://github.com/m2osw/csspp/releases"
+							rel="nofollow">Download Sources Github</a></li>
+				  <li><a href="https://launchpad.net/~snapcpp/+archive/ubuntu/ppa"
+							rel="nofollow">Download Binary Packages From Launchpad</a></li>
+				</ul>
 			</p>
 		</div>
 		<div class="transparent-copyright-placeholder"></div>
 		<div class="copyright">
-			<strong>CSS Preprocessor</strong> &mdash; Copyright &copy; 2015-2017 by <span class="company"><a href="https://www.m2osw.com/">Made to Order Software Corporation</a></span>
+			<strong>CSS Preprocessor</strong> &mdash; Copyright &copy; 2015-2019 by <span class="company"><a href="https://www.m2osw.com/">Made to Order Software Corporation</a></span>
 		</div>
 		<script>
 			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
