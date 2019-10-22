@@ -261,6 +261,8 @@ void free_char(char * ptr)
     free(ptr);
 }
 
+// TODO: add support for configuration files & the variable
+
 constexpr advgetopt::option g_options[] =
 {
     {
