@@ -1,3 +1,9 @@
+csspp (1.0.26.0~xenial) xenial; urgency=high
+
+  * Fixed the advgetopt exception names.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Mon, 28 Sep 2019 23:11:48 -0800
+
 csspp (1.0.25.0~xenial) xenial; urgency=high
 
   * Added the libboost-dev as a dependency.

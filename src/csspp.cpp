@@ -609,7 +609,7 @@ int main(int argc, char *argv[])
         pp preprocessor(argc, argv);
         return preprocessor.compile();
     }
-    catch(advgetopt::getopt_exception_exit const & except)
+    catch(advgetopt::getopt_exit const & except)
     {
         return except.code();
     }
@@ -633,17 +633,17 @@ int main(int argc, char *argv[])
         std::cerr << "fatal error: a runtime exception occurred: " << e.what() << std::endl;
         exit(1);
     }
-    catch(advgetopt::getopt_exception_undefined const & e)
+    catch(advgetopt::getopt_undefined const & e)
     {
         std::cerr << "fatal error: an undefined exception occurred because of your command line: " << e.what() << std::endl;
         exit(1);
     }
-    catch(advgetopt::getopt_exception_invalid const & e)
+    catch(advgetopt::getopt_invalid const & e)
     {
         std::cerr << "fatal error: there is an error on your command line, an exception occurred: " << e.what() << std::endl;
         exit(1);
     }
-    catch(advgetopt::getopt_exception_default const & e)
+    catch(advgetopt::getopt_invalid_default const & e)
     {
         std::cerr << "fatal error: there is an error on your command line, you used a parameter without a value and there is no default. The exception says: " << e.what() << std::endl;
         exit(1);
