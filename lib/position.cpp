@@ -28,19 +28,6 @@ position::position(std::string const & filename, line_t page, line_t line)
 {
 }
 
-position & position::operator = (position const & rhs)
-{
-    if(this != &rhs)
-    {
-        f_filename = rhs.f_filename;
-        f_page = rhs.f_page;
-        f_line = rhs.f_line;
-        f_total_line = rhs.f_total_line;
-    }
-
-    return *this;
-}
-
 void position::next_line()
 {
     ++f_line;
