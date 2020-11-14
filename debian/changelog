@@ -1,3 +1,10 @@
+csspp (1.0.27.1~xenial) xenial; urgency=high
+
+  * Bump version for a rebuild.
+  * Adjusted version for advgetopt (min. needed is 2.0.14 now).
+
+ -- Alexis Wilke <alexis@m2osw.com>  Fri, 13 Nov 2020 20:44:08 -0800
+
 csspp (1.0.27.0~xenial) xenial; urgency=high
 
   * Updated csspp to compile against the newest version of advgetopt.
