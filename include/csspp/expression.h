@@ -1,7 +1,7 @@
 #ifndef CSSPP_EXPRESSION_H
 #define CSSPP_EXPRESSION_H
 // CSS Preprocessor
-// Copyright (c) 2015-2019  Made to Order Software Corp.  All Rights Reserved
+// Copyright (c) 2015-2021  Made to Order Software Corp.  All Rights Reserved
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by

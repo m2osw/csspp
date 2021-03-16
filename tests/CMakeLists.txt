@@ -10,7 +10,7 @@
 #
 # License:
 #      CSS Preprocessor -- Test Suite
-#      Copyright (c) 2015-2019  Made to Order Software Corp.  All Rights Reserved
+#      Copyright (c) 2015-2021  Made to Order Software Corp.  All Rights Reserved
 #
 #      https://snapwebsites.org/
 #      contact@m2osw.com

@@ -1,3 +1,10 @@
+csspp (1.0.27.3~xenial) xenial; urgency=high
+
+  * Bump version for a rebuild for newer cppthread.
+  * Updated the copyright notices.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Mon, 15 Mar 2021 23:08:31 -0700
+
 csspp (1.0.27.2~xenial) xenial; urgency=high
 
   * Bump version for a rebuild for newer cppthread.
