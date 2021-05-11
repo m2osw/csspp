@@ -1,21 +1,9 @@
 
-To build csspp, use cmake:
+With the current setup, compiling csspp should be done from within the
+snapcpp environment or using the standalone tarball (see dev/INSTALL.md
+for details about that other option).
 
-  tar xf csspp.tar.gz
-  mkdir BUILD
-  cd BUILD
-  cmake ../csspp
-  make
-  make install
-
-The csspp directory is likely to include a version by default. Change the
-references in that script as required.
-
-The creation of the documentation requires doxygen:
-
-   sudo apt-get install doxygen
-
-The creation of the tests require catch.hpp, under Ubuntu:
-
-   sudo apt-get install catch
+The csspp project is also available pre-compiled on launchpad, which is
+probably you best/easiest option if you have Ubuntu or some other Debian
+flavor system.
 

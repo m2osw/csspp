@@ -55,18 +55,60 @@ find_package( SnapBuild        REQUIRED )
 ################################################################################
 # Snap libraries
 #
-ConfigureMakeProject( PROJECT_NAME cmake )
-
-ConfigureMakeProject( PROJECT_NAME advgetopt
-    CONFIG_ARGS
-        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-    DEPENDS cmake
+ConfigureMakeProject(
+    PROJECT_NAME
+        advgetopt
+    COMPONENT
+        contrib
 )
 
-ConfigureMakeProject( PROJECT_NAME csspp
-    CONFIG_ARGS
-        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-    DEPENDS cmake advgetopt
+ConfigureMakeProject(
+    PROJECT_NAME
+        cmake
+    COMPONENT
+        contrib
+)
+
+ConfigureMakeProject(
+    PROJECT_NAME
+        cppthread
+    COMPONENT
+        contrib
+)
+
+ConfigureMakeProject(
+    PROJECT_NAME
+        csspp
+    COMPONENT
+        contrib
+)
+
+ConfigureMakeProject(
+    PROJECT_NAME
+        libexcept
+    COMPONENT
+        contrib
+)
+
+ConfigureMakeProject(
+    PROJECT_NAME
+        libutf8
+    COMPONENT
+        contrib
+)
+
+ConfigureMakeProject(
+    PROJECT_NAME
+        snapcatch2
+    COMPONENT
+        contrib
+)
+
+ConfigureMakeProject(
+    PROJECT_NAME
+        snapdev
+    COMPONENT
+        contrib
 )
 
 get_property( BUILD_TARGETS    GLOBAL PROPERTY BUILD_TARGETS    )

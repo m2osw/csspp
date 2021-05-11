@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 #
 # File:
 #      dev/pack
@@ -38,19 +38,32 @@ set -e
 
 SOURCE_REPO=../../../sources-repo
 
+echo "-- verify clean source availability"
 if ! test -d $SOURCE_REPO
 then
+    echo "ERROR:"
     echo "To use this script, we expect you to have a directory named"
     echo "sources-repo, which is a pristine copy of the git repository."
     echo "Create that directory like any other git repository and place"
-    echo "it in the parent of the csspp directory. The script will update"
-    echo "the files on each run."
+    echo "it in the parent of the snapcpp directory. The script will"
+    echo "automatically update the files on each run."
+    echo
+    echo "   cd ../../.."
+    echo "   git clone --recursive https://github.com/m2osw/snapcpp.git sources-repo"
+    exit 1
+fi
+
+echo "-- verify version"
+if ! test -x dev/version
+then
+    echo "ERROR:"
+    echo "Are you in the top directory of the project?"
     exit 1
 fi
 
 # Get both versions
 . dev/version
-DEBIAN_VERSION=`dpkg-parsechangelog --show-field Version | sed -e s/~.*// -e s/\.0$//`
+DEBIAN_VERSION=`dpkg-parsechangelog --show-field Version | sed -e s/~.*// -e 's/\(^[0-9]\+\.[0-9]\+\.[0-9]\+\).*/\1/'`
 
 if test "$FULL_VERSION" != "$DEBIAN_VERSION"
 then
@@ -59,25 +72,82 @@ then
     exit 1;
 fi
 
+echo "-- prepare package directory"
 cd $SOURCE_REPO
-mkdir -p ../packages
-git pull origin master
-rm -f snapcmakemodules_*.tar.gz advgetopt_*.tar.gz csspp_*.tar.gz
-dpkg-source -b cmake
-cp snapcmakemodules_*.tar.gz ../packages
-cd contrib
-dpkg-source -b advgetopt
-dpkg-source -b csspp
-cp advgetopt_*.tar.gz csspp_*.tar.gz ../../packages
-cd ../..
+SOURCE_REPO=`pwd`
+cd ..
+rm -rf packages
+mkdir packages
+cd packages
+PACKAGES_DIR=`pwd`
+cd $SOURCE_REPO
+
+# this top folder probably doesn't need to be updated, but for cleanliness
+#
+echo "-- update top folder"
+MAIN=`git branch --list main`
+if test "${MAIN}" != ""
+then
+    git pull origin main
+else
+    git pull origin master
+fi
+
+# For list of dependencies, see ../../../BUILD/clean-dependencies.svg
+
+DEPENDENCIES="
+    advgetopt
+    cmake
+    cppthread
+    csspp
+    libexcept
+    libutf8
+    snapcatch2
+    snapdev
+    "
+
+for p in ${DEPENDENCIES}
+do
+    (
+        echo "-- process project \"${p}\""
+        name=$p
+        if test "$p" = "cmake"
+        then
+            name=snapcmakemodules
+        else
+            cd contrib
+        fi
+
+        # We use submodules now, make sure to update each one of them individually
+        (
+            cd $p
+            MAIN=`git branch --list main`
+            if test "${MAIN}" != ""
+            then
+                git pull origin main
+            else
+                git pull origin master
+            fi
+        )
+
+        rm -f ${p}_*.tar.gz
+        echo "-- process project \"${p}\" [dpkg-source -b $name]"
+        dpkg-source -b $p
+        mv ${name}_*.tar.gz $PACKAGES_DIR
+    )
+done
+
+cd ..
 rm -rf tmp/csspp
 mkdir -p tmp/csspp
 cd tmp/csspp
-tar xf ../../sources-repo/snapcmakemodules_*.tar.gz
-tar xf ../../sources-repo/contrib/advgetopt_*.tar.gz
-tar xf ../../sources-repo/contrib/csspp_*.tar.gz
+for f in ../../packages/*.tar.gz
+do
+    tar xf $f
+done
 cp csspp/dev/MasterCMakeLists.txt CMakeLists.txt
-cp csspp/dev/INSTALL INSTALL
+cp csspp/dev/INSTALL.md .
+cp csspp/dev/ubuntu-dependencies.sh .
 cd csspp
 VERSION=`dpkg-parsechangelog --show-field Version`
 cd ../..

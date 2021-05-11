@@ -40,8 +40,8 @@ generated.
 
 # Compile the library and `csspp` command line tool
 
-The INSTALL in the root directory tells you how to generate the
-distribution directory (or dev/INSTALL in the `csspp` project itself.)
+The `INSTALL.md` in the root directory tells you how to generate the
+distribution directory (or `dev/INSTALL.md` in the standalone `csspp` project).
 
 We will be looking at making this simpler with time... for now, the
 environment is a bit convoluted.
