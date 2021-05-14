@@ -864,19 +864,19 @@ TEST_CASE("Color to string", "[color] [output]")
                     static_cast<csspp::byte_component_t>(0xFF));
         switch(c.get_color())
         {
-        case (255 << 0) | (0 << 8) | (0 << 16) | (255 << 24):
+        case (255U << 0) | (0U << 8) | (0U << 16) | (255U << 24):
             REQUIRE(c.to_string() == "red");
             break;
 
-        case (0 << 0) | (255 << 8) | (0 << 16) | (255 << 24):
+        case (0U << 0) | (255U << 8) | (0U << 16) | (255U << 24):
             REQUIRE(c.to_string() == "lime");
             break;
 
-        case (0 << 0) | (0 << 8) | (255 << 16) | (255 << 24):
+        case (0U << 0) | (0U << 8) | (255U << 16) | (255U << 24):
             REQUIRE(c.to_string() == "blue");
             break;
 
-        case (0 << 0) | (255 << 8) | (255 << 16) | (255 << 24):
+        case (0U << 0) | (255U << 8) | (255U << 16) | (255U << 24):
             REQUIRE(c.to_string() == "aqua");
             break;
 
