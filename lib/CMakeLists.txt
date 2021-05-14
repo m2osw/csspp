@@ -1,43 +1,26 @@
 #
-# File:
-#      lib/CMakeLists.txt
+# Copyright (c) 2015-2021  Made to Order Software Corp.  All Rights Reserved
 #
-# Description:
-#      The csspp library.
+# https://snapwebsites.org/
+# contact@m2osw.com
 #
-# Documentation:
-#      See the CMake documentation.
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
 #
-# License:
-#      Copyright (c) 2015-2021  Made to Order Software Corp.  All Rights Reserved
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-#      https://snapwebsites.org/
-#      contact@m2osw.com
-#
-#      This program is free software; you can redistribute it and/or modify
-#      it under the terms of the GNU General Public License as published by
-#      the Free Software Foundation; either version 2 of the License, or
-#      (at your option) any later version.
-#     
-#      This program is distributed in the hope that it will be useful,
-#      but WITHOUT ANY WARRANTY; without even the implied warranty of
-#      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#      GNU General Public License for more details.
-#     
-#      You should have received a copy of the GNU General Public License
-#      along with this program; if not, write to the Free Software
-#      Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 #
 
 project(csspp)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/CSSPPConfig.cmake.in
-               ${CMAKE_CURRENT_BINARY_DIR}/CSSPPConfig.cmake
-               @ONLY)
-
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/CSSPPConfigVersion.cmake.in
-               ${CMAKE_CURRENT_BINARY_DIR}/CSSPPConfigVersion.cmake
-               @ONLY)
 
 add_library( ${PROJECT_NAME} SHARED
     assembler.cpp                               # Write the nodes back out
@@ -65,10 +48,6 @@ add_library( ${PROJECT_NAME} SHARED
     unicode_range.cpp                           # Handle a Unicode Range value
 )
 
-#target_link_libraries( ${PROJECT_NAME}
-#    ${LIBTLD_LIBRARIES}
-#)
-
 set_target_properties( ${PROJECT_NAME} PROPERTIES
     VERSION ${CSSPP_VERSION_MAJOR}.${CSSPP_VERSION_MINOR}
     SOVERSION ${CSSPP_VERSION_MAJOR}
@@ -81,11 +60,6 @@ install(
     ARCHIVE DESTINATION lib
 )
 
-install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/CSSPPConfig.cmake
-          ${CMAKE_CURRENT_BINARY_DIR}/CSSPPConfigVersion.cmake
-    DESTINATION share/cmake/CSSPP
-)
 
 # Local Variables:
 # indent-tabs-mode: nil

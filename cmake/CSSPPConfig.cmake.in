@@ -1,4 +1,4 @@
-# - Try to find the CSS Preprocessor development files (libcsspp.so)
+# Try to find the CSS Preprocessor development files
 #
 # Once done this will define
 #
@@ -48,9 +48,15 @@ mark_as_advanced(CSSPP_INCLUDE_DIR CSSPP_LIBRARY)
 set(CSSPP_INCLUDE_DIRS ${CSSPP_INCLUDE_DIR})
 set(CSSPP_LIBRARIES ${CSSPP_LIBRARY})
 
-include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set CSSPP_FOUND to TRUE
 # if all listed variables are TRUE
-find_package_handle_standard_args(csspp DEFAULT_MSG CSSPP_INCLUDE_DIR CSSPP_LIBRARY)
+#
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(
+    CSSPP
+    DEFAULT_MSG
+    CSSPP_INCLUDE_DIR
+    CSSPP_LIBRARY
+)
 
 # vim: ts=4 sw=4 et
