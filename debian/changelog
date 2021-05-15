@@ -1,3 +1,10 @@
+csspp (1.0.28.0~xenial) xenial; urgency=high
+
+  * Adding an Hirsute version.
+  * Fixed the library name in the CSSPPFind.cmake file.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Sat, 15 May 2021 11:02:18 -0700
+
 csspp (1.0.27.4~xenial) xenial; urgency=high
 
   * Updated the dev/pack script. We have many dependencies now.
