@@ -1,3 +1,9 @@
+csspp (1.0.28.2~bionic) bionic; urgency=high
+
+  * Bumped build version to rebuild on Launchpad.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Fri, 04 Jun 2021 21:07:22 -0700
+
 csspp (1.0.28.1~xenial) xenial; urgency=high
 
   * Bump version to rebuild against latest.
