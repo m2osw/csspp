@@ -1,4 +1,8 @@
 
+. Move includes along the source and rename the src folder as csspp.
+. Make sure the include_directories(...) in cmake files are correct.
+
+
 To be closer to what SASS supports, we shall implement the following
 additional features:
 
