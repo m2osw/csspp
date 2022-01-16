@@ -22,11 +22,7 @@ find_package( Catch )
 
 if(CATCH_FOUND)
 
-    project( csspp_tests )
-
-    include_directories(
-        ${CATCH_INCLUDE_DIR}
-    )
+    project(unittest)
 
     add_executable( ${PROJECT_NAME}
         catch_tests.cpp
@@ -54,12 +50,19 @@ if(CATCH_FOUND)
         catch_unicode_range.cpp
     )
 
-    target_link_libraries( ${PROJECT_NAME} csspp )
+    target_include_directories(${PROJECT_NAME}
+        PUBLIC
+            ${CATCH_INCLUDE_DIR}
+    )
+
+    target_link_libraries(${PROJECT_NAME}
+        csspp
+    )
 
     # You can use the --success command line option to see all the tests
     # as they run; it is a LOT of output though, thus by default we don't
     # use it
-    add_test( csspp_tests ${PROJECT_NAME} )
+    add_test(unittest ${PROJECT_NAME})
 
 else(CATCH_FOUND)
 

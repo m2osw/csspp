@@ -20,20 +20,20 @@
 
 project(csspp-tool)
 
-include_directories(
-    ${ADVGETOPT_INCLUDE_DIRS}
-    ${LIBEXCEPT_INCLUDE_DIRS}
-)
-
 add_executable(${PROJECT_NAME}
     csspp.cpp
+)
+
+target_include_directories(${PROJECT_NAME}
+    PUBLIC
+        ${ADVGETOPT_INCLUDE_DIRS}
+        ${LIBEXCEPT_INCLUDE_DIRS}
 )
 
 target_link_libraries(${PROJECT_NAME}
     csspp
     ${ADVGETOPT_LIBRARIES}
     ${LIBEXCEPT_LIBRARIES}
-    ${LIBUTF8_LIBRARIES}
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

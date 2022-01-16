@@ -1,3 +1,10 @@
+csspp (1.0.29.0~bionic) bionic; urgency=high
+
+  * Moved the headers along the code and renamed the directory csspp.
+  * Started some clean up of the copyright notice.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Sun, 16 Jan 2022 07:06:15 -0800
+
 csspp (1.0.28.4~bionic) bionic; urgency=high
 
   * Bumped build version to rebuild on Launchpad.

@@ -26,14 +26,22 @@ configure_file(
 )
 
 install(
-    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    DESTINATION lib/csspp
-    FILES_MATCHING PATTERN "*.scss"
+    DIRECTORY
+        ${CMAKE_CURRENT_SOURCE_DIR}
+
+    DESTINATION
+        lib/csspp
+
+    FILES_MATCHING PATTERN
+        "*.scss"
 )
 
 install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/system/version.scss
-    DESTINATION lib/csspp/scripts/system
+    FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/system/version.scss
+
+    DESTINATION
+        lib/csspp/scripts/system
 )
 
 # Local Variables:
