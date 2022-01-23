@@ -1,5 +1,7 @@
-// CSS Preprocessor -- Test Suite
-// Copyright (c) 2015-2021  Made to Order Software Corp.  All Rights Reserved
+// Copyright (c) 2015-2022  Made to Order Software Corp.  All Rights Reserved
+//
+// https://snapwebsites.org/project/csspp
+// contact@m2osw.com
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -11,9 +13,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 /** \file
  * \brief Test the error.cpp file.
@@ -22,16 +24,34 @@
  * implementation to ensure full coverage.
  */
 
-#include "catch_tests.h"
+// self
+//
+#include    "catch_main.h"
 
-#include "csspp/error.h"
-#include "csspp/exceptions.h"
-#include "csspp/lexer.h"
-#include "csspp/unicode_range.h"
 
-#include <sstream>
+// csspp lib
+//
+#include    <csspp/error.h>
+#include    <csspp/exceptions.h>
+#include    <csspp/lexer.h>
+#include    <csspp/unicode_range.h>
 
-#include <string.h>
+
+// C++ lib
+//
+#include    <sstream>
+
+
+// C lib
+//
+#include    <string.h>
+
+
+// last include
+//
+#include    <snapdev/poison.h>
+
+
 
 namespace
 {
@@ -40,98 +60,98 @@ namespace
 } // no name namespace
 
 
-TEST_CASE("Position defaults", "[position] [defaults]")
+CATCH_TEST_CASE("Position defaults", "[position] [defaults]")
 {
     {
         csspp::position pos("pos.css");
 
-        REQUIRE(pos.get_filename() == "pos.css");
-        REQUIRE(pos.get_line() == 1);
-        REQUIRE(pos.get_page() == 1);
-        REQUIRE(pos.get_total_line() == 1);
+        CATCH_REQUIRE(pos.get_filename() == "pos.css");
+        CATCH_REQUIRE(pos.get_line() == 1);
+        CATCH_REQUIRE(pos.get_page() == 1);
+        CATCH_REQUIRE(pos.get_total_line() == 1);
 
         csspp::position other("other.css");
 
-        REQUIRE(other.get_filename() == "other.css");
-        REQUIRE(other.get_line() == 1);
-        REQUIRE(other.get_page() == 1);
-        REQUIRE(other.get_total_line() == 1);
+        CATCH_REQUIRE(other.get_filename() == "other.css");
+        CATCH_REQUIRE(other.get_line() == 1);
+        CATCH_REQUIRE(other.get_page() == 1);
+        CATCH_REQUIRE(other.get_total_line() == 1);
 
         // copy works as expected?
         other = pos;
 
-        REQUIRE(pos.get_filename() == "pos.css");
-        REQUIRE(pos.get_line() == 1);
-        REQUIRE(pos.get_page() == 1);
-        REQUIRE(pos.get_total_line() == 1);
+        CATCH_REQUIRE(pos.get_filename() == "pos.css");
+        CATCH_REQUIRE(pos.get_line() == 1);
+        CATCH_REQUIRE(pos.get_page() == 1);
+        CATCH_REQUIRE(pos.get_total_line() == 1);
 
-        REQUIRE(other.get_filename() == "pos.css");
-        REQUIRE(other.get_line() == 1);
-        REQUIRE(other.get_page() == 1);
-        REQUIRE(other.get_total_line() == 1);
+        CATCH_REQUIRE(other.get_filename() == "pos.css");
+        CATCH_REQUIRE(other.get_line() == 1);
+        CATCH_REQUIRE(other.get_page() == 1);
+        CATCH_REQUIRE(other.get_total_line() == 1);
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Position counters", "[position] [count]")
+CATCH_TEST_CASE("Position counters", "[position] [count]")
 {
     // simple check to verify there is no interaction between
     // a copy and the original
     {
         csspp::position pos("pos.css");
 
-        REQUIRE(pos.get_filename() == "pos.css");
-        REQUIRE(pos.get_line() == 1);
-        REQUIRE(pos.get_page() == 1);
-        REQUIRE(pos.get_total_line() == 1);
+        CATCH_REQUIRE(pos.get_filename() == "pos.css");
+        CATCH_REQUIRE(pos.get_line() == 1);
+        CATCH_REQUIRE(pos.get_page() == 1);
+        CATCH_REQUIRE(pos.get_total_line() == 1);
 
         csspp::position other("other.css");
 
-        REQUIRE(other.get_filename() == "other.css");
-        REQUIRE(other.get_line() == 1);
-        REQUIRE(other.get_page() == 1);
-        REQUIRE(other.get_total_line() == 1);
+        CATCH_REQUIRE(other.get_filename() == "other.css");
+        CATCH_REQUIRE(other.get_line() == 1);
+        CATCH_REQUIRE(other.get_page() == 1);
+        CATCH_REQUIRE(other.get_total_line() == 1);
 
         // copy works as expected?
         other = pos;
 
-        REQUIRE(pos.get_filename() == "pos.css");
-        REQUIRE(pos.get_line() == 1);
-        REQUIRE(pos.get_page() == 1);
-        REQUIRE(pos.get_total_line() == 1);
+        CATCH_REQUIRE(pos.get_filename() == "pos.css");
+        CATCH_REQUIRE(pos.get_line() == 1);
+        CATCH_REQUIRE(pos.get_page() == 1);
+        CATCH_REQUIRE(pos.get_total_line() == 1);
 
-        REQUIRE(other.get_filename() == "pos.css"); // filename changed!
-        REQUIRE(other.get_line() == 1);
-        REQUIRE(other.get_page() == 1);
-        REQUIRE(other.get_total_line() == 1);
+        CATCH_REQUIRE(other.get_filename() == "pos.css"); // filename changed!
+        CATCH_REQUIRE(other.get_line() == 1);
+        CATCH_REQUIRE(other.get_page() == 1);
+        CATCH_REQUIRE(other.get_total_line() == 1);
 
         // increment does not affect another position
         other.next_line();
 
-        REQUIRE(pos.get_filename() == "pos.css");
-        REQUIRE(pos.get_line() == 1);
-        REQUIRE(pos.get_page() == 1);
-        REQUIRE(pos.get_total_line() == 1);
+        CATCH_REQUIRE(pos.get_filename() == "pos.css");
+        CATCH_REQUIRE(pos.get_line() == 1);
+        CATCH_REQUIRE(pos.get_page() == 1);
+        CATCH_REQUIRE(pos.get_total_line() == 1);
 
-        REQUIRE(other.get_filename() == "pos.css");
-        REQUIRE(other.get_line() == 2);
-        REQUIRE(other.get_page() == 1);
-        REQUIRE(other.get_total_line() == 2);
+        CATCH_REQUIRE(other.get_filename() == "pos.css");
+        CATCH_REQUIRE(other.get_line() == 2);
+        CATCH_REQUIRE(other.get_page() == 1);
+        CATCH_REQUIRE(other.get_total_line() == 2);
 
         // increment does not affect another position
         other.next_page();
 
-        REQUIRE(pos.get_filename() == "pos.css");
-        REQUIRE(pos.get_line() == 1);
-        REQUIRE(pos.get_page() == 1);
-        REQUIRE(pos.get_total_line() == 1);
+        CATCH_REQUIRE(pos.get_filename() == "pos.css");
+        CATCH_REQUIRE(pos.get_line() == 1);
+        CATCH_REQUIRE(pos.get_page() == 1);
+        CATCH_REQUIRE(pos.get_total_line() == 1);
 
-        REQUIRE(other.get_filename() == "pos.css");
-        REQUIRE(other.get_line() == 1);
-        REQUIRE(other.get_page() == 2);
-        REQUIRE(other.get_total_line() == 2);
+        CATCH_REQUIRE(other.get_filename() == "pos.css");
+        CATCH_REQUIRE(other.get_line() == 1);
+        CATCH_REQUIRE(other.get_page() == 2);
+        CATCH_REQUIRE(other.get_total_line() == 2);
     }
 
     // loop and increment line/page counters
@@ -157,22 +177,15 @@ TEST_CASE("Position counters", "[position] [count]")
                 //++total_line; -- should this happen?
             }
 
-            REQUIRE(pos.get_filename() == "counters.css");
-            REQUIRE(pos.get_line() == line);
-            REQUIRE(pos.get_page() == page);
-            REQUIRE(pos.get_total_line() == total_line);
+            CATCH_REQUIRE(pos.get_filename() == "counters.css");
+            CATCH_REQUIRE(pos.get_line() == line);
+            CATCH_REQUIRE(pos.get_page() == page);
+            CATCH_REQUIRE(pos.get_total_line() == total_line);
         }
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
-
-// Local Variables:
-// mode: cpp
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// tab-width: 4
-// End:
 
 // vim: ts=4 sw=4 et

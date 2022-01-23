@@ -1,5 +1,7 @@
-// CSS Preprocessor -- Test Suite
-// Copyright (c) 2015-2021  Made to Order Software Corp.  All Rights Reserved
+// Copyright (c) 2015-2022  Made to Order Software Corp.  All Rights Reserved
+//
+// https://snapwebsites.org/project/csspp
+// contact@m2osw.com
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -11,9 +13,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 /** \file
  * \brief Test the expression.cpp file: "**" operator.
@@ -32,18 +34,32 @@
  * classes.
  */
 
-#include "catch_tests.h"
+// self
+//
+#include    "catch_main.h"
 
-#include "csspp/assembler.h"
-#include "csspp/compiler.h"
-#include "csspp/exceptions.h"
-#include "csspp/parser.h"
+// csspp lib
+//
+#include    <csspp/assembler.h>
+#include    <csspp/compiler.h>
+#include    <csspp/exceptions.h>
+#include    <csspp/parser.h>
 
-#include <sstream>
 
-TEST_CASE("Expression number ** number", "[expression] [power]")
+// C++ lib
+//
+#include    <sstream>
+
+
+// last include
+//
+#include    <snapdev/poison.h>
+
+
+
+CATCH_TEST_CASE("Expression number ** number", "[expression] [power]")
 {
-    SECTION("no units, integers")
+    CATCH_START_SECTION("no units, integers")
     {
         std::stringstream ss;
         ss << "div { z-index: 10 ** 3; }";
@@ -68,7 +84,7 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -89,15 +105,16 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:1000}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("no units, integers two powers, parenthesis right")
+    CATCH_START_SECTION("no units, integers two powers, parenthesis right")
     {
         std::stringstream ss;
         ss << "div { z-index: 4 ** (3 ** 2); }";
@@ -122,7 +139,7 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -143,15 +160,16 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:262144}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("no units, integers two powers, parenthesis left")
+    CATCH_START_SECTION("no units, integers two powers, parenthesis left")
     {
         std::stringstream ss;
         ss << "div { z-index: (4 ** 3) ** 2; }";
@@ -176,7 +194,7 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -197,15 +215,16 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:4096}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("px unit, integers")
+    CATCH_START_SECTION("px unit, integers")
     {
         std::stringstream ss;
         ss << "div { width: 10px ** 3 / 2px\\*px; }";
@@ -230,7 +249,7 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -251,15 +270,16 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{width:500px}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("no units, decimal number / integer")
+    CATCH_START_SECTION("no units, decimal number / integer")
     {
         std::stringstream ss;
         ss << "div { z-index: 7.3 ** 3; }";
@@ -284,7 +304,7 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -305,15 +325,16 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:389.017}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("no units, integer and decimal number")
+    CATCH_START_SECTION("no units, integer and decimal number")
     {
         std::stringstream ss;
         ss << "div { z-index: 7 ** 3.1; }";
@@ -338,7 +359,7 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -359,15 +380,16 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:416.681}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("no units, decimal number / negative power")
+    CATCH_START_SECTION("no units, decimal number / negative power")
     {
         std::stringstream ss;
         ss << "div { z-index: 0.3 ** -3.2; }";
@@ -392,7 +414,7 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -413,15 +435,16 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:47.121}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("px unit, decimal number / integer")
+    CATCH_START_SECTION("px unit, decimal number / integer")
     {
         std::stringstream ss;
         ss << "div { width: 7.5px pow 3 / 3px\\*px; }";
@@ -446,7 +469,7 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -467,15 +490,16 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{width:140.625px}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("px/em unit, decimal number / integer")
+    CATCH_START_SECTION("px/em unit, decimal number / integer")
     {
         std::stringstream ss;
         ss << "div { width: (15.0px div 2.0em) pow 3; }";
@@ -500,7 +524,7 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -521,15 +545,16 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
 // 
 // //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 // 
-//         REQUIRE(assembler_out.str() ==
+//         CATCH_REQUIRE(assembler_out.str() ==
 // "div{width:421.875px}\n"
 // + csspp_test::get_close_comment()
 //                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("px/em unit, decimal number / integer")
+    CATCH_START_SECTION("px/em unit, decimal number / integer")
     {
         std::stringstream ss;
         ss << "div { width: (50.0px div 2.0em) pow -2; }";
@@ -554,7 +579,7 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -575,15 +600,16 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
 // 
 // //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 // 
-//         REQUIRE(assembler_out.str() ==
+//         CATCH_REQUIRE(assembler_out.str() ==
 // "div{width:421.875px}\n"
 // + csspp_test::get_close_comment()
 //                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("px unit, decimal number / -integer")
+    CATCH_START_SECTION("px unit, decimal number / -integer")
     {
         std::stringstream ss;
         ss << "div { width: .75px pow -3 * 3px\\*px\\*px\\*px; }";
@@ -608,7 +634,7 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -629,15 +655,16 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{width:7.111px}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("no units, decimal numbers")
+    CATCH_START_SECTION("no units, decimal numbers")
     {
         std::stringstream ss;
         ss << "div { z-index: 7.3 ** 3.1; }";
@@ -662,7 +689,7 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -683,15 +710,16 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:474.571}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("px unit, decimal numbers")
+    CATCH_START_SECTION("px unit, decimal numbers")
     {
         std::stringstream ss;
         ss << "div { width: 7.5px pow 3.0 / 3px\\*px; }";
@@ -716,7 +744,7 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -737,15 +765,16 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{width:140.625px}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("% and integer")
+    CATCH_START_SECTION("% and integer")
     {
         std::stringstream ss;
         ss << "div { width: 105% pow 4; }";
@@ -770,7 +799,7 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -791,15 +820,16 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{width:121.551%}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("% and decimal numbers")
+    CATCH_START_SECTION("% and decimal numbers")
     {
         std::stringstream ss;
         ss << "div { width: 107.5% pow 5.3; }";
@@ -824,7 +854,7 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -845,21 +875,22 @@ TEST_CASE("Expression number ** number", "[expression] [power]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{width:146.712%}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Expression number/invalid ** number/invalid", "[expression] [power] [invalid]")
+CATCH_TEST_CASE("Expression number/invalid ** number/invalid", "[expression] [power] [invalid]")
 {
-    SECTION("just ? is not a valid number")
+    CATCH_START_SECTION("just ? is not a valid number")
     {
         std::stringstream ss;
         ss << "div { border: ?; }";
@@ -880,12 +911,13 @@ TEST_CASE("Expression number/invalid ** number/invalid", "[expression] [power] [
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
+        VERIFY_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("number ** ? is invalid")
+    CATCH_START_SECTION("number ** ? is invalid")
     {
         std::stringstream ss;
         ss << "div { width: 10px ** ?; }";
@@ -906,18 +938,19 @@ TEST_CASE("Expression number/invalid ** number/invalid", "[expression] [power] [
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
+        VERIFY_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Power expressions with invalid dimensions or decimal numbers", "[expression] [power] [invalid]")
+CATCH_TEST_CASE("Power expressions with invalid dimensions or decimal numbers", "[expression] [power] [invalid]")
 {
-    SECTION("right hand side cannot have a dimension")
+    CATCH_START_SECTION("right hand side cannot have a dimension")
     {
         std::stringstream ss;
         ss << "div { border: 3px ** 2em; }";
@@ -938,12 +971,13 @@ TEST_CASE("Power expressions with invalid dimensions or decimal numbers", "[expr
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: the number representing the power cannot be a dimension (em); it has to be unitless.\n");
+        VERIFY_ERRORS("test.css(1): error: the number representing the power cannot be a dimension (em); it has to be unitless.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("power cannot be a percent")
+    CATCH_START_SECTION("power cannot be a percent")
     {
         std::stringstream ss;
         ss << "div { z-index: 10 ** 5%; }";
@@ -964,12 +998,13 @@ TEST_CASE("Power expressions with invalid dimensions or decimal numbers", "[expr
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: incompatible types between INTEGER and PERCENT for operator '**'.\n");
+        VERIFY_ERRORS("test.css(1): error: incompatible types between INTEGER and PERCENT for operator '**'.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("power must be integral if left hand side has a dimension")
+    CATCH_START_SECTION("power must be integral if left hand side has a dimension")
     {
         std::stringstream ss;
         ss << "div { width: 7.3px ** 3.1; }";
@@ -990,12 +1025,13 @@ TEST_CASE("Power expressions with invalid dimensions or decimal numbers", "[expr
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: a number with a dimension only supports integers as their power (i.e. 3px ** 2 is fine, 3px ** 2.1 is not supported).\n");
+        VERIFY_ERRORS("test.css(1): error: a number with a dimension only supports integers as their power (i.e. 3px ** 2 is fine, 3px ** 2.1 is not supported).\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("power zero with a dimension is not allowed")
+    CATCH_START_SECTION("power zero with a dimension is not allowed")
     {
         std::stringstream ss;
         ss << "div { width: 7.5px ** 0.0; }";
@@ -1016,12 +1052,13 @@ TEST_CASE("Power expressions with invalid dimensions or decimal numbers", "[expr
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: a number with a dimension power zero cannot be calculated (i.e. 3px ** 0 = 1 what?).\n");
+        VERIFY_ERRORS("test.css(1): error: a number with a dimension power zero cannot be calculated (i.e. 3px ** 0 = 1 what?).\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("power too large")
+    CATCH_START_SECTION("power too large")
     {
         std::stringstream ss;
         ss << "div { width: 7.5px ** 1584.000; }";
@@ -1042,12 +1079,13 @@ TEST_CASE("Power expressions with invalid dimensions or decimal numbers", "[expr
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: a number with a dimension power 101 or more would generate a very large string so we refuse it at this time. You may use unitless numbers instead.\n");
+        VERIFY_ERRORS("test.css(1): error: a number with a dimension power 101 or more would generate a very large string so we refuse it at this time. You may use unitless numbers instead.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("'a ** b ** c' is not valid")
+    CATCH_START_SECTION("'a ** b ** c' is not valid")
     {
         std::stringstream ss;
         ss << "div { z-index: 4 ** 3 ** 2; }";
@@ -1068,20 +1106,14 @@ TEST_CASE("Power expressions with invalid dimensions or decimal numbers", "[expr
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: unsupported type POWER as a unary expression token.\n");
+        VERIFY_ERRORS("test.css(1): error: unsupported type POWER as a unary expression token.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
-
-// Local Variables:
-// mode: cpp
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// tab-width: 4
-// End:
 
 // vim: ts=4 sw=4 et

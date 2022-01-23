@@ -1,5 +1,7 @@
-// CSS Preprocessor -- Test Suite
-// Copyright (c) 2015-2021  Made to Order Software Corp.  All Rights Reserved
+// Copyright (c) 2015-2022  Made to Order Software Corp.  All Rights Reserved
+//
+// https://snapwebsites.org/project/csspp
+// contact@m2osw.com
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -11,9 +13,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 /** \file
  * \brief Test the expression.cpp file for all possible unary expressions.
@@ -31,18 +33,33 @@
  * classes.
  */
 
-#include "catch_tests.h"
+// self
+//
+#include    "catch_main.h"
 
-#include "csspp/assembler.h"
-#include "csspp/compiler.h"
-#include "csspp/exceptions.h"
-#include "csspp/parser.h"
 
-#include <sstream>
+// csspp lib
+//
+#include    <csspp/assembler.h>
+#include    <csspp/compiler.h>
+#include    <csspp/exceptions.h>
+#include    <csspp/parser.h>
 
-TEST_CASE("Unary expressions", "[expression] [unary]")
+
+// C++ lib
+//
+#include    <sstream>
+
+
+// last include
+//
+#include    <snapdev/poison.h>
+
+
+
+CATCH_TEST_CASE("Unary expressions", "[expression] [unary]")
 {
-    SECTION("integer, identifier, hash color, color")
+    CATCH_START_SECTION("integer, identifier, hash color, color")
     {
         std::stringstream ss;
         ss << "$zzzrv: $_csspp_major > 0;\n"
@@ -87,7 +104,7 @@ TEST_CASE("Unary expressions", "[expression] [unary]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -186,7 +203,7 @@ TEST_CASE("Unary expressions", "[expression] [unary]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{"
   "border:3px solid #f1a932;"
   "z-index:175;"
@@ -208,10 +225,11 @@ TEST_CASE("Unary expressions", "[expression] [unary]")
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("null token (can't output)")
+    CATCH_START_SECTION("null token (can't output)")
     {
         std::stringstream ss;
         ss << "div{width:null}";
@@ -236,7 +254,7 @@ TEST_CASE("Unary expressions", "[expression] [unary]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -251,10 +269,11 @@ TEST_CASE("Unary expressions", "[expression] [unary]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("important width")
+    CATCH_START_SECTION("important width")
     {
         std::stringstream ss;
         ss << "div{width:3px !important}";
@@ -279,7 +298,7 @@ TEST_CASE("Unary expressions", "[expression] [unary]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -294,16 +313,17 @@ TEST_CASE("Unary expressions", "[expression] [unary]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Variables in expressions", "[expression] [unary] [variable]")
+CATCH_TEST_CASE("Variables in expressions", "[expression] [unary] [variable]")
 {
-    SECTION("set expression variable and reuse")
+    CATCH_START_SECTION("set expression variable and reuse")
     {
         std::stringstream ss;
         ss << "div {\n"
@@ -330,7 +350,7 @@ TEST_CASE("Variables in expressions", "[expression] [unary] [variable]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -355,7 +375,7 @@ TEST_CASE("Variables in expressions", "[expression] [unary] [variable]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{"
   "border:20px solid #f1a932"
@@ -364,16 +384,17 @@ TEST_CASE("Variables in expressions", "[expression] [unary] [variable]")
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Invalid unary expressions", "[expression] [unary] [invalid]")
+CATCH_TEST_CASE("Invalid unary expressions", "[expression] [unary] [invalid]")
 {
-    SECTION("not a unary token")
+    CATCH_START_SECTION("not a unary token")
     {
         std::stringstream ss;
         ss << "div { border: ?; }\n";
@@ -394,12 +415,13 @@ TEST_CASE("Invalid unary expressions", "[expression] [unary] [invalid]")
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
+        VERIFY_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("invalid # color")
+    CATCH_START_SECTION("invalid # color")
     {
         std::stringstream ss;
         ss << "div { border: #identifier; }\n";
@@ -420,12 +442,13 @@ TEST_CASE("Invalid unary expressions", "[expression] [unary] [invalid]")
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: the color in #identifier is not valid.\n");
+        VERIFY_ERRORS("test.css(1): error: the color in #identifier is not valid.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("not a valid token for minus")
+    CATCH_START_SECTION("not a valid token for minus")
     {
         std::stringstream ss;
         ss << "div { border: - \"test\"; }\n";
@@ -446,18 +469,20 @@ TEST_CASE("Invalid unary expressions", "[expression] [unary] [invalid]")
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: unsupported type STRING for operator '-'.\n");
+        VERIFY_ERRORS("test.css(1): error: unsupported type STRING for operator '-'.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("improper initialization of an expression object")
+    CATCH_START_SECTION("improper initialization of an expression object")
     {
         csspp::node::pointer_t null_node;
-        REQUIRE_THROWS_AS(new csspp::expression(null_node), csspp::csspp_exception_logic &);
+        CATCH_REQUIRE_THROWS_AS(new csspp::expression(null_node), csspp::csspp_exception_logic);
     }
+    CATCH_END_SECTION()
 
-    SECTION("important width, wrong order")
+    CATCH_START_SECTION("important width, wrong order")
     {
         std::stringstream ss;
         ss << "div { width: !important 3px; }";
@@ -478,12 +503,13 @@ TEST_CASE("Invalid unary expressions", "[expression] [unary] [invalid]")
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): warning: A special flag, !important in this case, must only appear at the end of a declaration.\n");
+        VERIFY_ERRORS("test.css(1): warning: A special flag, !important in this case, must only appear at the end of a declaration.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("minus by itself")
+    CATCH_START_SECTION("minus by itself")
     {
         std::stringstream ss;
         ss << "div { width: -; }";
@@ -504,20 +530,14 @@ TEST_CASE("Invalid unary expressions", "[expression] [unary] [invalid]")
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: unsupported type EOF_TOKEN as a unary expression token.\n");
+        VERIFY_ERRORS("test.css(1): error: unsupported type EOF_TOKEN as a unary expression token.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
-
-// Local Variables:
-// mode: cpp
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// tab-width: 4
-// End:
 
 // vim: ts=4 sw=4 et

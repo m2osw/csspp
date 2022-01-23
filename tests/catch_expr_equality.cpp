@@ -1,5 +1,7 @@
-// CSS Preprocessor -- Test Suite
-// Copyright (c) 2015-2021  Made to Order Software Corp.  All Rights Reserved
+// Copyright (c) 2015-2022  Made to Order Software Corp.  All Rights Reserved
+//
+// https://snapwebsites.org/project/csspp
+// contact@m2osw.com
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -11,9 +13,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 /** \file
  * \brief Test the expression.cpp file: "=", "!=", "~=", "^=", "$=",
@@ -35,18 +37,33 @@
  * classes.
  */
 
-#include "catch_tests.h"
+// self
+//
+#include    "catch_main.h"
 
-#include "csspp/assembler.h"
-#include "csspp/compiler.h"
-#include "csspp/exceptions.h"
-#include "csspp/parser.h"
 
-#include <sstream>
+// csspp lib
+//
+#include    <csspp/assembler.h>
+#include    <csspp/compiler.h>
+#include    <csspp/exceptions.h>
+#include    <csspp/parser.h>
 
-TEST_CASE("Expression number =,!= number", "[expression] [equality]")
+
+// C++ lib
+//
+#include    <sstream>
+
+
+// last include
+//
+#include    <snapdev/poison.h>
+
+
+
+CATCH_TEST_CASE("Expression number =,!= number", "[expression] [equality]")
 {
-    SECTION("compare 10 = 3")
+    CATCH_START_SECTION("compare 10 = 3")
     {
         std::stringstream ss;
         ss << "div { z-index: 10 = 3 ? 9 : 5; }";
@@ -71,7 +88,7 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -92,17 +109,18 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:5}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 10 != 3")
+    CATCH_START_SECTION("compare 10 != 3")
     {
         std::stringstream ss;
         ss << "div { z-index: 10 "
@@ -129,7 +147,7 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -150,17 +168,18 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:9}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 10.2 = 3.1")
+    CATCH_START_SECTION("compare 10.2 = 3.1")
     {
         std::stringstream ss;
         ss << "div { z-index: 10.2 = 3.1 ? 9 : 5; }";
@@ -185,7 +204,7 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -206,17 +225,18 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:5}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 10.2 != 3.1")
+    CATCH_START_SECTION("compare 10.2 != 3.1")
     {
         std::stringstream ss;
         ss << "div { z-index: 10.2 != 3.1 ? 9 : 5; }";
@@ -241,7 +261,7 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -262,17 +282,18 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:9}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 10 = 3.1")
+    CATCH_START_SECTION("compare 10 = 3.1")
     {
         std::stringstream ss;
         ss << "div { z-index: 10 = 3.1 ? 9 : 5; }";
@@ -297,7 +318,7 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -318,17 +339,18 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:5}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 10 != 3.1")
+    CATCH_START_SECTION("compare 10 != 3.1")
     {
         std::stringstream ss;
         ss << "div { z-index: 10 not-equal 3.1 ? 9 : 5; }";
@@ -353,7 +375,7 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -374,17 +396,18 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:9}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 10.2 = 3")
+    CATCH_START_SECTION("compare 10.2 = 3")
     {
         std::stringstream ss;
         ss << "div { z-index: 10.2 = 3 ? 9 : 5; }";
@@ -409,7 +432,7 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -430,17 +453,18 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:5}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 10.2 != 3")
+    CATCH_START_SECTION("compare 10.2 != 3")
     {
         std::stringstream ss;
         ss << "div { z-index: 10.2 "
@@ -467,7 +491,7 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -488,17 +512,18 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:9}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare (5 = 5) = (7.1 = 7.1)")
+    CATCH_START_SECTION("compare (5 = 5) = (7.1 = 7.1)")
     {
         std::stringstream ss;
         ss << "div { z-index: (5 = 5) = (7.1 = 7.1)"
@@ -524,7 +549,7 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -545,17 +570,18 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:9}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare (5 = 5) != (7.1 = 7.1)")
+    CATCH_START_SECTION("compare (5 = 5) != (7.1 = 7.1)")
     {
         std::stringstream ss;
         ss << "div { z-index: (5 = 5) != (7.1 = 7.1)"
@@ -581,7 +607,7 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -602,17 +628,18 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:5}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 7.1% = 7.1%)")
+    CATCH_START_SECTION("compare 7.1% = 7.1%)")
     {
         std::stringstream ss;
         ss << "div { z-index: 7.1% = 7.1% ? 9 : 5; }";
@@ -637,7 +664,7 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -658,17 +685,18 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:9}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 7.1% != 7.1%)")
+    CATCH_START_SECTION("compare 7.1% != 7.1%)")
     {
         std::stringstream ss;
         ss << "div { z-index: 7.1% != 7.1% ? 9 : 5; }";
@@ -693,7 +721,7 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -714,23 +742,24 @@ TEST_CASE("Expression number =,!= number", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:5}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Expression color =,!= color", "[expression] [equality]")
+CATCH_TEST_CASE("Expression color =,!= color", "[expression] [equality]")
 {
-    SECTION("compare black = white")
+    CATCH_START_SECTION("compare black = white")
     {
         std::stringstream ss;
         ss << "div { z-index: black = white ? 9 : 5; }";
@@ -755,7 +784,7 @@ TEST_CASE("Expression color =,!= color", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -776,17 +805,18 @@ TEST_CASE("Expression color =,!= color", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:5}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare black = #000")
+    CATCH_START_SECTION("compare black = #000")
     {
         std::stringstream ss;
         ss << "div { z-index: black = #000 ? 9 : 5; }";
@@ -811,7 +841,7 @@ TEST_CASE("Expression color =,!= color", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -832,17 +862,18 @@ TEST_CASE("Expression color =,!= color", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:9}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare rgba(r,g,b,a) = rgba(r,g,b,a)")
+    CATCH_START_SECTION("compare rgba(r,g,b,a) = rgba(r,g,b,a)")
     {
         csspp::integer_t const r(rand() % 256);
         csspp::integer_t const g(rand() % 256);
@@ -887,7 +918,7 @@ TEST_CASE("Expression color =,!= color", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -908,28 +939,29 @@ TEST_CASE("Expression color =,!= color", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:9}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
+CATCH_TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
 {
     char const * colors[]
     {
         "bleu", "blanc", "rouge"
     };
 
-    SECTION("compare 'blue'/'blanc'/'rouge' ~= 'bleu blanc rouge' -- always true")
+    CATCH_START_SECTION("compare 'blue'/'blanc'/'rouge' ~= 'bleu blanc rouge' -- always true")
     {
         for(size_t idx(0); idx < sizeof(colors) / sizeof(colors[0]); ++idx)
         {
@@ -958,7 +990,7 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -979,18 +1011,19 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:9}\n"
 + csspp_test::get_close_comment()
 
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 'blue'/'blanc'/'rouge' ~= 'blue white red' -- always false")
+    CATCH_START_SECTION("compare 'blue'/'blanc'/'rouge' ~= 'blue white red' -- always false")
     {
         for(size_t idx(0); idx < sizeof(colors) / sizeof(colors[0]); ++idx)
         {
@@ -1019,7 +1052,7 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1040,18 +1073,19 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:5}\n"
 + csspp_test::get_close_comment()
 
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 'blue blanc rouge'.substr(...) ^= 'bleu blanc rouge' -- always true")
+    CATCH_START_SECTION("compare 'blue blanc rouge'.substr(...) ^= 'bleu blanc rouge' -- always true")
     {
         std::string const str("bleu blanc rouge");
         for(size_t idx(0); idx < str.length(); ++idx)
@@ -1081,7 +1115,7 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1102,18 +1136,19 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:9}\n"
 + csspp_test::get_close_comment()
 
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 'blue blanc rouge'.substr(...) ^= 'bleu blanc rouge' -- always false")
+    CATCH_START_SECTION("compare 'blue blanc rouge'.substr(...) ^= 'bleu blanc rouge' -- always false")
     {
         std::string const str("bleu blanc rouge");
         for(size_t idx(1); idx < str.length(); ++idx)
@@ -1143,7 +1178,7 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1164,19 +1199,20 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:5}\n"
 + csspp_test::get_close_comment()
 
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
     // slight variation
-    SECTION("compare 'bleue' ^= 'bleu blanc rouge' -- always false")
+    CATCH_START_SECTION("compare 'bleue' ^= 'bleu blanc rouge' -- always false")
     {
         std::stringstream ss;
         ss << "div { z-index: 'bleue' ^= 'bleu blanc rouge' ? 9 : 5; }";
@@ -1201,7 +1237,7 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1222,18 +1258,19 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:5}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
     // left side larger than right side
-    SECTION("compare 'bleu blanc rouge' ^= 'bleu' -- always false")
+    CATCH_START_SECTION("compare 'bleu blanc rouge' ^= 'bleu' -- always false")
     {
         std::stringstream ss;
         ss << "div { z-index: 'bleu blanc rouge' ^= 'bleu' ? 9 : 5; }";
@@ -1258,7 +1295,7 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1279,17 +1316,18 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:5}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 'blue blanc rouge'.substr(...) $= 'bleu blanc rouge' -- always true")
+    CATCH_START_SECTION("compare 'blue blanc rouge'.substr(...) $= 'bleu blanc rouge' -- always true")
     {
         std::string const str("bleu blanc rouge");
         for(size_t idx(0); idx < str.length(); ++idx)
@@ -1319,7 +1357,7 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1340,18 +1378,19 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:9}\n"
 + csspp_test::get_close_comment()
 
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 'blue blanc rouge'.substr(...) $= 'bleu blanc rouge' -- always false")
+    CATCH_START_SECTION("compare 'blue blanc rouge'.substr(...) $= 'bleu blanc rouge' -- always false")
     {
         std::string const str("bleu blanc rouge");
         for(size_t idx(1); idx < str.length() - 1; ++idx)
@@ -1381,7 +1420,7 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1402,19 +1441,20 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:5}\n"
 + csspp_test::get_close_comment()
 
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
     // slight variation
-    SECTION("compare 'bouge' $= 'bleu blanc rouge' -- always false")
+    CATCH_START_SECTION("compare 'bouge' $= 'bleu blanc rouge' -- always false")
     {
         std::stringstream ss;
         ss << "div { z-index: 'bouge' $= 'bleu blanc rouge' ? 9 : 5; }";
@@ -1439,7 +1479,7 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1460,18 +1500,19 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:5}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
     // left larger than right
-    SECTION("compare 'bleu blanc rouge' $= 'rouge' -- always false")
+    CATCH_START_SECTION("compare 'bleu blanc rouge' $= 'rouge' -- always false")
     {
         std::stringstream ss;
         ss << "div { z-index: 'bleu blanc rouge' $= 'rouge' ? 9 : 5; }";
@@ -1496,7 +1537,7 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1517,17 +1558,18 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:5}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 'blue blanc rouge'.substr(...) *= 'bleu blanc rouge' -- always true")
+    CATCH_START_SECTION("compare 'blue blanc rouge'.substr(...) *= 'bleu blanc rouge' -- always true")
     {
         std::string const str("bleu blanc rouge");
         for(size_t idx(0); idx < 10; ++idx)
@@ -1561,7 +1603,7 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1582,18 +1624,19 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:9}\n"
 + csspp_test::get_close_comment()
 
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 'blue blanc rouge'.substr(...) *= 'bleu blanc rouge' -- always false")
+    CATCH_START_SECTION("compare 'blue blanc rouge'.substr(...) *= 'bleu blanc rouge' -- always false")
     {
         std::string const str("bleu blanc rouge");
         for(size_t idx(0); idx < 10; ++idx)
@@ -1628,7 +1671,7 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1649,19 +1692,20 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:5}\n"
 + csspp_test::get_close_comment()
 
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
     // slight variation
-    SECTION("compare 'bouge' *= 'bleu blanc rouge' -- always false")
+    CATCH_START_SECTION("compare 'bouge' *= 'bleu blanc rouge' -- always false")
     {
         std::stringstream ss;
         ss << "div { z-index: 'bouge' *= 'bleu blanc rouge' ? 9 : 5; }";
@@ -1686,7 +1730,7 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1707,17 +1751,18 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:5}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 'bleu'|'blanc'|'rouge' |= 'bleu-blanc-rouge' -- always true")
+    CATCH_START_SECTION("compare 'bleu'|'blanc'|'rouge' |= 'bleu-blanc-rouge' -- always true")
     {
         for(size_t idx(0); idx < sizeof(colors) / sizeof(colors[0]); ++idx)
         {
@@ -1746,7 +1791,7 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1767,18 +1812,19 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:9}\n"
 + csspp_test::get_close_comment()
 
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 'bleu#' |= 'bleu-blanc-rouge' -- always false")
+    CATCH_START_SECTION("compare 'bleu#' |= 'bleu-blanc-rouge' -- always false")
     {
         for(size_t idx(0); idx < sizeof(colors) / sizeof(colors[0]); ++idx)
         {
@@ -1808,7 +1854,7 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1829,19 +1875,20 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:5}\n"
 + csspp_test::get_close_comment()
 
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
     // slight variation
-    SECTION("compare 'bouge' *= 'bleu-blanc-rouge' -- always false")
+    CATCH_START_SECTION("compare 'bouge' *= 'bleu-blanc-rouge' -- always false")
     {
         std::stringstream ss;
         ss << "div { z-index: 'bouge' *= 'bleu-blanc-rouge' ? 9 : 5; }";
@@ -1866,7 +1913,7 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1887,21 +1934,22 @@ TEST_CASE("Expression string ~=,^=,$=,*=,|= string", "[expression] [equality]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:5}\n"
 + csspp_test::get_close_comment()
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Expression number/string/invalid <,<=,>,>= number/string/invalid", "[expression] [equality] [invalid]")
+CATCH_TEST_CASE("Expression number/string/invalid <,<=,>,>= number/string/invalid", "[expression] [equality] [invalid]")
 {
     char const * op[] =
     {
@@ -1914,7 +1962,7 @@ TEST_CASE("Expression number/string/invalid <,<=,>,>= number/string/invalid", "[
         "|="
     };
 
-    SECTION("just ? is not a valid number")
+    CATCH_START_SECTION("just ? is not a valid number")
     {
         std::stringstream ss;
         ss << "div { border: ?; }";
@@ -1935,12 +1983,13 @@ TEST_CASE("Expression number/string/invalid <,<=,>,>= number/string/invalid", "[
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
+        VERIFY_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("number ?? ? is invalid")
+    CATCH_START_SECTION("number ?? ? is invalid")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -1965,13 +2014,14 @@ TEST_CASE("Expression number/string/invalid <,<=,>,>= number/string/invalid", "[
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-            REQUIRE_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
+            VERIFY_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("number ~=,^=,$=,*=,|= number is invalid")
+    CATCH_START_SECTION("number ~=,^=,$=,*=,|= number is invalid")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -2000,9 +2050,9 @@ TEST_CASE("Expression number/string/invalid <,<=,>,>= number/string/invalid", "[
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-                REQUIRE_ERRORS("test.css(1): error: incompatible types between INTEGER and INTEGER for operator '~=', '^=', '$=', '*=', '|='.\n");
+                VERIFY_ERRORS("test.css(1): error: incompatible types between INTEGER and INTEGER for operator '~=', '^=', '$=', '*=', '|='.\n");
 
-                REQUIRE(c.get_root() == n);
+                CATCH_REQUIRE(c.get_root() == n);
             }
 
             // mismatched dimensions are caught earlier with a different
@@ -2031,22 +2081,16 @@ TEST_CASE("Expression number/string/invalid <,<=,>,>= number/string/invalid", "[
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-                REQUIRE_ERRORS("test.css(1): error: incompatible types or dimensions between INTEGER and INTEGER for operator '=', '!=', '<', '<=', '>', '>=', '~=', '^=', '$=', '*=', or '|='.\n");
+                VERIFY_ERRORS("test.css(1): error: incompatible types or dimensions between INTEGER and INTEGER for operator '=', '!=', '<', '<=', '>', '>=', '~=', '^=', '$=', '*=', or '|='.\n");
 
-                REQUIRE(c.get_root() == n);
+                CATCH_REQUIRE(c.get_root() == n);
             }
         }
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
-
-// Local Variables:
-// mode: cpp
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// tab-width: 4
-// End:
 
 // vim: ts=4 sw=4 et

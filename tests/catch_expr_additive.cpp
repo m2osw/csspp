@@ -1,5 +1,7 @@
-// CSS Preprocessor -- Test Suite
-// Copyright (c) 2015-2021  Made to Order Software Corp.  All Rights Reserved
+// Copyright (c) 2015-2022  Made to Order Software Corp.  All Rights Reserved
+//
+// https://snapwebsites.org/project/csspp
+// contact@m2osw.com
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -11,9 +13,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 /** \file
  * \brief Test the expression.cpp file: "+" and "-" operators.
@@ -32,16 +34,31 @@
  * classes.
  */
 
-#include "catch_tests.h"
+// self
+//
+#include    "catch_main.h"
 
-#include "csspp/assembler.h"
-#include "csspp/compiler.h"
-#include "csspp/exceptions.h"
-#include "csspp/parser.h"
 
-#include <sstream>
+// csspp lib
+//
+#include    <csspp/assembler.h>
+#include    <csspp/compiler.h>
+#include    <csspp/exceptions.h>
+#include    <csspp/parser.h>
 
-TEST_CASE("Expression integer +/- integer", "[expression] [additive]")
+
+// C++ lib
+//
+#include    <sstream>
+
+
+// last include
+//
+#include    <snapdev/poison.h>
+
+
+
+CATCH_TEST_CASE("Expression integer +/- integer", "[expression] [additive]")
 {
     // add sizes without dimensions
     {
@@ -68,7 +85,7 @@ TEST_CASE("Expression integer +/- integer", "[expression] [additive]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -89,12 +106,12 @@ TEST_CASE("Expression integer +/- integer", "[expression] [additive]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:13}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // subtract sizes without dimensions
@@ -122,7 +139,7 @@ TEST_CASE("Expression integer +/- integer", "[expression] [additive]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -143,12 +160,12 @@ TEST_CASE("Expression integer +/- integer", "[expression] [additive]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:-7}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // add pixels
@@ -176,7 +193,7 @@ TEST_CASE("Expression integer +/- integer", "[expression] [additive]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -197,12 +214,12 @@ TEST_CASE("Expression integer +/- integer", "[expression] [additive]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(out.str() ==
+        CATCH_REQUIRE(out.str() ==
 "div{width:13px}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // subtract pixels
@@ -230,7 +247,7 @@ TEST_CASE("Expression integer +/- integer", "[expression] [additive]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -251,19 +268,19 @@ TEST_CASE("Expression integer +/- integer", "[expression] [additive]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(out.str() ==
+        CATCH_REQUIRE(out.str() ==
 "div{width:7px}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Expression integer +/- integer with incompatible dimensions", "[expression] [additive] [invalid]")
+CATCH_TEST_CASE("Expression integer +/- integer with incompatible dimensions", "[expression] [additive] [invalid]")
 {
     // px + ""
     {
@@ -286,9 +303,9 @@ TEST_CASE("Expression integer +/- integer with incompatible dimensions", "[expre
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: incompatible dimensions: \"px\" and \"\" cannot be used as is with operator '+'.\n");
+        VERIFY_ERRORS("test.css(1): error: incompatible dimensions: \"px\" and \"\" cannot be used as is with operator '+'.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // px - ""
@@ -312,9 +329,9 @@ TEST_CASE("Expression integer +/- integer with incompatible dimensions", "[expre
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: incompatible dimensions: \"px\" and \"\" cannot be used as is with operator '-'.\n");
+        VERIFY_ERRORS("test.css(1): error: incompatible dimensions: \"px\" and \"\" cannot be used as is with operator '-'.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // "" + em
@@ -338,9 +355,9 @@ TEST_CASE("Expression integer +/- integer with incompatible dimensions", "[expre
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: incompatible dimensions: \"\" and \"em\" cannot be used as is with operator '+'.\n");
+        VERIFY_ERRORS("test.css(1): error: incompatible dimensions: \"\" and \"em\" cannot be used as is with operator '+'.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // "" - em
@@ -364,9 +381,9 @@ TEST_CASE("Expression integer +/- integer with incompatible dimensions", "[expre
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: incompatible dimensions: \"\" and \"em\" cannot be used as is with operator '-'.\n");
+        VERIFY_ERRORS("test.css(1): error: incompatible dimensions: \"\" and \"em\" cannot be used as is with operator '-'.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // px + em
@@ -390,9 +407,9 @@ TEST_CASE("Expression integer +/- integer with incompatible dimensions", "[expre
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: incompatible dimensions: \"px\" and \"em\" cannot be used as is with operator '+'.\n");
+        VERIFY_ERRORS("test.css(1): error: incompatible dimensions: \"px\" and \"em\" cannot be used as is with operator '+'.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // px - em
@@ -416,9 +433,9 @@ TEST_CASE("Expression integer +/- integer with incompatible dimensions", "[expre
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: incompatible dimensions: \"px\" and \"em\" cannot be used as is with operator '-'.\n");
+        VERIFY_ERRORS("test.css(1): error: incompatible dimensions: \"px\" and \"em\" cannot be used as is with operator '-'.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // string - string
@@ -442,18 +459,18 @@ TEST_CASE("Expression integer +/- integer with incompatible dimensions", "[expre
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: incompatible types between STRING (lhs) and STRING (rhs) for operator '-'.\n");
+        VERIFY_ERRORS("test.css(1): error: incompatible types between STRING (lhs) and STRING (rhs) for operator '-'.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Expression additive errors", "[expression] [additive] [invalid]")
+CATCH_TEST_CASE("Expression additive errors", "[expression] [additive] [invalid]")
 {
-    SECTION("an invalid unary value generates an error caught in additive")
+    CATCH_START_SECTION("an invalid unary value generates an error caught in additive")
     {
         std::stringstream ss;
         ss << "div { width: ?; }";
@@ -474,12 +491,13 @@ TEST_CASE("Expression additive errors", "[expression] [additive] [invalid]")
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
+        VERIFY_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("an invalid unary on the right side of the operator")
+    CATCH_START_SECTION("an invalid unary on the right side of the operator")
     {
         std::stringstream ss;
         ss << "div { width: 3 + ?; }";
@@ -500,12 +518,13 @@ TEST_CASE("Expression additive errors", "[expression] [additive] [invalid]")
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
+        VERIFY_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("cannot add a unicode range with anything")
+    CATCH_START_SECTION("cannot add a unicode range with anything")
     {
         std::stringstream ss;
         ss << "div { width: 3 + U+4??; }";
@@ -526,16 +545,17 @@ TEST_CASE("Expression additive errors", "[expression] [additive] [invalid]")
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: incompatible types between INTEGER and UNICODE_RANGE for operator '+'.\n");
+        VERIFY_ERRORS("test.css(1): error: incompatible types between INTEGER and UNICODE_RANGE for operator '+'.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Expression decimal number or integer +/- decimal number or integer", "[expression] [additive]")
+CATCH_TEST_CASE("Expression decimal number or integer +/- decimal number or integer", "[expression] [additive]")
 {
     // add sizes without dimensions; both decimal with non zero decimals
     {
@@ -556,7 +576,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -564,7 +584,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -585,12 +605,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:13.7}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // add sizes without dimensions; one integer and one decimal with non zero decimals
@@ -612,7 +632,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -620,7 +640,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -641,12 +661,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:13.2}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // add sizes without dimensions; one integer and one decimal with non zero decimals
@@ -668,7 +688,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -676,7 +696,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -697,12 +717,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:13.5}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // add sizes without dimensions; both decimal with zero decimals
@@ -724,7 +744,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -732,7 +752,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -753,12 +773,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:13}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // add sizes without dimensions; one integer and one decimal with zero decimals
@@ -780,7 +800,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -788,7 +808,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -809,12 +829,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:13}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // add sizes without dimensions; one integer and one decimal with zero decimals
@@ -836,7 +856,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -844,7 +864,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -865,12 +885,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:13}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // subtract sizes without dimensions; with decimal numbers
@@ -892,7 +912,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -900,7 +920,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -921,12 +941,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:-6.5}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // subtract sizes without dimensions; with integer and decimal numbers
@@ -948,7 +968,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -956,7 +976,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -977,12 +997,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:-7.2}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // subtract sizes without dimensions; with integer and decimal numbers
@@ -1004,7 +1024,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -1012,7 +1032,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1033,12 +1053,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:-6.5}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // subtract sizes without dimensions; with decimal numbers
@@ -1060,7 +1080,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -1068,7 +1088,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1089,12 +1109,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:-7}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // subtract sizes without dimensions; with an integer and a decimal number
@@ -1116,7 +1136,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -1124,7 +1144,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1145,12 +1165,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:-7}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // subtract sizes without dimensions; with an integer and a decimal number
@@ -1172,7 +1192,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -1180,7 +1200,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1201,12 +1221,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{z-index:-7}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // add pixels; both decimal numbers
@@ -1228,7 +1248,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -1236,7 +1256,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1257,12 +1277,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(out.str() ==
+        CATCH_REQUIRE(out.str() ==
 "div{width:13.7px}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // add pixels; both decimal numbers
@@ -1284,7 +1304,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -1292,7 +1312,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1313,12 +1333,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(out.str() ==
+        CATCH_REQUIRE(out.str() ==
 "div{width:13.7px}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // add pixels; integer and decimal number
@@ -1340,7 +1360,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -1348,7 +1368,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1369,12 +1389,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(out.str() ==
+        CATCH_REQUIRE(out.str() ==
 "div{width:13.5px}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // add pixels; integer and decimal number
@@ -1396,7 +1416,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -1404,7 +1424,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1425,12 +1445,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(out.str() ==
+        CATCH_REQUIRE(out.str() ==
 "div{width:13.2px}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // subtract pixels; both decimals
@@ -1452,7 +1472,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -1460,7 +1480,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1481,12 +1501,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(out.str() ==
+        CATCH_REQUIRE(out.str() ==
 "div{width:6.7px}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // subtract pixels; one integer and one decimal
@@ -1508,7 +1528,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -1516,7 +1536,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1537,12 +1557,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(out.str() ==
+        CATCH_REQUIRE(out.str() ==
 "div{width:6.5px}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // subtract pixels; one integer and one decimal
@@ -1564,7 +1584,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -1572,7 +1592,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1593,12 +1613,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(out.str() ==
+        CATCH_REQUIRE(out.str() ==
 "div{width:7.2px}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // add pixels; both decimal numbers
@@ -1620,7 +1640,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -1628,7 +1648,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1649,12 +1669,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(out.str() ==
+        CATCH_REQUIRE(out.str() ==
 "div{width:13em}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // add pixels; integer and decimal number
@@ -1676,7 +1696,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -1684,7 +1704,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1705,12 +1725,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(out.str() ==
+        CATCH_REQUIRE(out.str() ==
 "div{width:13em}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // add pixels; integer and decimal number
@@ -1732,7 +1752,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -1740,7 +1760,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1761,12 +1781,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(out.str() ==
+        CATCH_REQUIRE(out.str() ==
 "div{width:13em}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // subtract pixels; both decimals
@@ -1788,7 +1808,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -1796,7 +1816,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1817,12 +1837,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(out.str() ==
+        CATCH_REQUIRE(out.str() ==
 "div{width:7em}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // subtract pixels; one integer and one decimal
@@ -1844,7 +1864,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -1852,7 +1872,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1873,12 +1893,12 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(out.str() ==
+        CATCH_REQUIRE(out.str() ==
 "div{width:7em}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // subtract pixels; one integer and one decimal
@@ -1900,7 +1920,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -1908,7 +1928,7 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1929,19 +1949,19 @@ TEST_CASE("Expression decimal number or integer +/- decimal number or integer", 
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(out.str() ==
+        CATCH_REQUIRE(out.str() ==
 "div{width:7em}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Expression percent +/- percent", "[expression] [additive]")
+CATCH_TEST_CASE("Expression percent +/- percent", "[expression] [additive]")
 {
     // add percents; both decimal with non zero decimals
     {
@@ -1962,7 +1982,7 @@ TEST_CASE("Expression percent +/- percent", "[expression] [additive]")
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -1970,7 +1990,7 @@ TEST_CASE("Expression percent +/- percent", "[expression] [additive]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1991,12 +2011,12 @@ TEST_CASE("Expression percent +/- percent", "[expression] [additive]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{height:13.7%}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // add percents; use what looks like an integer and a decimal number
@@ -2018,7 +2038,7 @@ TEST_CASE("Expression percent +/- percent", "[expression] [additive]")
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -2026,7 +2046,7 @@ TEST_CASE("Expression percent +/- percent", "[expression] [additive]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -2047,12 +2067,12 @@ TEST_CASE("Expression percent +/- percent", "[expression] [additive]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{height:13.2%}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // add percents; use what looks like an integer and a decimal number
@@ -2074,7 +2094,7 @@ TEST_CASE("Expression percent +/- percent", "[expression] [additive]")
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -2082,7 +2102,7 @@ TEST_CASE("Expression percent +/- percent", "[expression] [additive]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -2103,12 +2123,12 @@ TEST_CASE("Expression percent +/- percent", "[expression] [additive]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{height:13.5%}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // subtract percents; both decimal with non zero decimals
@@ -2130,7 +2150,7 @@ TEST_CASE("Expression percent +/- percent", "[expression] [additive]")
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -2138,7 +2158,7 @@ TEST_CASE("Expression percent +/- percent", "[expression] [additive]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -2159,12 +2179,12 @@ TEST_CASE("Expression percent +/- percent", "[expression] [additive]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{height:6.7%}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // subtract percents; use what looks like an integer and a decimal number
@@ -2186,7 +2206,7 @@ TEST_CASE("Expression percent +/- percent", "[expression] [additive]")
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -2194,7 +2214,7 @@ TEST_CASE("Expression percent +/- percent", "[expression] [additive]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -2215,12 +2235,12 @@ TEST_CASE("Expression percent +/- percent", "[expression] [additive]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{height:7.2%}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // subtract percents; use what looks like an integer and a decimal number
@@ -2242,7 +2262,7 @@ TEST_CASE("Expression percent +/- percent", "[expression] [additive]")
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -2250,7 +2270,7 @@ TEST_CASE("Expression percent +/- percent", "[expression] [additive]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -2271,21 +2291,21 @@ TEST_CASE("Expression percent +/- percent", "[expression] [additive]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{height:6.5%}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [additive] [colors]")
+CATCH_TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [additive] [colors]")
 {
-    SECTION("add two colors together")
+    CATCH_START_SECTION("add two colors together")
     {
         std::stringstream ss;
         ss << "div { color: (red + blue) / 2; }";
@@ -2304,7 +2324,7 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -2312,7 +2332,7 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -2333,15 +2353,16 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{color:purple}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("subtract a color from another")
+    CATCH_START_SECTION("subtract a color from another")
     {
         std::stringstream ss;
         ss << "div { color: white - purple; }";
@@ -2360,7 +2381,7 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -2368,7 +2389,7 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -2389,15 +2410,16 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{color:transparent}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("subtract a color from another and rescue the alpha channel")
+    CATCH_START_SECTION("subtract a color from another and rescue the alpha channel")
     {
         std::stringstream ss;
         ss << "div { color: rgba(white - purple, 1); }";
@@ -2416,7 +2438,7 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -2424,7 +2446,7 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -2445,15 +2467,16 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{color:#7fff7f}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("add an offset to a color")
+    CATCH_START_SECTION("add an offset to a color")
     {
         std::stringstream ss;
         ss << "div { color: black + 1; background-color: black + 0.25; }";
@@ -2472,7 +2495,7 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -2480,7 +2503,7 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -2505,15 +2528,16 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{color:#fff;background-color:#404040}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("add an offset to a color (swapped)")
+    CATCH_START_SECTION("add an offset to a color (swapped)")
     {
         std::stringstream ss;
         ss << "div { color: 1 + black; background-color: 0.25 + black; }";
@@ -2532,7 +2556,7 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -2540,7 +2564,7 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -2565,15 +2589,16 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{color:#fff;background-color:#404040}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("subtract an offset from a color")
+    CATCH_START_SECTION("subtract an offset from a color")
     {
         std::stringstream ss;
         ss << "div { color: white - 1; background-color: white - 0.25; }";
@@ -2592,7 +2617,7 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -2600,7 +2625,7 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -2625,15 +2650,16 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{color:transparent;background-color:rgba(191,191,191,.75)}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("subtract a color from an offset")
+    CATCH_START_SECTION("subtract a color from an offset")
     {
         std::stringstream ss;
         ss << "div { color: 1 - forestgreen; background-color: 0.25 - chocolate; }";
@@ -2652,7 +2678,7 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
@@ -2660,7 +2686,7 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -2685,21 +2711,22 @@ TEST_CASE("Expression color or offset +/- color or offsets", "[expression] [addi
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 "div{color:transparent;background-color:transparent}\n"
 + csspp_test::get_close_comment()
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Expression color +/- offset with a dimension", "[expression] [additive] [colors] [invalid]")
+CATCH_TEST_CASE("Expression color +/- offset with a dimension", "[expression] [additive] [colors] [invalid]")
 {
-    SECTION("color + 3px")
+    CATCH_START_SECTION("color + 3px")
     {
         std::stringstream ss;
         ss << "div { color: red + 3px; }";
@@ -2718,14 +2745,15 @@ TEST_CASE("Expression color +/- offset with a dimension", "[expression] [additiv
 
         c.compile(false);
 
-        REQUIRE_ERRORS("test.css(1): error: color offsets (numbers added with + or - operators) must be unit less values, 3px is not acceptable.\n");
+        VERIFY_ERRORS("test.css(1): error: color offsets (numbers added with + or - operators) must be unit less values, 3px is not acceptable.\n");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("color - 3px")
+    CATCH_START_SECTION("color - 3px")
     {
         std::stringstream ss;
         ss << "div { color: red - 3px; }";
@@ -2744,14 +2772,15 @@ TEST_CASE("Expression color +/- offset with a dimension", "[expression] [additiv
 
         c.compile(false);
 
-        REQUIRE_ERRORS("test.css(1): error: color offsets (numbers added with + or - operators) must be unit less values, 3px is not acceptable.\n");
+        VERIFY_ERRORS("test.css(1): error: color offsets (numbers added with + or - operators) must be unit less values, 3px is not acceptable.\n");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("3px + color")
+    CATCH_START_SECTION("3px + color")
     {
         std::stringstream ss;
         ss << "div { color: 3px + red; }";
@@ -2770,14 +2799,15 @@ TEST_CASE("Expression color +/- offset with a dimension", "[expression] [additiv
 
         c.compile(false);
 
-        REQUIRE_ERRORS("test.css(1): error: color offsets (numbers added with + or - operators) must be unit less values, 3px is not acceptable.\n");
+        VERIFY_ERRORS("test.css(1): error: color offsets (numbers added with + or - operators) must be unit less values, 3px is not acceptable.\n");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("3px - color")
+    CATCH_START_SECTION("3px - color")
     {
         std::stringstream ss;
         ss << "div { color: 3px - red; }";
@@ -2796,14 +2826,15 @@ TEST_CASE("Expression color +/- offset with a dimension", "[expression] [additiv
 
         c.compile(false);
 
-        REQUIRE_ERRORS("test.css(1): error: color offsets (numbers added with + or - operators) must be unit less values, 3px is not acceptable.\n");
+        VERIFY_ERRORS("test.css(1): error: color offsets (numbers added with + or - operators) must be unit less values, 3px is not acceptable.\n");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("color + 3.2px")
+    CATCH_START_SECTION("color + 3.2px")
     {
         std::stringstream ss;
         ss << "div { color: red + 3.2px; }";
@@ -2822,14 +2853,15 @@ TEST_CASE("Expression color +/- offset with a dimension", "[expression] [additiv
 
         c.compile(false);
 
-        REQUIRE_ERRORS("test.css(1): error: color offsets (numbers added with + or - operators) must be unit less values, 3.2px is not acceptable.\n");
+        VERIFY_ERRORS("test.css(1): error: color offsets (numbers added with + or - operators) must be unit less values, 3.2px is not acceptable.\n");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("color - 3.2px")
+    CATCH_START_SECTION("color - 3.2px")
     {
         std::stringstream ss;
         ss << "div { color: red - 3.2px; }";
@@ -2848,14 +2880,15 @@ TEST_CASE("Expression color +/- offset with a dimension", "[expression] [additiv
 
         c.compile(false);
 
-        REQUIRE_ERRORS("test.css(1): error: color offsets (numbers added with + or - operators) must be unit less values, 3.2px is not acceptable.\n");
+        VERIFY_ERRORS("test.css(1): error: color offsets (numbers added with + or - operators) must be unit less values, 3.2px is not acceptable.\n");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("3.2px + color")
+    CATCH_START_SECTION("3.2px + color")
     {
         std::stringstream ss;
         ss << "div { color: 3.2px + red; }";
@@ -2874,14 +2907,15 @@ TEST_CASE("Expression color +/- offset with a dimension", "[expression] [additiv
 
         c.compile(false);
 
-        REQUIRE_ERRORS("test.css(1): error: color offsets (numbers added with + or - operators) must be unit less values, 3.2px is not acceptable.\n");
+        VERIFY_ERRORS("test.css(1): error: color offsets (numbers added with + or - operators) must be unit less values, 3.2px is not acceptable.\n");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("3.2px - color")
+    CATCH_START_SECTION("3.2px - color")
     {
         std::stringstream ss;
         ss << "div { color: 3.2px - red; }";
@@ -2900,22 +2934,16 @@ TEST_CASE("Expression color +/- offset with a dimension", "[expression] [additiv
 
         c.compile(false);
 
-        REQUIRE_ERRORS("test.css(1): error: color offsets (numbers added with + or - operators) must be unit less values, 3.2px is not acceptable.\n");
+        VERIFY_ERRORS("test.css(1): error: color offsets (numbers added with + or - operators) must be unit less values, 3.2px is not acceptable.\n");
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
-
-// Local Variables:
-// mode: cpp
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// tab-width: 4
-// End:
 
 // vim: ts=4 sw=4 et

@@ -1,5 +1,3 @@
-#ifndef CSSPP_COMPILER_H
-#define CSSPP_COMPILER_H
 // Copyright (c) 2015-2022  Made to Order Software Corp.  All Rights Reserved
 //
 // This program is free software; you can redistribute it and/or modify
@@ -15,8 +13,11 @@
 // You should have received a copy of the GNU General Public License along
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#pragma once
 
-#include "csspp/expression.h"
+// self
+//
+#include    "csspp/expression.h"
 
 namespace csspp
 {
@@ -129,14 +130,4 @@ private:
 };
 
 } // namespace csspp
-#endif
-// #ifndef CSSPP_COMPILER_H
-
-// Local Variables:
-// mode: cpp
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// tab-width: 4
-// End:
-
 // vim: ts=4 sw=4 et

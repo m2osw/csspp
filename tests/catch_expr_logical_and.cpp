@@ -1,5 +1,7 @@
-// CSS Preprocessor -- Test Suite
-// Copyright (c) 2015-2021  Made to Order Software Corp.  All Rights Reserved
+// Copyright (c) 2015-2022  Made to Order Software Corp.  All Rights Reserved
+//
+// https://snapwebsites.org/project/csspp
+// contact@m2osw.com
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -11,9 +13,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 /** \file
  * \brief Test the expression.cpp file: "&&" operator.
@@ -32,16 +34,31 @@
  * classes.
  */
 
-#include "catch_tests.h"
+// self
+//
+#include    "catch_main.h"
 
-#include "csspp/assembler.h"
-#include "csspp/compiler.h"
-#include "csspp/exceptions.h"
-#include "csspp/parser.h"
 
-#include <sstream>
+// csspp lib
+//
+#include    <csspp/assembler.h>
+#include    <csspp/compiler.h>
+#include    <csspp/exceptions.h>
+#include    <csspp/parser.h>
 
-TEST_CASE("Expression value && value", "[expression] [logical-and]")
+
+// C++ lib
+//
+#include    <sstream>
+
+
+// last include
+//
+#include    <snapdev/poison.h>
+
+
+
+CATCH_TEST_CASE("Expression value && value", "[expression] [logical-and]")
 {
     struct value_t
     {
@@ -105,7 +122,7 @@ TEST_CASE("Expression value && value", "[expression] [logical-and]")
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -126,24 +143,24 @@ TEST_CASE("Expression value && value", "[expression] [logical-and]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 
 std::string("div{z-index:") + (values[i].f_true && values[j].f_true ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
 
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Expression invalid && invalid", "[expression] [logical-and] [invalid]")
+CATCH_TEST_CASE("Expression invalid && invalid", "[expression] [logical-and] [invalid]")
 {
-    SECTION("just ? is not a valid boolean")
+    CATCH_START_SECTION("just ? is not a valid boolean")
     {
         std::stringstream ss;
         ss << "div { border: ?; }";
@@ -164,12 +181,13 @@ TEST_CASE("Expression invalid && invalid", "[expression] [logical-and] [invalid]
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
+        VERIFY_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("boolean && ? is invalid")
+    CATCH_START_SECTION("boolean && ? is invalid")
     {
         std::stringstream ss;
         ss << "div { width: true && ?; }";
@@ -190,12 +208,13 @@ TEST_CASE("Expression invalid && invalid", "[expression] [logical-and] [invalid]
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
+        VERIFY_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("boolean && U+A?? is invalid")
+    CATCH_START_SECTION("boolean && U+A?? is invalid")
     {
         std::stringstream ss;
         ss << "div { width: false && U+A??; }";
@@ -216,20 +235,14 @@ TEST_CASE("Expression invalid && invalid", "[expression] [logical-and] [invalid]
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: a boolean expression was expected.\n");
+        VERIFY_ERRORS("test.css(1): error: a boolean expression was expected.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
-
-// Local Variables:
-// mode: cpp
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// tab-width: 4
-// End:
 
 // vim: ts=4 sw=4 et

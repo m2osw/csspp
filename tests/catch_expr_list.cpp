@@ -1,5 +1,7 @@
-// CSS Preprocessor -- Test Suite
-// Copyright (c) 2015-2021  Made to Order Software Corp.  All Rights Reserved
+// Copyright (c) 2015-2022  Made to Order Software Corp.  All Rights Reserved
+//
+// https://snapwebsites.org/project/csspp
+// contact@m2osw.com
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -11,9 +13,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 /** \file
  * \brief Test the expression.cpp file: "(..., ..., ...)" (list) operator.
@@ -32,18 +34,33 @@
  * classes.
  */
 
-#include "catch_tests.h"
+// self
+//
+#include    "catch_main.h"
 
-#include "csspp/assembler.h"
-#include "csspp/compiler.h"
-#include "csspp/exceptions.h"
-#include "csspp/parser.h"
 
-#include <sstream>
+// csspp lib
+//
+#include    <csspp/assembler.h>
+#include    <csspp/compiler.h>
+#include    <csspp/exceptions.h>
+#include    <csspp/parser.h>
 
-TEST_CASE("Expression arrays", "[expression] [list] [array]")
+
+// C++ lib
+//
+#include    <sstream>
+
+
+// last include
+//
+#include    <snapdev/poison.h>
+
+
+
+CATCH_TEST_CASE("Expression arrays", "[expression] [list] [array]")
 {
-    SECTION("test a compiled array")
+    CATCH_START_SECTION("test a compiled array")
     {
         std::stringstream ss;
         ss << "div { z-index: (15, 1, -39, 44, 10); }";
@@ -68,7 +85,7 @@ TEST_CASE("Expression arrays", "[expression] [list] [array]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -88,10 +105,11 @@ TEST_CASE("Expression arrays", "[expression] [list] [array]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("create an array and retrieve each element")
+    CATCH_START_SECTION("create an array and retrieve each element")
     {
         int const results[6] =
         {
@@ -129,7 +147,7 @@ TEST_CASE("Expression arrays", "[expression] [list] [array]")
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -157,7 +175,7 @@ TEST_CASE("Expression arrays", "[expression] [list] [array]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:" + std::to_string(results[idx]) + "}"
 "span{z-index:" + std::to_string(results[6 - idx]) + "}"
@@ -166,11 +184,12 @@ TEST_CASE("Expression arrays", "[expression] [list] [array]")
 
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("use list to do some computation and retrieve the last result")
+    CATCH_START_SECTION("use list to do some computation and retrieve the last result")
     {
         std::stringstream ss;
         ss << "div {\n"
@@ -197,7 +216,7 @@ TEST_CASE("Expression arrays", "[expression] [list] [array]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -222,7 +241,7 @@ TEST_CASE("Expression arrays", "[expression] [list] [array]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-        REQUIRE(assembler_out.str() ==
+        CATCH_REQUIRE(assembler_out.str() ==
 
 "div{"
   "border:20px solid #f1a932"
@@ -231,16 +250,17 @@ TEST_CASE("Expression arrays", "[expression] [list] [array]")
 
                 );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Expression maps", "[expression] [list] [map]")
+CATCH_TEST_CASE("Expression maps", "[expression] [list] [map]")
 {
-    SECTION("test a compiled map")
+    CATCH_START_SECTION("test a compiled map")
     {
         std::stringstream ss;
         ss << "div { z-index: (a: 15, b:1,c: -39,d:44,  e  :  10  ); }";
@@ -265,7 +285,7 @@ TEST_CASE("Expression maps", "[expression] [list] [map]")
         // test the root node here
         std::stringstream compiler_out;
         compiler_out << *n;
-        REQUIRE_TREES(compiler_out.str(),
+        VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -290,10 +310,11 @@ TEST_CASE("Expression maps", "[expression] [list] [map]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("create a map and retrieve each element with block-[] (number and name) and '.<name>'")
+    CATCH_START_SECTION("create a map and retrieve each element with block-[] (number and name) and '.<name>'")
     {
         int const results[6] =
         {
@@ -336,7 +357,7 @@ TEST_CASE("Expression maps", "[expression] [list] [map]")
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -364,7 +385,7 @@ TEST_CASE("Expression maps", "[expression] [list] [map]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:" + std::to_string(results[idx]) + "}"
 "span{z-index:" + std::to_string(results[6 - idx]) + "}"
@@ -373,7 +394,7 @@ TEST_CASE("Expression maps", "[expression] [list] [map]")
 
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         // retrieve using an identifier, a string, and the period syntax
@@ -423,7 +444,7 @@ TEST_CASE("Expression maps", "[expression] [list] [map]")
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -458,7 +479,7 @@ TEST_CASE("Expression maps", "[expression] [list] [map]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 
 "div{z-index:" + std::to_string(results[idx]) + "}"
 "p{z-index:" + std::to_string(results[idx]) + "}"
@@ -468,11 +489,12 @@ TEST_CASE("Expression maps", "[expression] [list] [map]")
 
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("test with empty entries in a map")
+    CATCH_START_SECTION("test with empty entries in a map")
     {
         char const * results[6] =
         {
@@ -518,7 +540,7 @@ TEST_CASE("Expression maps", "[expression] [list] [map]")
 
             if(idx == 3)
             {
-                REQUIRE_TREES(compiler_out.str(),
+                VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -542,7 +564,7 @@ TEST_CASE("Expression maps", "[expression] [list] [map]")
             }
             else
             {
-                REQUIRE_TREES(compiler_out.str(),
+                VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -570,7 +592,7 @@ TEST_CASE("Expression maps", "[expression] [list] [map]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-                REQUIRE(assembler_out.str() ==
+                CATCH_REQUIRE(assembler_out.str() ==
 
 std::string("div{z-index:") + results[idx] + "}"
 "span{z-index:" + results[6 - idx] + "}"
@@ -580,7 +602,7 @@ std::string("div{z-index:") + results[idx] + "}"
                         );
             }
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         // retrieve using an identifier, a string, and the period syntax
@@ -633,7 +655,7 @@ std::string("div{z-index:") + results[idx] + "}"
 
             if(idx == 3)
             {
-                REQUIRE_TREES(compiler_out.str(),
+                VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -664,7 +686,7 @@ std::string("div{z-index:") + results[idx] + "}"
             }
             else
             {
-                REQUIRE_TREES(compiler_out.str(),
+                VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -699,7 +721,7 @@ std::string("div{z-index:") + results[idx] + "}"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-                REQUIRE(assembler_out.str() ==
+                CATCH_REQUIRE(assembler_out.str() ==
 
 std::string("div{z-index:") + results[idx] + "}"
 "p{z-index:" + results[idx] + "}"
@@ -710,11 +732,12 @@ std::string("div{z-index:") + results[idx] + "}"
                         );
             }
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("test once more with no ending value")
+    CATCH_START_SECTION("test once more with no ending value")
     {
         char const * results[6] =
         {
@@ -758,7 +781,7 @@ std::string("div{z-index:") + results[idx] + "}"
             std::stringstream compiler_out;
             compiler_out << *n;
 
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -797,7 +820,7 @@ std::string("div{z-index:") + results[idx] + "}"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-                REQUIRE(assembler_out.str() ==
+                CATCH_REQUIRE(assembler_out.str() ==
 
 std::string("div{z-index:") + results[idx] + "}"
 "span{z-index:" + results[6 - idx] + "}"
@@ -807,7 +830,7 @@ std::string("div{z-index:") + results[idx] + "}"
                         );
             }
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         // retrieve using an identifier, a string, and the period syntax
@@ -860,7 +883,7 @@ std::string("div{z-index:") + results[idx] + "}"
 
             if(idx == 5)
             {
-                REQUIRE_TREES(compiler_out.str(),
+                VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -891,7 +914,7 @@ std::string("div{z-index:") + results[idx] + "}"
             }
             else
             {
-                REQUIRE_TREES(compiler_out.str(),
+                VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -926,7 +949,7 @@ std::string("div{z-index:") + results[idx] + "}"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-                REQUIRE(assembler_out.str() ==
+                CATCH_REQUIRE(assembler_out.str() ==
 
 std::string("div{z-index:") + results[idx] + "}"
 "p{z-index:" + results[idx] + "}"
@@ -937,17 +960,18 @@ std::string("div{z-index:") + results[idx] + "}"
                         );
             }
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Expression invalid lists", "[expression] [list] [array] [map] [invalid]")
+CATCH_TEST_CASE("Expression invalid lists", "[expression] [list] [array] [map] [invalid]")
 {
-    SECTION("array was an invalid number")
+    CATCH_START_SECTION("array was an invalid number")
     {
         std::stringstream ss;
         ss << "div { border: (1, ?, 3); }";
@@ -968,12 +992,13 @@ TEST_CASE("Expression invalid lists", "[expression] [list] [array] [map] [invali
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
+        VERIFY_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("array accessed with an invalid index")
+    CATCH_START_SECTION("array accessed with an invalid index")
     {
         std::stringstream ss;
         ss << "div { border: (1, 2, 3)[?]; }";
@@ -994,12 +1019,13 @@ TEST_CASE("Expression invalid lists", "[expression] [list] [array] [map] [invali
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
+        VERIFY_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("dereferencing something which cannot be dereferenced")
+    CATCH_START_SECTION("dereferencing something which cannot be dereferenced")
     {
         std::stringstream ss;
         ss << "div { border: U+A??[1]; }";
@@ -1020,12 +1046,13 @@ TEST_CASE("Expression invalid lists", "[expression] [list] [array] [map] [invali
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: unsupported type UNICODE_RANGE for the 'array[<index>]' operation.\n");
+        VERIFY_ERRORS("test.css(1): error: unsupported type UNICODE_RANGE for the 'array[<index>]' operation.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("array accessed with a decimal number index")
+    CATCH_START_SECTION("array accessed with a decimal number index")
     {
         std::stringstream ss;
         ss << "div { border: (1, 2, 3)[3.4]; }";
@@ -1046,12 +1073,13 @@ TEST_CASE("Expression invalid lists", "[expression] [list] [array] [map] [invali
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: an integer, an identifier, or a string was expected as the index (defined in '[ ... ]'). A DECIMAL_NUMBER was not expected.\n");
+        VERIFY_ERRORS("test.css(1): error: an integer, an identifier, or a string was expected as the index (defined in '[ ... ]'). A DECIMAL_NUMBER was not expected.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("array[0] is invalid")
+    CATCH_START_SECTION("array[0] is invalid")
     {
         std::stringstream ss;
         ss << "div { border: (1, 2, 3)[0]; }";
@@ -1072,12 +1100,13 @@ TEST_CASE("Expression invalid lists", "[expression] [list] [array] [map] [invali
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: index 0 is out of range. The allowed range is 1 to 3.\n");
+        VERIFY_ERRORS("test.css(1): error: index 0 is out of range. The allowed range is 1 to 3.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("array[-x or +y] are invalid when out of range")
+    CATCH_START_SECTION("array[-x or +y] are invalid when out of range")
     {
         for(int idx(4); idx <= 100; ++idx)
         {
@@ -1108,9 +1137,9 @@ TEST_CASE("Expression invalid lists", "[expression] [list] [array] [map] [invali
                 errmsg << "test.css(1): error: index "
                        << idx
                        << " is out of range. The allowed range is 1 to 3.\n";
-                REQUIRE_ERRORS(errmsg.str());
+                VERIFY_ERRORS(errmsg.str());
 
-                REQUIRE(c.get_root() == n);
+                CATCH_REQUIRE(c.get_root() == n);
             }
 
             // from the back
@@ -1140,14 +1169,15 @@ TEST_CASE("Expression invalid lists", "[expression] [list] [array] [map] [invali
                 errmsg << "test.css(1): error: index "
                        << -idx
                        << " is out of range. The allowed range is 1 to 3.\n";
-                REQUIRE_ERRORS(errmsg.str());
+                VERIFY_ERRORS(errmsg.str());
 
-                REQUIRE(c.get_root() == n);
+                CATCH_REQUIRE(c.get_root() == n);
             }
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("array.field is not invalid")
+    CATCH_START_SECTION("array.field is not invalid")
     {
         std::stringstream ss;
         ss << "div { border: (1, 2, 3).unexpected; }";
@@ -1168,12 +1198,13 @@ TEST_CASE("Expression invalid lists", "[expression] [list] [array] [map] [invali
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: unsupported left handside type ARRAY for the '<map>.<identifier>' operation.\n");
+        VERIFY_ERRORS("test.css(1): error: unsupported left handside type ARRAY for the '<map>.<identifier>' operation.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("map with an invalid number")
+    CATCH_START_SECTION("map with an invalid number")
     {
         std::stringstream ss;
         ss << "div { border: (aaa: 1, bbb: ?, ccc: 3); }";
@@ -1194,12 +1225,13 @@ TEST_CASE("Expression invalid lists", "[expression] [list] [array] [map] [invali
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
+        VERIFY_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("map accessed with an invalid index")
+    CATCH_START_SECTION("map accessed with an invalid index")
     {
         std::stringstream ss;
         ss << "div { border: (poors: 1, man: 2, test: 3)[?]; }";
@@ -1220,12 +1252,13 @@ TEST_CASE("Expression invalid lists", "[expression] [list] [array] [map] [invali
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
+        VERIFY_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("map accessed with a decimal number index")
+    CATCH_START_SECTION("map accessed with a decimal number index")
     {
         std::stringstream ss;
         ss << "div { border: (map: 1, and: 2, decimal_number: 3)[3.4]; }";
@@ -1246,12 +1279,13 @@ TEST_CASE("Expression invalid lists", "[expression] [list] [array] [map] [invali
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: an integer, an identifier, or a string was expected as the index (defined in '[ ... ]'). A DECIMAL_NUMBER was not expected.\n");
+        VERIFY_ERRORS("test.css(1): error: an integer, an identifier, or a string was expected as the index (defined in '[ ... ]'). A DECIMAL_NUMBER was not expected.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("map[0] is invalid")
+    CATCH_START_SECTION("map[0] is invalid")
     {
         std::stringstream ss;
         ss << "div { border: (zero: 1, as: 2, index: 3)[0]; }";
@@ -1272,12 +1306,13 @@ TEST_CASE("Expression invalid lists", "[expression] [list] [array] [map] [invali
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: index 0 is out of range. The allowed range is 1 to 3.\n");
+        VERIFY_ERRORS("test.css(1): error: index 0 is out of range. The allowed range is 1 to 3.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("map[-x or +y] are invalid when out of range")
+    CATCH_START_SECTION("map[-x or +y] are invalid when out of range")
     {
         for(int idx(4); idx <= 100; ++idx)
         {
@@ -1308,9 +1343,9 @@ TEST_CASE("Expression invalid lists", "[expression] [list] [array] [map] [invali
                 errmsg << "test.css(1): error: index "
                        << idx
                        << " is out of range. The allowed range is 1 to 3.\n";
-                REQUIRE_ERRORS(errmsg.str());
+                VERIFY_ERRORS(errmsg.str());
 
-                REQUIRE(c.get_root() == n);
+                CATCH_REQUIRE(c.get_root() == n);
             }
 
             // from the back
@@ -1340,14 +1375,15 @@ TEST_CASE("Expression invalid lists", "[expression] [list] [array] [map] [invali
                 errmsg << "test.css(1): error: index "
                        << -idx
                        << " is out of range. The allowed range is 1 to 3.\n";
-                REQUIRE_ERRORS(errmsg.str());
+                VERIFY_ERRORS(errmsg.str());
 
-                REQUIRE(c.get_root() == n);
+                CATCH_REQUIRE(c.get_root() == n);
             }
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("map[unknown] is similar to an 'out of range' error")
+    CATCH_START_SECTION("map[unknown] is similar to an 'out of range' error")
     {
         std::stringstream ss;
         ss << "div { border: (large: 1, index: 2, out-of-range: 3)['unknown']; }";
@@ -1368,12 +1404,13 @@ TEST_CASE("Expression invalid lists", "[expression] [list] [array] [map] [invali
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: 'map[\"unknown\"]' is not set.\n");
+        VERIFY_ERRORS("test.css(1): error: 'map[\"unknown\"]' is not set.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("map . 123 is not possible")
+    CATCH_START_SECTION("map . 123 is not possible")
     {
         std::stringstream ss;
         ss << "div { border: (large: 1, index: 2, out-of-range: 3) . 123; }";
@@ -1394,20 +1431,14 @@ TEST_CASE("Expression invalid lists", "[expression] [list] [array] [map] [invali
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: only an identifier is expected after a '.'.\n");
+        VERIFY_ERRORS("test.css(1): error: only an identifier is expected after a '.'.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
-
-// Local Variables:
-// mode: cpp
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// tab-width: 4
-// End:
 
 // vim: ts=4 sw=4 et

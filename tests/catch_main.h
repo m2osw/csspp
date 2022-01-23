@@ -1,7 +1,7 @@
-#ifndef CSSPP_TESTS_H
-#define CSSPP_TESTS_H
-// CSS Preprocessor -- Test Suite
-// Copyright (c) 2015-2021  Made to Order Software Corp.  All Rights Reserved
+// Copyright (c) 2015-2022  Made to Order Software Corp.  All Rights Reserved
+//
+// https://snapwebsites.org/project/csspp
+// contact@m2osw.com
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,20 +13,28 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#pragma once
 
 /** \file
- * \brief Common header for all our catch tests.
+ * \brief Common header for all our catch2 tests.
  *
  * csspp comes with a unit test suite. This header defines things
- * that all the tests access, such as the catch.hpp header file.
+ * that all the tests access, such as the snapcatch2.hpp header file.
  */
 
-#include <csspp/unicode_range.h>
+// catch2 lib
+//
+#include    <catch2/snapcatch2.hpp>
 
-#include <catch.hpp>
+
+// csspp lib
+//
+#include    <csspp/unicode_range.h>
+
+
 
 namespace csspp_test
 {
@@ -47,7 +55,7 @@ private:
     bool                    m_verbose = false;
 };
 
-#define REQUIRE_ERRORS( msg ) ::csspp_test::trace_error::instance().expected_error((msg), __FILE__, __LINE__)
+#define VERIFY_ERRORS(msg)  ::csspp_test::trace_error::instance().expected_error((msg), __FILE__, __LINE__)
 
 class our_unicode_range_t
 {
@@ -69,7 +77,7 @@ private:
 
 // this compares two resulting trees, line by line
 void compare(std::string const & generated, std::string const & expected, char const * filename, int line);
-#define REQUIRE_TREES( a, b ) ::csspp_test::compare((a), (b), __FILE__, __LINE__)
+#define VERIFY_TREES(a, b)  ::csspp_test::compare((a), (b), __FILE__, __LINE__)
 
 typedef uint64_t    default_variables_flags_t;
 
@@ -82,14 +90,4 @@ std::string get_close_comment(bool token = false);
 time_t get_now();
 
 } // csspp_test namespace
-#endif
-// #ifndef CSSPP_TESTS_H
-
-// Local Variables:
-// mode: cpp
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// tab-width: 4
-// End:
-
 // vim: ts=4 sw=4 et

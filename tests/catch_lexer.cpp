@@ -1,5 +1,7 @@
-// CSS Preprocessor -- Test Suite
-// Copyright (c) 2015-2021  Made to Order Software Corp.  All Rights Reserved
+// Copyright (c) 2015-2022  Made to Order Software Corp.  All Rights Reserved
+//
+// https://snapwebsites.org/project/csspp
+// contact@m2osw.com
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -11,9 +13,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 /** \file
  * \brief Test the lexer.cpp file.
@@ -26,16 +28,36 @@
  * UTF-8 as input.
  */
 
-#include "catch_tests.h"
+// self
+//
+#include    "catch_main.h"
 
-#include "csspp/exceptions.h"
-#include "csspp/lexer.h"
-#include "csspp/unicode_range.h"
 
-#include <iostream>
-#include <sstream>
+// csspp lib
+//
+#include    <csspp/exceptions.h>
+#include    <csspp/lexer.h>
+#include    <csspp/unicode_range.h>
 
-#include <string.h>
+
+// C++ lib
+//
+#include    <iomanip>
+#include    <iostream>
+#include    <sstream>
+
+
+// C lib
+//
+#include    <math.h>
+#include    <string.h>
+
+
+// last include
+//
+#include    <snapdev/poison.h>
+
+
 
 namespace
 {
@@ -45,7 +67,7 @@ namespace
 
 
 
-TEST_CASE("UTF-8 conversions", "[lexer] [unicode]")
+CATCH_TEST_CASE("UTF-8 conversions", "[lexer] [unicode]")
 {
     std::stringstream ss;
     csspp::position pos("test.css");
@@ -63,7 +85,7 @@ TEST_CASE("UTF-8 conversions", "[lexer] [unicode]")
         std::string const str(l.wctomb(i));
         csspp::wide_char_t const wc(l.mbtowc(str.c_str()));
 
-        REQUIRE(wc == i);
+        CATCH_REQUIRE(wc == i);
     }
 
     // make sure the test for the buffer size works as expected
@@ -71,7 +93,7 @@ TEST_CASE("UTF-8 conversions", "[lexer] [unicode]")
     {
         char buf[6];
         csspp::wide_char_t const wc(rand() % 0x1FFFFF);
-        REQUIRE_THROWS_AS(l.wctomb(wc, buf, i), csspp::csspp_exception_overflow &);
+        CATCH_REQUIRE_THROWS_AS(l.wctomb(wc, buf, i), csspp::csspp_exception_overflow);
     }
 
     // make sure surrogates are not allowed
@@ -80,8 +102,8 @@ TEST_CASE("UTF-8 conversions", "[lexer] [unicode]")
         char buf[6];
         buf[0] = '?';
         l.wctomb(i, buf, sizeof(buf) / sizeof(buf[0]));
-        REQUIRE(buf[0] == '\0'); // make sure we get an empty string on errors
-        REQUIRE_ERRORS("test.css(1): error: surrogate characters cannot be encoded in UTF-8.\n");
+        CATCH_REQUIRE(buf[0] == '\0'); // make sure we get an empty string on errors
+        VERIFY_ERRORS("test.css(1): error: surrogate characters cannot be encoded in UTF-8.\n");
     }
 
     // page 0 -- error is slightly different
@@ -90,14 +112,14 @@ TEST_CASE("UTF-8 conversions", "[lexer] [unicode]")
         // test FFFE
         buf[0] = '?';
         l.wctomb(0xFFFE, buf, sizeof(buf) / sizeof(buf[0]));
-        REQUIRE(buf[0] == '\0'); // make sure we get an empty string on errors
-        REQUIRE_ERRORS("test.css(1): error: characters 0xFFFE and 0xFFFF are not valid.\n");
+        CATCH_REQUIRE(buf[0] == '\0'); // make sure we get an empty string on errors
+        VERIFY_ERRORS("test.css(1): error: characters 0xFFFE and 0xFFFF are not valid.\n");
 
         // test FFFF
         buf[0] = '?';
         l.wctomb(0xFFFF, buf, sizeof(buf) / sizeof(buf[0]));
-        REQUIRE(buf[0] == '\0'); // make sure we get an empty string on errors
-        REQUIRE_ERRORS("test.css(1): error: characters 0xFFFE and 0xFFFF are not valid.\n");
+        CATCH_REQUIRE(buf[0] == '\0'); // make sure we get an empty string on errors
+        VERIFY_ERRORS("test.css(1): error: characters 0xFFFE and 0xFFFF are not valid.\n");
     }
 
     // page 1 to 16
@@ -108,15 +130,15 @@ TEST_CASE("UTF-8 conversions", "[lexer] [unicode]")
         csspp::wide_char_t wc((page << 16) | 0xFFFE);
         buf[0] = '?';
         l.wctomb(wc, buf, sizeof(buf) / sizeof(buf[0]));
-        REQUIRE(buf[0] == '\0'); // make sure we get an empty string on errors
-        REQUIRE_ERRORS("test.css(1): error: any characters that end with 0xFFFE or 0xFFFF are not valid.\n");
+        CATCH_REQUIRE(buf[0] == '\0'); // make sure we get an empty string on errors
+        VERIFY_ERRORS("test.css(1): error: any characters that end with 0xFFFE or 0xFFFF are not valid.\n");
 
         // test <page>FFFF
         wc = (page << 16) | 0xFFFF;
         buf[0] = '?';
         l.wctomb(wc, buf, sizeof(buf) / sizeof(buf[0]));
-        REQUIRE(buf[0] == '\0'); // make sure we get an empty string on errors
-        REQUIRE_ERRORS("test.css(1): error: any characters that end with 0xFFFE or 0xFFFF are not valid.\n");
+        CATCH_REQUIRE(buf[0] == '\0'); // make sure we get an empty string on errors
+        VERIFY_ERRORS("test.css(1): error: any characters that end with 0xFFFE or 0xFFFF are not valid.\n");
     }
 
     // test 1,000 characters with a number that's too large
@@ -132,8 +154,8 @@ TEST_CASE("UTF-8 conversions", "[lexer] [unicode]")
         char buf[6];
         buf[0] = '?';
         l.wctomb(wc, buf, sizeof(buf) / sizeof(buf[0]));
-        REQUIRE(buf[0] == '\0'); // make sure we get an empty string on errors
-        REQUIRE_ERRORS("test.css(1): error: character too large, it cannot be encoded in UTF-8.\n");
+        CATCH_REQUIRE(buf[0] == '\0'); // make sure we get an empty string on errors
+        VERIFY_ERRORS("test.css(1): error: character too large, it cannot be encoded in UTF-8.\n");
     }
 
     // check that bytes 0xF8 and over generate an error
@@ -146,10 +168,10 @@ TEST_CASE("UTF-8 conversions", "[lexer] [unicode]")
         buf[3] = static_cast<char>(0x80);
         buf[4] = static_cast<char>(0x80);
         buf[5] = 0;
-        REQUIRE(l.mbtowc(buf) == 0xFFFD);
+        CATCH_REQUIRE(l.mbtowc(buf) == 0xFFFD);
         std::stringstream errmsg;
         errmsg << "test.css(1): error: byte U+" << std::hex << i << " not valid in a UTF-8 stream.\n";
-        REQUIRE_ERRORS(errmsg.str());
+        VERIFY_ERRORS(errmsg.str());
     }
 
     // continuation bytes at the start
@@ -162,10 +184,10 @@ TEST_CASE("UTF-8 conversions", "[lexer] [unicode]")
         buf[3] = static_cast<char>(0x80);
         buf[4] = static_cast<char>(0x80);
         buf[5] = 0;
-        REQUIRE(l.mbtowc(buf) == 0xFFFD);
+        CATCH_REQUIRE(l.mbtowc(buf) == 0xFFFD);
         std::stringstream errmsg;
         errmsg << "test.css(1): error: byte U+" << std::hex << i << " not valid to introduce a UTF-8 encoded character.\n";
-        REQUIRE_ERRORS(errmsg.str());
+        VERIFY_ERRORS(errmsg.str());
     }
 
     // not enough bytes ('\0' too soon)
@@ -174,10 +196,10 @@ TEST_CASE("UTF-8 conversions", "[lexer] [unicode]")
         char buf[6];
         buf[0] = i;
         buf[1] = 0;
-        REQUIRE(l.mbtowc(buf) == 0xFFFD);
+        CATCH_REQUIRE(l.mbtowc(buf) == 0xFFFD);
         std::stringstream errmsg;
         errmsg << "test.css(1): error: sequence of bytes too short to represent a valid UTF-8 encoded character.\n";
-        REQUIRE_ERRORS(errmsg.str());
+        VERIFY_ERRORS(errmsg.str());
     }
 
     // too many bytes ('\0' missing), and
@@ -195,10 +217,10 @@ TEST_CASE("UTF-8 conversions", "[lexer] [unicode]")
         // the sequence is one too many bytes
         {
             std::string const too_long(str + static_cast<char>(rand() % 64 + 0x80)); // add one byte
-            REQUIRE(l.mbtowc(too_long.c_str()) == 0xFFFD);
+            CATCH_REQUIRE(l.mbtowc(too_long.c_str()) == 0xFFFD);
             std::stringstream errmsg;
             errmsg << "test.css(1): error: sequence of bytes too long, it cannot represent a valid UTF-8 encoded character.\n";
-            REQUIRE_ERRORS(errmsg.str());
+            VERIFY_ERRORS(errmsg.str());
         }
 
         // one of the bytes in the sequence is not between 0x80 and 0xBF
@@ -218,18 +240,18 @@ TEST_CASE("UTF-8 conversions", "[lexer] [unicode]")
                 c += 64;
             }
             wrong_sequence[p + 1] = static_cast<char>(c);
-            REQUIRE(l.mbtowc(wrong_sequence.c_str()) == 0xFFFD);
+            CATCH_REQUIRE(l.mbtowc(wrong_sequence.c_str()) == 0xFFFD);
             std::stringstream errmsg;
             errmsg << "test.css(1): error: invalid sequence of bytes, it cannot represent a valid UTF-8 encoded character.\n";
-            REQUIRE_ERRORS(errmsg.str());
+            VERIFY_ERRORS(errmsg.str());
         }
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Invalid characters", "[lexer] [invalid]")
+CATCH_TEST_CASE("Invalid characters", "[lexer] [invalid]")
 {
     // 0xFFFD
     {
@@ -239,13 +261,13 @@ TEST_CASE("Invalid characters", "[lexer] [invalid]")
         ss << l.wctomb(0xFFFD);
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         // EOF
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("test.css(1): error: invalid input character: U+fffd.\n");
+        VERIFY_ERRORS("test.css(1): error: invalid input character: U+fffd.\n");
     }
 
     // '\0'
@@ -256,13 +278,13 @@ TEST_CASE("Invalid characters", "[lexer] [invalid]")
         csspp::lexer l(ss, pos);
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         // EOF
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("test.css(1): error: invalid input character: U+fffd.\n");
+        VERIFY_ERRORS("test.css(1): error: invalid input character: U+fffd.\n");
     }
 
     // '^', '<', etc.
@@ -321,15 +343,15 @@ TEST_CASE("Invalid characters", "[lexer] [invalid]")
             csspp::lexer l(ss, pos);
 
             // so far, no error
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             // EOF
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
             // make sure we got the expected error
             std::stringstream errmsg;
             errmsg << "test.css(1): error: invalid input character: U+" << std::hex << static_cast<int>(i) << "." << std::endl;
-            REQUIRE_ERRORS(errmsg.str());
+            VERIFY_ERRORS(errmsg.str());
         }
     }
 
@@ -349,12 +371,12 @@ TEST_CASE("Invalid characters", "[lexer] [invalid]")
         csspp::lexer l(ss, pos);
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected errors
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: too many follow bytes, it cannot represent a valid UTF-8 character.\n"
                 "test.css(1): error: invalid input character: U+fffd.\n"
             );
@@ -378,22 +400,22 @@ TEST_CASE("Invalid characters", "[lexer] [invalid]")
         csspp::lexer l(ss, pos);
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         // comment
         {
             csspp::node::pointer_t comment(l.next_token());
-            REQUIRE(comment->is(csspp::node_type_t::COMMENT));
-            REQUIRE(comment->get_string() == "plus a comment to @preserve");
-            REQUIRE(comment->get_integer() == 0); // C++ comment
+            CATCH_REQUIRE(comment->is(csspp::node_type_t::COMMENT));
+            CATCH_REQUIRE(comment->get_string() == "plus a comment to @preserve");
+            CATCH_REQUIRE(comment->get_integer() == 0); // C++ comment
             csspp::position const & npos(comment->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
             // make sure we got the expected errors
-            REQUIRE_ERRORS(
+            VERIFY_ERRORS(
                     "test.css(1): error: too many follow bytes, it cannot represent a valid UTF-8 character.\n"
                     "test.css(1): error: invalid input character: U+fffd.\n"
                     "test.css(1): warning: C++ comments should not be preserved as they are not supported by most CSS parsers.\n"
@@ -403,28 +425,28 @@ TEST_CASE("Invalid characters", "[lexer] [invalid]")
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
         // string
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::STRING));
-            REQUIRE(string->get_string() == " and  a  string ");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::STRING));
+            CATCH_REQUIRE(string->get_string() == " and  a  string ");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
         // EOF
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // invalid UTF-8 sequence (i.e. incorrect introducer)
@@ -446,16 +468,16 @@ TEST_CASE("Invalid characters", "[lexer] [invalid]")
             csspp::lexer l(ss, pos);
 
             // so far, no error
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
             // make sure we got the expected errors
             std::stringstream errmsg;
             errmsg << "test.css(1): error: unexpected byte in input buffer: U+"
                    << std::hex << (i == 0xC0 ? 0xFF : i)
                    << ".\ntest.css(1): error: invalid input character: U+fffd.\n";
-            REQUIRE_ERRORS(errmsg.str());
+            VERIFY_ERRORS(errmsg.str());
         }
 
         // ends with comment and string
@@ -476,46 +498,46 @@ TEST_CASE("Invalid characters", "[lexer] [invalid]")
             csspp::lexer l(ss, pos);
 
             // so far, no error
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             // comment
             {
                 csspp::node::pointer_t comment(l.next_token());
-                REQUIRE(comment->is(csspp::node_type_t::COMMENT));
-                REQUIRE(comment->get_string() == "plus one comment to @preserve");
-                REQUIRE(comment->get_integer() == 0); // C++ comment
+                CATCH_REQUIRE(comment->is(csspp::node_type_t::COMMENT));
+                CATCH_REQUIRE(comment->get_string() == "plus one comment to @preserve");
+                CATCH_REQUIRE(comment->get_integer() == 0); // C++ comment
                 csspp::position const & npos(comment->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // whitespace
             {
                 csspp::node::pointer_t whitespace(l.next_token());
-                REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+                CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
                 csspp::position const & npos(whitespace->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 2);
-                REQUIRE(npos.get_total_line() == 2);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 2);
+                CATCH_REQUIRE(npos.get_total_line() == 2);
             }
 
             // string
             {
                 csspp::node::pointer_t string(l.next_token());
-                REQUIRE(string->is(csspp::node_type_t::STRING));
-                REQUIRE(string->get_string() == " and  that  string ");
+                CATCH_REQUIRE(string->is(csspp::node_type_t::STRING));
+                CATCH_REQUIRE(string->get_string() == " and  that  string ");
                 csspp::position const & npos(string->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 2);
-                REQUIRE(npos.get_total_line() == 2);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 2);
+                CATCH_REQUIRE(npos.get_total_line() == 2);
             }
 
             // EOF
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
             // make sure we got the expected errors
             std::stringstream errmsg;
@@ -523,15 +545,15 @@ TEST_CASE("Invalid characters", "[lexer] [invalid]")
                    << std::hex << (i == 0xC0 ? 0xFF : i)
                    << ".\ntest.css(1): error: invalid input character: U+fffd.\n"
                    << "test.css(1): warning: C++ comments should not be preserved as they are not supported by most CSS parsers.\n";
-            REQUIRE_ERRORS(errmsg.str());
+            VERIFY_ERRORS(errmsg.str());
         }
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
+CATCH_TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
 {
     // ' ' -> WHITESPACE
     {
@@ -547,13 +569,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
             ss << whitespaces[i];
 
             // so far, no error
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
-            REQUIRE(l.next_token()->is(csspp::node_type_t::WHITESPACE));
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
             // make sure we got the expected error
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
         }
 
         // try 1,000 combo of 3 to 12 whitespaces
@@ -570,13 +592,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
             }
 
             // so far, no error
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
-            REQUIRE(l.next_token()->is(csspp::node_type_t::WHITESPACE));
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
             // make sure we got the expected error
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
         }
     }
 
@@ -588,13 +610,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "=";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EQUAL));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EQUAL));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '==' -> EQUAL + warning
@@ -605,14 +627,14 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "==";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EQUAL));
-        REQUIRE_ERRORS("test.css(1): warning: we accepted '==' instead of '=' in an expression, you probably want to change the operator to just '=', though.\n");
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EQUAL));
+        VERIFY_ERRORS("test.css(1): warning: we accepted '==' instead of '=' in an expression, you probably want to change the operator to just '=', though.\n");
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // ',' -> COMMA
@@ -623,13 +645,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << ",";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::COMMA));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::COMMA));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // ':' -> COLON
@@ -640,13 +662,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << ":";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::COLON));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::COLON));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // ';' -> SEMICOLON
@@ -657,13 +679,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << ";";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::SEMICOLON));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::SEMICOLON));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '.' -> PERIOD
@@ -674,13 +696,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << ".";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::PERIOD));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::PERIOD));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '$' -> DOLLAR
@@ -691,13 +713,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "$";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::DOLLAR));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::DOLLAR));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '?' -> CONDITIONAL
@@ -708,13 +730,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "?";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::CONDITIONAL));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::CONDITIONAL));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '%' -> MODULO
@@ -725,13 +747,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "%";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::MODULO));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::MODULO));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '/' -> DIVIDE
@@ -742,13 +764,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "/";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::DIVIDE));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::DIVIDE));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '*' -> MULTIPLY
@@ -759,13 +781,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "*";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::MULTIPLY));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::MULTIPLY));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '**' -> POWER
@@ -776,13 +798,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << '*' << '*';
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::POWER));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::POWER));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '&' -> REFERENCE
@@ -793,13 +815,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "&";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::REFERENCE));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::REFERENCE));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '&&' -> AND
@@ -810,13 +832,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << '&' << '&';
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::AND));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::AND));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '~' -> PRECEDED
@@ -827,13 +849,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "~";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::PRECEDED));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::PRECEDED));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '+' -> ADD
@@ -844,13 +866,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "+";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::ADD));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::ADD));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '-' -> SUBTRACT
@@ -861,13 +883,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "-";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::SUBTRACT));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::SUBTRACT));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '|' -> SCOPE
@@ -878,13 +900,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "|";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::SCOPE));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::SCOPE));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '>' -> GREATER_THAN
@@ -895,13 +917,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << ">";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::GREATER_THAN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::GREATER_THAN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '>=' -> GREATER_EQUAL
@@ -912,13 +934,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << ">=";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::GREATER_EQUAL));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::GREATER_EQUAL));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // "<"
@@ -929,13 +951,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         csspp::lexer l(ss, pos);
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::LESS_THAN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::LESS_THAN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // "<="
@@ -946,13 +968,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         csspp::lexer l(ss, pos);
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::LESS_EQUAL));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::LESS_EQUAL));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // "<!" -- (special case because of "<!--")
@@ -963,14 +985,14 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         csspp::lexer l(ss, pos);
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::LESS_THAN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EXCLAMATION));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::LESS_THAN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EXCLAMATION));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // "<!-" -- (special case because of "<!--")
@@ -981,18 +1003,18 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         csspp::lexer l(ss, pos);
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         // The '<' is returned as LESS_THAN
         // The '!' is returned as EXCLAMATION
         // The '-' is returned as SUBTRACT
-        REQUIRE(l.next_token()->is(csspp::node_type_t::LESS_THAN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EXCLAMATION));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::SUBTRACT));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::LESS_THAN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EXCLAMATION));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::SUBTRACT));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // "!"
@@ -1003,14 +1025,14 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         csspp::lexer l(ss, pos);
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         // The '!' is returned as EXCLAMATION
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EXCLAMATION));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EXCLAMATION));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // "!="
@@ -1021,14 +1043,14 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         csspp::lexer l(ss, pos);
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         // The '!=' is returned as NOT_EQUAL
-        REQUIRE(l.next_token()->is(csspp::node_type_t::NOT_EQUAL));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::NOT_EQUAL));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '(' -> OPEN_PARENTHESIS
@@ -1039,13 +1061,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "(";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::OPEN_PARENTHESIS));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::OPEN_PARENTHESIS));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // ')' -> OPEN_PARENTHESIS
@@ -1056,13 +1078,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << ")";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::CLOSE_PARENTHESIS));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::CLOSE_PARENTHESIS));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '{' -> OPEN_CURLYBRACKET
@@ -1073,13 +1095,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "{";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::OPEN_CURLYBRACKET));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::OPEN_CURLYBRACKET));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '}' -> OPEN_CURLYBRACKET
@@ -1090,13 +1112,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "}";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::CLOSE_CURLYBRACKET));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::CLOSE_CURLYBRACKET));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '[' -> OPEN_SQUAREBRACKET
@@ -1107,13 +1129,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "[";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::OPEN_SQUAREBRACKET));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::OPEN_SQUAREBRACKET));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // ']' -> OPEN_SQUAREBRACKET
@@ -1124,13 +1146,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "]";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::CLOSE_SQUAREBRACKET));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::CLOSE_SQUAREBRACKET));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '<!--' -> CDO
@@ -1141,13 +1163,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "<!--";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::CDO));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::CDO));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '<!--' -> CDC
@@ -1158,13 +1180,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "-->";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::CDC));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::CDC));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '^=' -> PREFIX_MATCH
@@ -1175,13 +1197,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "^=";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::PREFIX_MATCH));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::PREFIX_MATCH));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '|=' -> DASH_MATCH
@@ -1192,13 +1214,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "|=";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::DASH_MATCH));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::DASH_MATCH));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '$=' -> SUFFIX_MATCH
@@ -1209,13 +1231,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "$=";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::SUFFIX_MATCH));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::SUFFIX_MATCH));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '~=' -> INCLUDE_MATCH
@@ -1226,13 +1248,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "~=";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::INCLUDE_MATCH));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::INCLUDE_MATCH));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '*=' -> SUBSTRING_MATCH
@@ -1243,13 +1265,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "*=";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::SUBSTRING_MATCH));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::SUBSTRING_MATCH));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // ':=' -> ASSIGNMENT
@@ -1260,13 +1282,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << ":=";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::ASSIGNMENT));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::ASSIGNMENT));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // '||' -> COLUMN
@@ -1277,13 +1299,13 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "||";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::COLUMN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::COLUMN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // A "special" sequence div+.alpha
@@ -1294,24 +1316,24 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "div+.alpha";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::node::pointer_t div(l.next_token());
-        REQUIRE(div->is(csspp::node_type_t::IDENTIFIER));
-        REQUIRE(div->get_string() == "div");
+        CATCH_REQUIRE(div->is(csspp::node_type_t::IDENTIFIER));
+        CATCH_REQUIRE(div->get_string() == "div");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::ADD));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::ADD));
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::PERIOD));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::PERIOD));
 
         csspp::node::pointer_t alpha(l.next_token());
-        REQUIRE(alpha->is(csspp::node_type_t::IDENTIFIER));
-        REQUIRE(alpha->get_string() == "alpha");
+        CATCH_REQUIRE(alpha->is(csspp::node_type_t::IDENTIFIER));
+        CATCH_REQUIRE(alpha->get_string() == "alpha");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // A "special" sequence div -.alpha
@@ -1322,33 +1344,33 @@ TEST_CASE("Simple tokens", "[lexer] [basics] [delimiters]")
         ss << "div -.alpha";
 
         // so far, no error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::node::pointer_t div(l.next_token());
-        REQUIRE(div->is(csspp::node_type_t::IDENTIFIER));
-        REQUIRE(div->get_string() == "div");
+        CATCH_REQUIRE(div->is(csspp::node_type_t::IDENTIFIER));
+        CATCH_REQUIRE(div->get_string() == "div");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::WHITESPACE));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::WHITESPACE));
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::SUBTRACT));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::SUBTRACT));
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::PERIOD));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::PERIOD));
 
         csspp::node::pointer_t alpha(l.next_token());
-        REQUIRE(alpha->is(csspp::node_type_t::IDENTIFIER));
-        REQUIRE(alpha->get_string() == "alpha");
+        CATCH_REQUIRE(alpha->is(csspp::node_type_t::IDENTIFIER));
+        CATCH_REQUIRE(alpha->get_string() == "alpha");
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // make sure we got the expected error
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Newline", "[lexer] [newline] [characters]")
+CATCH_TEST_CASE("Newline", "[lexer] [newline] [characters]")
 {
     // we have a special case with '\r' followed by a character
     // other than '\n'
@@ -1420,135 +1442,135 @@ TEST_CASE("Newline", "[lexer] [newline] [characters]")
         {
             // check the whitespace
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // make sure the next character is viewed as an identifier
         // just as expected
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(identifier->get_string() == out.str());
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(identifier->get_string() == out.str());
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
         // character on the second line (\n char)
         {
             // check the whitespace
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 3);
-            REQUIRE(npos.get_total_line() == 3);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 3);
+            CATCH_REQUIRE(npos.get_total_line() == 3);
         }
 
         // make sure the next character is viewed as an identifier
         // just as expected
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(identifier->get_string() == out.str());
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(identifier->get_string() == out.str());
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 3);
-            REQUIRE(npos.get_total_line() == 3);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 3);
+            CATCH_REQUIRE(npos.get_total_line() == 3);
         }
 
         // character on the second line (\f char)
         {
             // check the whitespace
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 2);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 3);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 2);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 3);
         }
 
         // make sure the next character is viewed as an identifier
         // just as expected
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(identifier->get_string() == out.str());
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(identifier->get_string() == out.str());
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 2);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 3);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 2);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 3);
         }
 
         // character on the second line (\r\n char)
         {
             // check the whitespace
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 2);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 4);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 2);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 4);
         }
 
         // make sure the next character is viewed as an identifier
         // just as expected
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(identifier->get_string() == out.str());
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(identifier->get_string() == out.str());
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 2);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 4);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 2);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 4);
         }
 
         // character on the second line (\n\r char)
         {
             // check the whitespace
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 2);
-            REQUIRE(npos.get_line() == 3);
-            REQUIRE(npos.get_total_line() == 5);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 2);
+            CATCH_REQUIRE(npos.get_line() == 3);
+            CATCH_REQUIRE(npos.get_total_line() == 5);
         }
 
         // make sure the next character is viewed as an identifier
         // just as expected
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(identifier->get_string() == out.str());
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(identifier->get_string() == out.str());
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 2);
-            REQUIRE(npos.get_line() == 4);
-            REQUIRE(npos.get_total_line() == 6);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 2);
+            CATCH_REQUIRE(npos.get_line() == 4);
+            CATCH_REQUIRE(npos.get_total_line() == 6);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("C-like comments", "[lexer] [comment]")
+CATCH_TEST_CASE("C-like comments", "[lexer] [comment]")
 {
     // a comment without @preserve gets lost
     {
@@ -1557,9 +1579,9 @@ TEST_CASE("C-like comments", "[lexer] [comment]")
         csspp::position pos("test.css");
         csspp::lexer l(ss, pos);
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // one simple comment
@@ -1572,19 +1594,19 @@ TEST_CASE("C-like comments", "[lexer] [comment]")
         // comment
         {
             csspp::node::pointer_t comment(l.next_token());
-            REQUIRE(comment->is(csspp::node_type_t::COMMENT));
-            REQUIRE(comment->get_string() == "test simple comment @preserve");
-            REQUIRE(comment->get_integer() == 1); // C-like comment
+            CATCH_REQUIRE(comment->is(csspp::node_type_t::COMMENT));
+            CATCH_REQUIRE(comment->get_string() == "test simple comment @preserve");
+            CATCH_REQUIRE(comment->get_integer() == 1); // C-like comment
             csspp::position const & npos(comment->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // an unterminated simple comment
@@ -1597,21 +1619,21 @@ TEST_CASE("C-like comments", "[lexer] [comment]")
         // comment
         {
             csspp::node::pointer_t comment(l.next_token());
-            REQUIRE(comment->is(csspp::node_type_t::COMMENT));
-            REQUIRE(comment->get_string() == "test simple comment @preserve");
-            REQUIRE(comment->get_integer() == 1); // C-like comment
+            CATCH_REQUIRE(comment->is(csspp::node_type_t::COMMENT));
+            CATCH_REQUIRE(comment->get_string() == "test simple comment @preserve");
+            CATCH_REQUIRE(comment->get_integer() == 1); // C-like comment
             csspp::position const & npos(comment->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
-        REQUIRE_ERRORS("test.css(1): error: unclosed C-like comment at the end of your document.\n");
+        VERIFY_ERRORS("test.css(1): error: unclosed C-like comment at the end of your document.\n");
     }
 
     // a comment on multiple lines
@@ -1624,31 +1646,31 @@ TEST_CASE("C-like comments", "[lexer] [comment]")
         // comment
         {
             csspp::node::pointer_t comment(l.next_token());
-            REQUIRE(comment->is(csspp::node_type_t::COMMENT));
-            REQUIRE(comment->get_string() == "test\na\nmulti-line\ncomment\n\ntoo @preserve");
-            REQUIRE(comment->get_integer() == 1); // C-like comment
+            CATCH_REQUIRE(comment->is(csspp::node_type_t::COMMENT));
+            CATCH_REQUIRE(comment->get_string() == "test\na\nmulti-line\ncomment\n\ntoo @preserve");
+            CATCH_REQUIRE(comment->get_integer() == 1); // C-like comment
             csspp::position const & npos(comment->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 2);
-            REQUIRE(npos.get_line() == 3);
-            REQUIRE(npos.get_total_line() == 5);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 2);
+            CATCH_REQUIRE(npos.get_line() == 3);
+            CATCH_REQUIRE(npos.get_total_line() == 5);
         }
 
         // EOF
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // one multi-line comment followed by another simple comment
@@ -1661,43 +1683,43 @@ TEST_CASE("C-like comments", "[lexer] [comment]")
         // 1st comment
         {
             csspp::node::pointer_t comment1(l.next_token());
-            REQUIRE(comment1->is(csspp::node_type_t::COMMENT));
-            REQUIRE(comment1->get_string() == "test\na\nmulti-line\ncomment\n\ntoo @preserve");
-            REQUIRE(comment1->get_integer() == 1); // C-like comment
+            CATCH_REQUIRE(comment1->is(csspp::node_type_t::COMMENT));
+            CATCH_REQUIRE(comment1->get_string() == "test\na\nmulti-line\ncomment\n\ntoo @preserve");
+            CATCH_REQUIRE(comment1->get_integer() == 1); // C-like comment
             csspp::position const & npos(comment1->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // whitespace in between
         {
             csspp::node::pointer_t whitespace(l.next_token());
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 2);
-            REQUIRE(npos.get_line() == 3);
-            REQUIRE(npos.get_total_line() == 5);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 2);
+            CATCH_REQUIRE(npos.get_line() == 3);
+            CATCH_REQUIRE(npos.get_total_line() == 5);
         }
 
         // 2nd comment
         {
             csspp::node::pointer_t comment(l.next_token());
-            REQUIRE(comment->is(csspp::node_type_t::COMMENT));
-            REQUIRE(comment->get_string() == "with a second comment @preserve");
-            REQUIRE(comment->get_integer() == 1); // C-like comment
+            CATCH_REQUIRE(comment->is(csspp::node_type_t::COMMENT));
+            CATCH_REQUIRE(comment->get_string() == "with a second comment @preserve");
+            CATCH_REQUIRE(comment->get_integer() == 1); // C-like comment
             csspp::position const & npos(comment->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 2);
-            REQUIRE(npos.get_line() == 4);
-            REQUIRE(npos.get_total_line() == 6);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 2);
+            CATCH_REQUIRE(npos.get_line() == 4);
+            CATCH_REQUIRE(npos.get_total_line() == 6);
         }
 
         // EOF
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // test with all types of characters that are considered valid by
@@ -1775,27 +1797,27 @@ TEST_CASE("C-like comments", "[lexer] [comment]")
             // comment
             {
                 csspp::node::pointer_t comment(l.next_token());
-                REQUIRE(comment->is(csspp::node_type_t::COMMENT));
-                REQUIRE(comment->get_string() == cmt + " @preserve");
-                REQUIRE(comment->get_integer() == 1); // C-like comment
+                CATCH_REQUIRE(comment->is(csspp::node_type_t::COMMENT));
+                CATCH_REQUIRE(comment->get_string() == cmt + " @preserve");
+                CATCH_REQUIRE(comment->get_integer() == 1); // C-like comment
                 csspp::position const & npos(comment->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
         }
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("C++ comments", "[lexer] [comment]")
+CATCH_TEST_CASE("C++ comments", "[lexer] [comment]")
 {
     // a comment without @preserve gets lost
     {
@@ -1807,21 +1829,21 @@ TEST_CASE("C++ comments", "[lexer] [comment]")
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
         // EOF
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // one simple comment
@@ -1834,36 +1856,36 @@ TEST_CASE("C++ comments", "[lexer] [comment]")
         // comment
         {
             csspp::node::pointer_t comment(l.next_token());
-            REQUIRE(comment->is(csspp::node_type_t::COMMENT));
-            REQUIRE(comment->get_string() == "test simple comment @preserve");
-            REQUIRE(comment->get_integer() == 0); // C++ comment
+            CATCH_REQUIRE(comment->is(csspp::node_type_t::COMMENT));
+            CATCH_REQUIRE(comment->get_string() == "test simple comment @preserve");
+            CATCH_REQUIRE(comment->get_integer() == 0); // C++ comment
             csspp::position const & npos(comment->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): warning: C++ comments should not be preserved as they are not supported by most CSS parsers.\n");
+            VERIFY_ERRORS("test.css(1): warning: C++ comments should not be preserved as they are not supported by most CSS parsers.\n");
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
         // EOF
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // a C++ comment on multiple lines is just a comment
@@ -1877,36 +1899,36 @@ TEST_CASE("C++ comments", "[lexer] [comment]")
         // comment
         {
             csspp::node::pointer_t comment(l.next_token());
-            REQUIRE(comment->is(csspp::node_type_t::COMMENT));
-            REQUIRE(comment->get_string() == "test\na\nmulti-line\ncomment\ntoo @preserve");
-            REQUIRE(comment->get_integer() == 0); // C++ comment
+            CATCH_REQUIRE(comment->is(csspp::node_type_t::COMMENT));
+            CATCH_REQUIRE(comment->get_string() == "test\na\nmulti-line\ncomment\ntoo @preserve");
+            CATCH_REQUIRE(comment->get_integer() == 0); // C++ comment
             csspp::position const & npos(comment->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): warning: C++ comments should not be preserved as they are not supported by most CSS parsers.\n");
+            VERIFY_ERRORS("test.css(1): warning: C++ comments should not be preserved as they are not supported by most CSS parsers.\n");
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 2);
-            REQUIRE(npos.get_line() == 3);
-            REQUIRE(npos.get_total_line() == 5);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 2);
+            CATCH_REQUIRE(npos.get_line() == 3);
+            CATCH_REQUIRE(npos.get_total_line() == 5);
         }
 
         // EOF
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // one multi-line comment followed by another simple comment
@@ -1919,51 +1941,51 @@ TEST_CASE("C++ comments", "[lexer] [comment]")
         // 1st comment
         {
             csspp::node::pointer_t comment(l.next_token());
-            REQUIRE(comment->is(csspp::node_type_t::COMMENT));
-            REQUIRE(comment->get_string() == "test\na\nmulti-line\ncomment\ntoo @preserve");
-            REQUIRE(comment->get_integer() == 0); // C++ comment
+            CATCH_REQUIRE(comment->is(csspp::node_type_t::COMMENT));
+            CATCH_REQUIRE(comment->get_string() == "test\na\nmulti-line\ncomment\ntoo @preserve");
+            CATCH_REQUIRE(comment->get_integer() == 0); // C++ comment
             csspp::position const & npos(comment->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): warning: C++ comments should not be preserved as they are not supported by most CSS parsers.\n");
+            VERIFY_ERRORS("test.css(1): warning: C++ comments should not be preserved as they are not supported by most CSS parsers.\n");
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 2);
-            REQUIRE(npos.get_line() == 4);
-            REQUIRE(npos.get_total_line() == 6);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 2);
+            CATCH_REQUIRE(npos.get_line() == 4);
+            CATCH_REQUIRE(npos.get_total_line() == 6);
         }
 
         // 2nd comment
         {
             csspp::node::pointer_t comment(l.next_token());
-            REQUIRE(comment->is(csspp::node_type_t::COMMENT));
-            REQUIRE(comment->get_string() == "with a second comment @preserve");
-            REQUIRE(comment->get_integer() == 0); // C++ comment
+            CATCH_REQUIRE(comment->is(csspp::node_type_t::COMMENT));
+            CATCH_REQUIRE(comment->get_string() == "with a second comment @preserve");
+            CATCH_REQUIRE(comment->get_integer() == 0); // C++ comment
             csspp::position const & npos(comment->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 2);
-            REQUIRE(npos.get_line() == 4);
-            REQUIRE(npos.get_total_line() == 6);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 2);
+            CATCH_REQUIRE(npos.get_line() == 4);
+            CATCH_REQUIRE(npos.get_total_line() == 6);
 
-            REQUIRE_ERRORS("test.css(4): warning: C++ comments should not be preserved as they are not supported by most CSS parsers.\n");
+            VERIFY_ERRORS("test.css(4): warning: C++ comments should not be preserved as they are not supported by most CSS parsers.\n");
         }
 
         // EOF
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // one comment nearly multi-line
@@ -1976,70 +1998,70 @@ TEST_CASE("C++ comments", "[lexer] [comment]")
         // comment
         {
             csspp::node::pointer_t comment(l.next_token());
-            REQUIRE(comment->is(csspp::node_type_t::COMMENT));
-            REQUIRE(comment->get_string() == "test comment and @preserve");
-            REQUIRE(comment->get_integer() == 0); // C++ comment
+            CATCH_REQUIRE(comment->is(csspp::node_type_t::COMMENT));
+            CATCH_REQUIRE(comment->get_string() == "test comment and @preserve");
+            CATCH_REQUIRE(comment->get_integer() == 0); // C++ comment
             csspp::position const & npos(comment->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): warning: C++ comments should not be preserved as they are not supported by most CSS parsers.\n");
+            VERIFY_ERRORS("test.css(1): warning: C++ comments should not be preserved as they are not supported by most CSS parsers.\n");
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
         // divide
         {
             csspp::node::pointer_t comment(l.next_token());
-            REQUIRE(comment->is(csspp::node_type_t::DIVIDE));
+            CATCH_REQUIRE(comment->is(csspp::node_type_t::DIVIDE));
             csspp::position const & npos(comment->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
         // identifier
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(identifier->get_string() == "divide");
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(identifier->get_string() == "divide");
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
         // EOF
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // test with all types of characters that are considered valid by
@@ -2117,29 +2139,29 @@ TEST_CASE("C++ comments", "[lexer] [comment]")
             // comment
             {
                 csspp::node::pointer_t comment(l.next_token());
-                REQUIRE(comment->is(csspp::node_type_t::COMMENT));
-                REQUIRE(comment->get_string() == cmt + " @preserve");
-                REQUIRE(comment->get_integer() == 0); // C++ comment
+                CATCH_REQUIRE(comment->is(csspp::node_type_t::COMMENT));
+                CATCH_REQUIRE(comment->get_string() == cmt + " @preserve");
+                CATCH_REQUIRE(comment->get_integer() == 0); // C++ comment
                 csspp::position const & npos(comment->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
 
-                REQUIRE_ERRORS("test.css(1): warning: C++ comments should not be preserved as they are not supported by most CSS parsers.\n");
+                VERIFY_ERRORS("test.css(1): warning: C++ comments should not be preserved as they are not supported by most CSS parsers.\n");
             }
 
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
         }
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 }
 
-TEST_CASE("Strings", "[lexer] [string]")
+CATCH_TEST_CASE("Strings", "[lexer] [string]")
 {
     // one simple string with "
     {
@@ -2161,19 +2183,19 @@ TEST_CASE("Strings", "[lexer] [string]")
         // string
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::STRING));
-            REQUIRE(string->get_string() == word);
+            CATCH_REQUIRE(string->is(csspp::node_type_t::STRING));
+            CATCH_REQUIRE(string->get_string() == word);
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // one simple string with " and including '
@@ -2186,19 +2208,19 @@ TEST_CASE("Strings", "[lexer] [string]")
         // string
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::STRING));
-            REQUIRE(string->get_string() == "c'est un teste");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::STRING));
+            CATCH_REQUIRE(string->get_string() == "c'est un teste");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // one simple string with '
@@ -2221,19 +2243,19 @@ TEST_CASE("Strings", "[lexer] [string]")
         // string
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::STRING));
-            REQUIRE(string->get_string() == word);
+            CATCH_REQUIRE(string->is(csspp::node_type_t::STRING));
+            CATCH_REQUIRE(string->get_string() == word);
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // one simple string with ' including "
@@ -2246,19 +2268,19 @@ TEST_CASE("Strings", "[lexer] [string]")
         // string
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::STRING));
-            REQUIRE(string->get_string() == "This \"word\" sounds wrong!");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::STRING));
+            CATCH_REQUIRE(string->get_string() == "This \"word\" sounds wrong!");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // string with escaped characters
@@ -2338,24 +2360,24 @@ TEST_CASE("Strings", "[lexer] [string]")
             // string
             {
                 csspp::node::pointer_t string(l.next_token());
-                REQUIRE(string->is(csspp::node_type_t::STRING));
+                CATCH_REQUIRE(string->is(csspp::node_type_t::STRING));
                 std::stringstream out;
                 out << "escape character #" << std::dec << i
                     << " as: " << l.wctomb(i)
                     << (i < 0x100000 ? "" : " ") // space gets eaten if less than 6 characters in escape sequence
                     << "to see whether it works";
-                REQUIRE(string->get_string() == out.str());
+                CATCH_REQUIRE(string->get_string() == out.str());
                 csspp::position const & npos(string->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
             // no error left over
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
         }
     }
 
@@ -2369,21 +2391,21 @@ TEST_CASE("Strings", "[lexer] [string]")
         // string
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::STRING));
-            REQUIRE(string->get_string() == "No terminator");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::STRING));
+            CATCH_REQUIRE(string->get_string() == "No terminator");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): error: found an unterminated string.\n");
+            VERIFY_ERRORS("test.css(1): error: found an unterminated string.\n");
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // unterminated string before \n
@@ -2396,90 +2418,90 @@ TEST_CASE("Strings", "[lexer] [string]")
         // string
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::STRING));
-            REQUIRE(string->get_string() == "No terminator");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::STRING));
+            CATCH_REQUIRE(string->get_string() == "No terminator");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): error: found an unterminated string with an unescaped newline.\n");
+            VERIFY_ERRORS("test.css(1): error: found an unterminated string with an unescaped newline.\n");
         }
 
         // whitespace
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(string->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == "to");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == "to");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
         // whitespace
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(string->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == "that");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == "that");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
         // whitespace
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(string->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == "string");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == "string");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // special escapes in a string: \ + <EOF>
@@ -2493,21 +2515,21 @@ TEST_CASE("Strings", "[lexer] [string]")
         // string
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::STRING));
-            REQUIRE(string->get_string() == "No terminator");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::STRING));
+            CATCH_REQUIRE(string->get_string() == "No terminator");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): error: found an unterminated string.\n");
+            VERIFY_ERRORS("test.css(1): error: found an unterminated string.\n");
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // special escapes in a string: \ + '\n'
@@ -2521,19 +2543,19 @@ TEST_CASE("Strings", "[lexer] [string]")
         // string
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::STRING));
-            REQUIRE(string->get_string() == "Line ncontinues on\nthe next line.");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::STRING));
+            CATCH_REQUIRE(string->get_string() == "Line ncontinues on\nthe next line.");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // special escapes in a string: \ + <FFFD>
@@ -2546,20 +2568,20 @@ TEST_CASE("Strings", "[lexer] [string]")
         // string
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::STRING));
-            REQUIRE(string->get_string() == "Bad Escape  String");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::STRING));
+            CATCH_REQUIRE(string->get_string() == "Bad Escape  String");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): error: invalid character after a \\ character.\n");
+            VERIFY_ERRORS("test.css(1): error: invalid character after a \\ character.\n");
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // escapes in a string: \ + <number too large>
@@ -2573,25 +2595,25 @@ TEST_CASE("Strings", "[lexer] [string]")
         // string
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::STRING));
-            REQUIRE(string->get_string() == "Bad Escape  String");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::STRING));
+            CATCH_REQUIRE(string->get_string() == "Bad Escape  String");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): error: escape character too large for Unicode.\n");
+            VERIFY_ERRORS("test.css(1): error: escape character too large for Unicode.\n");
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 }
 
-TEST_CASE("Identifiers", "[lexer] [identifier]")
+CATCH_TEST_CASE("Identifiers", "[lexer] [identifier]")
 {
     // a few simple identifiers
     for(int count(0); count < 10; ++count)
@@ -2612,16 +2634,16 @@ TEST_CASE("Identifiers", "[lexer] [identifier]")
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == word);
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == word);
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // a few simple identifiers starting with '_'
@@ -2644,16 +2666,16 @@ TEST_CASE("Identifiers", "[lexer] [identifier]")
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == word);
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == word);
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // a few simple identifiers starting with '@'
@@ -2676,16 +2698,16 @@ TEST_CASE("Identifiers", "[lexer] [identifier]")
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::AT_KEYWORD));
-            REQUIRE(string->get_string() == word);
+            CATCH_REQUIRE(string->is(csspp::node_type_t::AT_KEYWORD));
+            CATCH_REQUIRE(string->get_string() == word);
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // try with empty '@' characters (i.e. invalid identifiers)
@@ -2698,22 +2720,22 @@ TEST_CASE("Identifiers", "[lexer] [identifier]")
         // prefix-match
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::MULTIPLY));
+            CATCH_REQUIRE(string->is(csspp::node_type_t::MULTIPLY));
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): error: found an empty identifier.\n");
+            VERIFY_ERRORS("test.css(1): error: found an empty identifier.\n");
         }
 
         // EOF
         {
             csspp::node::pointer_t eof(l.next_token());
-            REQUIRE(eof->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(eof->is(csspp::node_type_t::EOF_TOKEN));
 
-            REQUIRE_ERRORS("test.css(1): error: found an empty identifier.\n");
+            VERIFY_ERRORS("test.css(1): error: found an empty identifier.\n");
         }
     }
 
@@ -2738,16 +2760,16 @@ TEST_CASE("Identifiers", "[lexer] [identifier]")
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == word);
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == word);
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // identifiers cannot start with '--'
@@ -2760,85 +2782,85 @@ TEST_CASE("Identifiers", "[lexer] [identifier]")
         // subtract
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::SUBTRACT));
+            CATCH_REQUIRE(string->is(csspp::node_type_t::SUBTRACT));
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == "-not-double-dash");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == "-not-double-dash");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == "--double-dash");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == "--double-dash");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 3);
-            REQUIRE(npos.get_total_line() == 3);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 3);
+            CATCH_REQUIRE(npos.get_total_line() == 3);
         }
 
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == "-----quintuple-dash-----");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == "-----quintuple-dash-----");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 3);
-            REQUIRE(npos.get_total_line() == 3);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 3);
+            CATCH_REQUIRE(npos.get_total_line() == 3);
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 4);
-            REQUIRE(npos.get_total_line() == 4);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 4);
+            CATCH_REQUIRE(npos.get_total_line() == 4);
         }
 
         // EOF
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // identifiers starting with an escape (\)
@@ -2853,74 +2875,74 @@ TEST_CASE("Identifiers", "[lexer] [identifier]")
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == "Alexis"); // identifiers are forced to lowercase since they are case insensitive
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == "Alexis"); // identifiers are forced to lowercase since they are case insensitive
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == "Babar"); // prove the space is eaten as expected
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == "Babar"); // prove the space is eaten as expected
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 3);
-            REQUIRE(npos.get_total_line() == 3);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 3);
+            CATCH_REQUIRE(npos.get_total_line() == 3);
         }
 
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == "Carlos"); // prove the space is not required with 6 digits
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == "Carlos"); // prove the space is not required with 6 digits
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 3);
-            REQUIRE(npos.get_total_line() == 3);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 3);
+            CATCH_REQUIRE(npos.get_total_line() == 3);
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 4);
-            REQUIRE(npos.get_total_line() == 4);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 4);
+            CATCH_REQUIRE(npos.get_total_line() == 4);
         }
 
         // EOF
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // identifier with an empty escape (\ + <EOF>)
@@ -2933,19 +2955,19 @@ TEST_CASE("Identifiers", "[lexer] [identifier]")
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == "This");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == "This");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): error: found EOF right after \\.\n");
+            VERIFY_ERRORS("test.css(1): error: found EOF right after \\.\n");
         }
 
         // EOF
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // empty identifier with an empty escape (\ + <EOF>)
@@ -2958,30 +2980,30 @@ TEST_CASE("Identifiers", "[lexer] [identifier]")
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == "This");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == "This");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // EOF
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: found EOF right after \\.\n"
                 "test.css(1): error: found an empty identifier.\n"
             );
@@ -2997,15 +3019,15 @@ TEST_CASE("Identifiers", "[lexer] [identifier]")
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == "This");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == "This");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS(
+            VERIFY_ERRORS(
                     "test.css(1): error: spurious newline character after a \\ character outside of a string.\n"
                 );
         }
@@ -3013,28 +3035,28 @@ TEST_CASE("Identifiers", "[lexer] [identifier]")
         // whitespace -- this one gets lost and we do not care much
         //{
         //    csspp::node::pointer_t whitespace(l.next_token());
-        //    REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+        //    CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
         //    csspp::position const & npos(whitespace->get_position());
-        //    REQUIRE(npos.get_filename() == "test.css");
-        //    REQUIRE(npos.get_page() == 1);
-        //    REQUIRE(npos.get_line() == 1);
-        //    REQUIRE(npos.get_total_line() == 1);
+        //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+        //    CATCH_REQUIRE(npos.get_page() == 1);
+        //    CATCH_REQUIRE(npos.get_line() == 1);
+        //    CATCH_REQUIRE(npos.get_total_line() == 1);
         //}
 
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == "That");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == "That");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
         // EOF
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // identifiers written between parenthesis and "don't do that"
@@ -3065,39 +3087,39 @@ TEST_CASE("Identifiers", "[lexer] [identifier]")
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == word);
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == word);
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == "\"don't do that\""); // yes, it's possible
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == "\"don't do that\""); // yes, it's possible
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 2);
-            REQUIRE(npos.get_total_line() == 2);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 2);
+            CATCH_REQUIRE(npos.get_total_line() == 2);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // identifier with an escape followed by 0xFFFD (\ + <FFFD>)
@@ -3110,31 +3132,31 @@ TEST_CASE("Identifiers", "[lexer] [identifier]")
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == "This");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == "This");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): error: invalid character after a \\ character.\n");
+            VERIFY_ERRORS("test.css(1): error: invalid character after a \\ character.\n");
         }
 
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == " ID");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == " ID");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // EOF
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // identifier with an escape followed by "0" (\0)
@@ -3147,41 +3169,41 @@ TEST_CASE("Identifiers", "[lexer] [identifier]")
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == "This");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == "This");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): error: escape character '\\0' is not acceptable in CSS.\n");
+            VERIFY_ERRORS("test.css(1): error: escape character '\\0' is not acceptable in CSS.\n");
         }
 
         // identifier
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(string->get_string() == "ID");
+            CATCH_REQUIRE(string->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(string->get_string() == "ID");
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // EOF
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Urls", "[lexer] [identifier] [url] [function]")
+CATCH_TEST_CASE("Urls", "[lexer] [identifier] [url] [function]")
 {
     // a few simple URLs
-    SECTION("simple URLs")
+    CATCH_START_SECTION("simple URLs")
     {
         for(int count(0); count < 10; ++count)
         {
@@ -3213,23 +3235,24 @@ TEST_CASE("Urls", "[lexer] [identifier] [url] [function]")
             // url
             {
                 csspp::node::pointer_t string(l.next_token());
-                REQUIRE(string->is(csspp::node_type_t::URL));
-                REQUIRE(string->get_string() == word);
+                CATCH_REQUIRE(string->is(csspp::node_type_t::URL));
+                CATCH_REQUIRE(string->get_string() == word);
                 csspp::position const & npos(string->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
         }
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
+    CATCH_END_SECTION()
 
     // a few simple quoted URLs
-    SECTION("simple quoted URLs")
+    CATCH_START_SECTION("simple quoted URLs")
     {
         for(int count(0); count < 10; ++count)
         {
@@ -3264,23 +3287,24 @@ TEST_CASE("Urls", "[lexer] [identifier] [url] [function]")
             // url
             {
                 csspp::node::pointer_t string(l.next_token());
-                REQUIRE(string->is(csspp::node_type_t::URL));
-                REQUIRE(string->get_string() == word);
+                CATCH_REQUIRE(string->is(csspp::node_type_t::URL));
+                CATCH_REQUIRE(string->get_string() == word);
                 csspp::position const & npos(string->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
         }
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
+    CATCH_END_SECTION()
 
     // an invalid URL with EOF too soon
-    SECTION("invalid URL with EOF too soon")
+    CATCH_START_SECTION("invalid URL with EOF too soon")
     {
         for(int count(0); count < 10; ++count)
         {
@@ -3306,27 +3330,28 @@ TEST_CASE("Urls", "[lexer] [identifier] [url] [function]")
             // url
             {
                 csspp::node::pointer_t string(l.next_token());
-                REQUIRE(string->is(csspp::node_type_t::URL));
-                REQUIRE(string->get_string() == word);
+                CATCH_REQUIRE(string->is(csspp::node_type_t::URL));
+                CATCH_REQUIRE(string->get_string() == word);
                 csspp::position const & npos(string->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
 
-                REQUIRE_ERRORS(
+                VERIFY_ERRORS(
                         "test.css(1): error: found an invalid URL, one with forbidden characters.\n"
                     );
             }
 
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
         }
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
+    CATCH_END_SECTION()
 
     // an invalid URL with '"', "'", '(', and non-printable
-    SECTION("invalid URL with various unacceptable characters")
+    CATCH_START_SECTION("invalid URL with various unacceptable characters")
     {
         char const invalid_chars[] = "\"'(\x8\xb\xe\xf\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f\x7f";
         for(size_t ic(0); ic < sizeof(invalid_chars) / sizeof(invalid_chars[0]); ++ic)
@@ -3369,33 +3394,34 @@ TEST_CASE("Urls", "[lexer] [identifier] [url] [function]")
                 // url
                 {
                     csspp::node::pointer_t string(l.next_token());
-                    REQUIRE(string->is(csspp::node_type_t::URL));
-                    REQUIRE(string->get_string() == word);
+                    CATCH_REQUIRE(string->is(csspp::node_type_t::URL));
+                    CATCH_REQUIRE(string->get_string() == word);
                     csspp::position const & npos(string->get_position());
-                    REQUIRE(npos.get_filename() == "test.css");
-                    REQUIRE(npos.get_page() == 1);
-                    REQUIRE(npos.get_line() == 1);
-                    REQUIRE(npos.get_total_line() == 1);
+                    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                    CATCH_REQUIRE(npos.get_page() == 1);
+                    CATCH_REQUIRE(npos.get_line() == 1);
+                    CATCH_REQUIRE(npos.get_total_line() == 1);
 
-                    REQUIRE_ERRORS(
+                    VERIFY_ERRORS(
                             trailing == 0
                                 ? "test.css(1): error: found an invalid URL, one with forbidden characters.\n"
                                 : "test.css(1): error: found an invalid URL, one which includes spaces or has a missing ')'.\n"
                         );
                 }
 
-                REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+                CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
             }
         }
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Functions", "[lexer] [identifier] [function]")
+CATCH_TEST_CASE("Functions", "[lexer] [identifier] [function]")
 {
     // a few simple functions
     for(int count(0); count < 10; ++count)
@@ -3417,46 +3443,46 @@ TEST_CASE("Functions", "[lexer] [identifier] [function]")
         // function
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::FUNCTION));
-            REQUIRE(string->get_string() == word);
+            CATCH_REQUIRE(string->is(csspp::node_type_t::FUNCTION));
+            CATCH_REQUIRE(string->get_string() == word);
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // number
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::INTEGER));
-            REQUIRE(string->get_integer() == 123);
+            CATCH_REQUIRE(string->is(csspp::node_type_t::INTEGER));
+            CATCH_REQUIRE(string->get_integer() == 123);
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // parenthesis
         {
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::CLOSE_PARENTHESIS));
+            CATCH_REQUIRE(string->is(csspp::node_type_t::CLOSE_PARENTHESIS));
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Numbers", "[lexer] [number]")
+CATCH_TEST_CASE("Numbers", "[lexer] [number]")
 {
     // a few simple integers
     for(int i(-10000); i <= 10000; ++i)
@@ -3470,27 +3496,27 @@ TEST_CASE("Numbers", "[lexer] [number]")
         //if(i < 0)
         //{
         //    csspp::node::pointer_t integer(l.next_token());
-        //    REQUIRE(integer->is(csspp::node_type_t::SUBTRACT));
+        //    CATCH_REQUIRE(integer->is(csspp::node_type_t::SUBTRACT));
         //    csspp::position const & npos(integer->get_position());
-        //    REQUIRE(npos.get_filename() == "test.css");
-        //    REQUIRE(npos.get_page() == 1);
-        //    REQUIRE(npos.get_line() == 1);
-        //    REQUIRE(npos.get_total_line() == 1);
+        //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+        //    CATCH_REQUIRE(npos.get_page() == 1);
+        //    CATCH_REQUIRE(npos.get_line() == 1);
+        //    CATCH_REQUIRE(npos.get_total_line() == 1);
         //}
 
         // integer
         {
             csspp::node::pointer_t integer(l.next_token());
-            REQUIRE(integer->is(csspp::node_type_t::INTEGER));
-            REQUIRE(integer->get_integer() == i);
+            CATCH_REQUIRE(integer->is(csspp::node_type_t::INTEGER));
+            CATCH_REQUIRE(integer->get_integer() == i);
             csspp::position const & npos(integer->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // a few simple numbers (decimal / decimal)
@@ -3512,63 +3538,63 @@ TEST_CASE("Numbers", "[lexer] [number]")
         //if(negative)
         //{
         //    csspp::node::pointer_t subtract(l.next_token());
-        //    REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
+        //    CATCH_REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
         //    csspp::position const & npos(subtract->get_position());
-        //    REQUIRE(npos.get_filename() == "test.css");
-        //    REQUIRE(npos.get_page() == 1);
-        //    REQUIRE(npos.get_line() == 1);
-        //    REQUIRE(npos.get_total_line() == 1);
+        //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+        //    CATCH_REQUIRE(npos.get_page() == 1);
+        //    CATCH_REQUIRE(npos.get_line() == 1);
+        //    CATCH_REQUIRE(npos.get_total_line() == 1);
         //}
         //else if(*sign == '+')
         //{
         //    csspp::node::pointer_t subtract(l.next_token());
-        //    REQUIRE(subtract->is(csspp::node_type_t::ADD));
+        //    CATCH_REQUIRE(subtract->is(csspp::node_type_t::ADD));
         //    csspp::position const & npos(subtract->get_position());
-        //    REQUIRE(npos.get_filename() == "test.css");
-        //    REQUIRE(npos.get_page() == 1);
-        //    REQUIRE(npos.get_line() == 1);
-        //    REQUIRE(npos.get_total_line() == 1);
+        //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+        //    CATCH_REQUIRE(npos.get_page() == 1);
+        //    CATCH_REQUIRE(npos.get_line() == 1);
+        //    CATCH_REQUIRE(npos.get_total_line() == 1);
         //}
 
         if(floating_point)
         {
             // decimal number
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::DECIMAL_NUMBER));
+            CATCH_REQUIRE(string->is(csspp::node_type_t::DECIMAL_NUMBER));
 //std::cerr << "*** from [" << ss.str()
 //          << "] or [" << static_cast<csspp::decimal_number_t>(i) / 1000.0
 //          << "] we got [" << string->get_decimal_number()
 //          << "] |" << fabs(string->get_decimal_number())
 //          << "| (sign: " << (negative ? "-" : "+") << ")\n";
-            REQUIRE(fabs(fabs(string->get_decimal_number()) - static_cast<csspp::decimal_number_t>(i) / 1000.0) < 0.00001);
+            CATCH_REQUIRE(fabs(fabs(string->get_decimal_number()) - static_cast<csspp::decimal_number_t>(i) / 1000.0) < 0.00001);
             if(negative)
             {
-                REQUIRE(string->get_decimal_number() <= 0.0);
+                CATCH_REQUIRE(string->get_decimal_number() <= 0.0);
             }
             else
             {
-                REQUIRE(string->get_decimal_number() >= 0.0);
+                CATCH_REQUIRE(string->get_decimal_number() >= 0.0);
             }
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
         else
         {
             // integer
             csspp::node::pointer_t string(l.next_token());
-            REQUIRE(string->is(csspp::node_type_t::INTEGER));
-            REQUIRE(string->get_integer() == (negative ? -1 : 1) * i / 1000);
+            CATCH_REQUIRE(string->is(csspp::node_type_t::INTEGER));
+            CATCH_REQUIRE(string->get_integer() == (negative ? -1 : 1) * i / 1000);
             csspp::position const & npos(string->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // a few simple decimals with an exponent
@@ -3610,29 +3636,29 @@ TEST_CASE("Numbers", "[lexer] [number]")
             //if(i < 0)
             //{
             //    csspp::node::pointer_t subtract(l.next_token());
-            //    REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
+            //    CATCH_REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
             //    csspp::position const & npos(subtract->get_position());
-            //    REQUIRE(npos.get_filename() == "test.css");
-            //    REQUIRE(npos.get_page() == 1);
-            //    REQUIRE(npos.get_line() == 1);
-            //    REQUIRE(npos.get_total_line() == 1);
+            //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+            //    CATCH_REQUIRE(npos.get_page() == 1);
+            //    CATCH_REQUIRE(npos.get_line() == 1);
+            //    CATCH_REQUIRE(npos.get_total_line() == 1);
             //}
             //else if(*sign == '+')
             //{
             //    csspp::node::pointer_t subtract(l.next_token());
-            //    REQUIRE(subtract->is(csspp::node_type_t::ADD));
+            //    CATCH_REQUIRE(subtract->is(csspp::node_type_t::ADD));
             //    csspp::position const & npos(subtract->get_position());
-            //    REQUIRE(npos.get_filename() == "test.css");
-            //    REQUIRE(npos.get_page() == 1);
-            //    REQUIRE(npos.get_line() == 1);
-            //    REQUIRE(npos.get_total_line() == 1);
+            //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+            //    CATCH_REQUIRE(npos.get_page() == 1);
+            //    CATCH_REQUIRE(npos.get_line() == 1);
+            //    CATCH_REQUIRE(npos.get_total_line() == 1);
             //}
 
             // decimal number
             {
                 csspp::node::pointer_t decimal_number(l.next_token());
 //std::cerr << "*** type is " << static_cast<int>(decimal_number->get_type()) << " ***\n";
-                REQUIRE(decimal_number->is(csspp::node_type_t::DECIMAL_NUMBER));
+                CATCH_REQUIRE(decimal_number->is(csspp::node_type_t::DECIMAL_NUMBER));
                 csspp::decimal_number_t const result(fabs(decimal_number->get_decimal_number()));
                 csspp::decimal_number_t const abs_number(fabs(our_number));
                 csspp::decimal_number_t const delta(fabs(result - abs_number));
@@ -3647,23 +3673,23 @@ TEST_CASE("Numbers", "[lexer] [number]")
 //std::cerr << std::hex
 //          << *reinterpret_cast<int64_t *>(&r) << "\n"
 //          << *reinterpret_cast<int64_t *>(&q) << " " << (r - q) << " -> " << diff << "\n";
-                REQUIRE(diff < 0.00001);
+                CATCH_REQUIRE(diff < 0.00001);
                 if(*sign == '-')
                 {
-                    REQUIRE(decimal_number->get_decimal_number() <= 0);
+                    CATCH_REQUIRE(decimal_number->get_decimal_number() <= 0);
                 }
                 else
                 {
-                    REQUIRE(decimal_number->get_decimal_number() >= 0);
+                    CATCH_REQUIRE(decimal_number->get_decimal_number() >= 0);
                 }
                 csspp::position const & npos(decimal_number->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
         }
 
         // numbers starting with a period (.25e3)
@@ -3703,28 +3729,28 @@ TEST_CASE("Numbers", "[lexer] [number]")
             //if(i < 0)
             //{
             //    csspp::node::pointer_t subtract(l.next_token());
-            //    REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
+            //    CATCH_REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
             //    csspp::position const & npos(subtract->get_position());
-            //    REQUIRE(npos.get_filename() == "test.css");
-            //    REQUIRE(npos.get_page() == 1);
-            //    REQUIRE(npos.get_line() == 1);
-            //    REQUIRE(npos.get_total_line() == 1);
+            //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+            //    CATCH_REQUIRE(npos.get_page() == 1);
+            //    CATCH_REQUIRE(npos.get_line() == 1);
+            //    CATCH_REQUIRE(npos.get_total_line() == 1);
             //}
             //else if(*sign == '+')
             //{
             //    csspp::node::pointer_t subtract(l.next_token());
-            //    REQUIRE(subtract->is(csspp::node_type_t::ADD));
+            //    CATCH_REQUIRE(subtract->is(csspp::node_type_t::ADD));
             //    csspp::position const & npos(subtract->get_position());
-            //    REQUIRE(npos.get_filename() == "test.css");
-            //    REQUIRE(npos.get_page() == 1);
-            //    REQUIRE(npos.get_line() == 1);
-            //    REQUIRE(npos.get_total_line() == 1);
+            //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+            //    CATCH_REQUIRE(npos.get_page() == 1);
+            //    CATCH_REQUIRE(npos.get_line() == 1);
+            //    CATCH_REQUIRE(npos.get_total_line() == 1);
             //}
 
             // decimal number
             {
                 csspp::node::pointer_t decimal_number(l.next_token());
-                REQUIRE(decimal_number->is(csspp::node_type_t::DECIMAL_NUMBER));
+                CATCH_REQUIRE(decimal_number->is(csspp::node_type_t::DECIMAL_NUMBER));
                 csspp::decimal_number_t const result(fabs(decimal_number->get_decimal_number()));
                 csspp::decimal_number_t const abs_number(fabs(our_number));
                 csspp::decimal_number_t const delta(fabs(result - abs_number));
@@ -3739,23 +3765,23 @@ TEST_CASE("Numbers", "[lexer] [number]")
 //std::cerr << std::hex
 //          << *reinterpret_cast<int64_t *>(&r) << "\n"
 //          << *reinterpret_cast<int64_t *>(&q) << " " << (r - q) << " -> " << diff << "\n";
-                REQUIRE(diff < 0.00001);
+                CATCH_REQUIRE(diff < 0.00001);
                 if(*sign == '-')
                 {
-                    REQUIRE(decimal_number->get_decimal_number() <= 0);
+                    CATCH_REQUIRE(decimal_number->get_decimal_number() <= 0);
                 }
                 else
                 {
-                    REQUIRE(decimal_number->get_decimal_number() >= 0);
+                    CATCH_REQUIRE(decimal_number->get_decimal_number() >= 0);
                 }
                 csspp::position const & npos(decimal_number->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
         }
     }
 
@@ -3770,50 +3796,50 @@ TEST_CASE("Numbers", "[lexer] [number]")
         // identifier
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(identifier->get_string() == "perfect");
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(identifier->get_string() == "perfect");
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // colon
         {
             csspp::node::pointer_t colon(l.next_token());
-            REQUIRE(colon->is(csspp::node_type_t::COLON));
+            CATCH_REQUIRE(colon->is(csspp::node_type_t::COLON));
             csspp::position const & npos(colon->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // decimal number
         {
             csspp::node::pointer_t integer(l.next_token());
-            REQUIRE(integer->is(csspp::node_type_t::INTEGER));
-            REQUIRE(integer->get_integer() == 9223372036854775807LL);
+            CATCH_REQUIRE(integer->is(csspp::node_type_t::INTEGER));
+            CATCH_REQUIRE(integer->get_integer() == 9223372036854775807LL);
             csspp::position const & npos(integer->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // check a number so large that it fails
@@ -3827,52 +3853,52 @@ TEST_CASE("Numbers", "[lexer] [number]")
         // identifier
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(identifier->get_string() == "too large");
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(identifier->get_string() == "too large");
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // colon
         {
             csspp::node::pointer_t colon(l.next_token());
-            REQUIRE(colon->is(csspp::node_type_t::COLON));
+            CATCH_REQUIRE(colon->is(csspp::node_type_t::COLON));
             csspp::position const & npos(colon->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // integer
         {
             csspp::node::pointer_t integer(l.next_token());
-            REQUIRE(integer->is(csspp::node_type_t::INTEGER));
-            //REQUIRE(integer->get_integer() == ???); -- there is an overflow so we decide not to replicate it here
+            CATCH_REQUIRE(integer->is(csspp::node_type_t::INTEGER));
+            //CATCH_REQUIRE(integer->get_integer() == ???); -- there is an overflow so we decide not to replicate it here
             csspp::position const & npos(integer->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): error: integral part too large for a number.\n");
+            VERIFY_ERRORS("test.css(1): error: integral part too large for a number.\n");
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // check a decimal part that's too large
@@ -3886,52 +3912,52 @@ TEST_CASE("Numbers", "[lexer] [number]")
         // identifier
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(identifier->get_string() == "decimal_part_too_long");
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(identifier->get_string() == "decimal_part_too_long");
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // colon
         {
             csspp::node::pointer_t colon(l.next_token());
-            REQUIRE(colon->is(csspp::node_type_t::COLON));
+            CATCH_REQUIRE(colon->is(csspp::node_type_t::COLON));
             csspp::position const & npos(colon->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // decimal number
         {
             csspp::node::pointer_t decimal_number(l.next_token());
-            REQUIRE(decimal_number->is(csspp::node_type_t::DECIMAL_NUMBER));
-            //REQUIRE(decimal_number->get_decimal_number() == ???); -- there may be an overflow so we decide not to replicate it here
+            CATCH_REQUIRE(decimal_number->is(csspp::node_type_t::DECIMAL_NUMBER));
+            //CATCH_REQUIRE(decimal_number->get_decimal_number() == ???); -- there may be an overflow so we decide not to replicate it here
             csspp::position const & npos(decimal_number->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): error: fraction too large for a decimal number.\n");
+            VERIFY_ERRORS("test.css(1): error: fraction too large for a decimal number.\n");
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // decimal number with no digits in the decimal fraction part is an error
@@ -3944,66 +3970,63 @@ TEST_CASE("Numbers", "[lexer] [number]")
         // identifier
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(identifier->get_string() == "font-size");
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(identifier->get_string() == "font-size");
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // colon
         {
             csspp::node::pointer_t colon(l.next_token());
-            REQUIRE(colon->is(csspp::node_type_t::COLON));
+            CATCH_REQUIRE(colon->is(csspp::node_type_t::COLON));
             csspp::position const & npos(colon->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // decimal number
         {
             csspp::node::pointer_t decimal_number(l.next_token());
-            REQUIRE(decimal_number->is(csspp::node_type_t::DECIMAL_NUMBER));
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wfloat-equal"
-            REQUIRE(decimal_number->get_decimal_number() == 154.0);
-#pragma GCC diagnostic pop
+            CATCH_REQUIRE(decimal_number->is(csspp::node_type_t::DECIMAL_NUMBER));
+            CATCH_REQUIRE(decimal_number->get_decimal_number() == 154.0_a);
             csspp::position const & npos(decimal_number->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): error: decimal number must have at least one digit after the decimal point.\n");
+            VERIFY_ERRORS("test.css(1): error: decimal number must have at least one digit after the decimal point.\n");
         }
 
         // semi-colon
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::SEMICOLON));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::SEMICOLON));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // try parsing an expression
@@ -4016,84 +4039,84 @@ TEST_CASE("Numbers", "[lexer] [number]")
         // identifier
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(identifier->get_string() == "font-size");
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(identifier->get_string() == "font-size");
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // colon
         {
             csspp::node::pointer_t colon(l.next_token());
-            REQUIRE(colon->is(csspp::node_type_t::COLON));
+            CATCH_REQUIRE(colon->is(csspp::node_type_t::COLON));
             csspp::position const & npos(colon->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // integer
         {
             csspp::node::pointer_t integer(l.next_token());
-            REQUIRE(integer->is(csspp::node_type_t::INTEGER));
-            REQUIRE(integer->get_integer() == 154);
+            CATCH_REQUIRE(integer->is(csspp::node_type_t::INTEGER));
+            CATCH_REQUIRE(integer->get_integer() == 154);
             csspp::position const & npos(integer->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // multiply
         {
             csspp::node::pointer_t integer(l.next_token());
-            REQUIRE(integer->is(csspp::node_type_t::MULTIPLY));
+            CATCH_REQUIRE(integer->is(csspp::node_type_t::MULTIPLY));
             csspp::position const & npos(integer->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // integer
         {
             csspp::node::pointer_t integer(l.next_token());
-            REQUIRE(integer->is(csspp::node_type_t::INTEGER));
-            REQUIRE(integer->get_integer() == 3);
+            CATCH_REQUIRE(integer->is(csspp::node_type_t::INTEGER));
+            CATCH_REQUIRE(integer->get_integer() == 3);
             csspp::position const & npos(integer->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // semi-colon
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::SEMICOLON));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::SEMICOLON));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // test with an exponent that's too large
@@ -4106,70 +4129,70 @@ TEST_CASE("Numbers", "[lexer] [number]")
         // identifier
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(identifier->get_string() == "font-size");
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(identifier->get_string() == "font-size");
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // colon
         {
             csspp::node::pointer_t colon(l.next_token());
-            REQUIRE(colon->is(csspp::node_type_t::COLON));
+            CATCH_REQUIRE(colon->is(csspp::node_type_t::COLON));
             csspp::position const & npos(colon->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // decimal number
         {
             csspp::node::pointer_t decimal_number(l.next_token());
-            REQUIRE(decimal_number->is(csspp::node_type_t::DECIMAL_NUMBER));
-            //REQUIRE(decimal_number->get_decimal_number() == ...); -- this is not a valid number
+            CATCH_REQUIRE(decimal_number->is(csspp::node_type_t::DECIMAL_NUMBER));
+            //CATCH_REQUIRE(decimal_number->get_decimal_number() == ...); -- this is not a valid number
             csspp::position const & npos(decimal_number->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): error: exponent too large for a decimal number.\n");
+            VERIFY_ERRORS("test.css(1): error: exponent too large for a decimal number.\n");
         }
 
         // semi-colon
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::SEMICOLON));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::SEMICOLON));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Dimensions", "[lexer] [number] [dimension] [identifier]")
+CATCH_TEST_CASE("Dimensions", "[lexer] [number] [dimension] [identifier]")
 {
     // well known dimensions with integers
     {
@@ -4198,12 +4221,12 @@ TEST_CASE("Dimensions", "[lexer] [number] [dimension] [identifier]")
                 //if(i < 0)
                 //{
                 //    csspp::node::pointer_t integer(l.next_token());
-                //    REQUIRE(integer->is(csspp::node_type_t::SUBTRACT));
+                //    CATCH_REQUIRE(integer->is(csspp::node_type_t::SUBTRACT));
                 //    csspp::position const & npos(integer->get_position());
-                //    REQUIRE(npos.get_filename() == "test.css");
-                //    REQUIRE(npos.get_page() == 1);
-                //    REQUIRE(npos.get_line() == 1);
-                //    REQUIRE(npos.get_total_line() == 1);
+                //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                //    CATCH_REQUIRE(npos.get_page() == 1);
+                //    CATCH_REQUIRE(npos.get_line() == 1);
+                //    CATCH_REQUIRE(npos.get_total_line() == 1);
                 //}
 
                 // dimension
@@ -4211,14 +4234,14 @@ TEST_CASE("Dimensions", "[lexer] [number] [dimension] [identifier]")
                     // a dimension is an integer or a decimal number
                     // with a string expressing the dimension
                     csspp::node::pointer_t dimension(l.next_token());
-                    REQUIRE(dimension->is(csspp::node_type_t::INTEGER));
-                    REQUIRE(dimension->get_integer() == i);
-                    REQUIRE(dimension->get_string() == dimensions[j]);
+                    CATCH_REQUIRE(dimension->is(csspp::node_type_t::INTEGER));
+                    CATCH_REQUIRE(dimension->get_integer() == i);
+                    CATCH_REQUIRE(dimension->get_string() == dimensions[j]);
                     csspp::position const & npos(dimension->get_position());
-                    REQUIRE(npos.get_filename() == "test.css");
-                    REQUIRE(npos.get_page() == 1);
-                    REQUIRE(npos.get_line() == 1);
-                    REQUIRE(npos.get_total_line() == 1);
+                    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                    CATCH_REQUIRE(npos.get_page() == 1);
+                    CATCH_REQUIRE(npos.get_line() == 1);
+                    CATCH_REQUIRE(npos.get_total_line() == 1);
                 }
 
                 // direct escape?
@@ -4227,24 +4250,24 @@ TEST_CASE("Dimensions", "[lexer] [number] [dimension] [identifier]")
                     // comma
                     {
                         csspp::node::pointer_t comma(l.next_token());
-                        REQUIRE(comma->is(csspp::node_type_t::COMMA));
+                        CATCH_REQUIRE(comma->is(csspp::node_type_t::COMMA));
                         csspp::position const & npos(comma->get_position());
-                        REQUIRE(npos.get_filename() == "test.css");
-                        REQUIRE(npos.get_page() == 1);
-                        REQUIRE(npos.get_line() == 1);
-                        REQUIRE(npos.get_total_line() == 1);
+                        CATCH_REQUIRE(npos.get_filename() == "test.css");
+                        CATCH_REQUIRE(npos.get_page() == 1);
+                        CATCH_REQUIRE(npos.get_line() == 1);
+                        CATCH_REQUIRE(npos.get_total_line() == 1);
                     }
 
                     // sign
                     //if(i < 0)
                     //{
                     //    csspp::node::pointer_t integer(l.next_token());
-                    //    REQUIRE(integer->is(csspp::node_type_t::SUBTRACT));
+                    //    CATCH_REQUIRE(integer->is(csspp::node_type_t::SUBTRACT));
                     //    csspp::position const & npos(integer->get_position());
-                    //    REQUIRE(npos.get_filename() == "test.css");
-                    //    REQUIRE(npos.get_page() == 1);
-                    //    REQUIRE(npos.get_line() == 1);
-                    //    REQUIRE(npos.get_total_line() == 1);
+                    //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                    //    CATCH_REQUIRE(npos.get_page() == 1);
+                    //    CATCH_REQUIRE(npos.get_line() == 1);
+                    //    CATCH_REQUIRE(npos.get_total_line() == 1);
                     //}
 
                     // dimension
@@ -4252,38 +4275,38 @@ TEST_CASE("Dimensions", "[lexer] [number] [dimension] [identifier]")
                         // a dimension is an integer or a decimal number
                         // with a string expressing the dimension
                         csspp::node::pointer_t dimension(l.next_token());
-                        REQUIRE(dimension->is(csspp::node_type_t::INTEGER));
-                        REQUIRE(dimension->get_integer() == i);
-                        REQUIRE(dimension->get_string() == dimensions[j]);
+                        CATCH_REQUIRE(dimension->is(csspp::node_type_t::INTEGER));
+                        CATCH_REQUIRE(dimension->get_integer() == i);
+                        CATCH_REQUIRE(dimension->get_string() == dimensions[j]);
                         csspp::position const & npos(dimension->get_position());
-                        REQUIRE(npos.get_filename() == "test.css");
-                        REQUIRE(npos.get_page() == 1);
-                        REQUIRE(npos.get_line() == 1);
-                        REQUIRE(npos.get_total_line() == 1);
+                        CATCH_REQUIRE(npos.get_filename() == "test.css");
+                        CATCH_REQUIRE(npos.get_page() == 1);
+                        CATCH_REQUIRE(npos.get_line() == 1);
+                        CATCH_REQUIRE(npos.get_total_line() == 1);
                     }
                 }
 
                 // comma
                 {
                     csspp::node::pointer_t comma(l.next_token());
-                    REQUIRE(comma->is(csspp::node_type_t::COMMA));
+                    CATCH_REQUIRE(comma->is(csspp::node_type_t::COMMA));
                     csspp::position const & npos(comma->get_position());
-                    REQUIRE(npos.get_filename() == "test.css");
-                    REQUIRE(npos.get_page() == 1);
-                    REQUIRE(npos.get_line() == 1);
-                    REQUIRE(npos.get_total_line() == 1);
+                    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                    CATCH_REQUIRE(npos.get_page() == 1);
+                    CATCH_REQUIRE(npos.get_line() == 1);
+                    CATCH_REQUIRE(npos.get_total_line() == 1);
                 }
 
                 // sign
                 //if(i < 0)
                 //{
                 //    csspp::node::pointer_t integer(l.next_token());
-                //    REQUIRE(integer->is(csspp::node_type_t::SUBTRACT));
+                //    CATCH_REQUIRE(integer->is(csspp::node_type_t::SUBTRACT));
                 //    csspp::position const & npos(integer->get_position());
-                //    REQUIRE(npos.get_filename() == "test.css");
-                //    REQUIRE(npos.get_page() == 1);
-                //    REQUIRE(npos.get_line() == 1);
-                //    REQUIRE(npos.get_total_line() == 1);
+                //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                //    CATCH_REQUIRE(npos.get_page() == 1);
+                //    CATCH_REQUIRE(npos.get_line() == 1);
+                //    CATCH_REQUIRE(npos.get_total_line() == 1);
                 //}
 
                 // dimension
@@ -4291,61 +4314,61 @@ TEST_CASE("Dimensions", "[lexer] [number] [dimension] [identifier]")
                     // a dimension is an integer or a decimal number
                     // with a string expressing the dimension
                     csspp::node::pointer_t dimension(l.next_token());
-                    REQUIRE(dimension->is(csspp::node_type_t::INTEGER));
-                    REQUIRE(dimension->get_integer() == i);
-                    REQUIRE(dimension->get_string() == dimensions[j]);
+                    CATCH_REQUIRE(dimension->is(csspp::node_type_t::INTEGER));
+                    CATCH_REQUIRE(dimension->get_integer() == i);
+                    CATCH_REQUIRE(dimension->get_string() == dimensions[j]);
                     csspp::position const & npos(dimension->get_position());
-                    REQUIRE(npos.get_filename() == "test.css");
-                    REQUIRE(npos.get_page() == 1);
-                    REQUIRE(npos.get_line() == 1);
-                    REQUIRE(npos.get_total_line() == 1);
+                    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                    CATCH_REQUIRE(npos.get_page() == 1);
+                    CATCH_REQUIRE(npos.get_line() == 1);
+                    CATCH_REQUIRE(npos.get_total_line() == 1);
                 }
 
                 // comma
                 {
                     csspp::node::pointer_t comma(l.next_token());
-                    REQUIRE(comma->is(csspp::node_type_t::COMMA));
+                    CATCH_REQUIRE(comma->is(csspp::node_type_t::COMMA));
                     csspp::position const & npos(comma->get_position());
-                    REQUIRE(npos.get_filename() == "test.css");
-                    REQUIRE(npos.get_page() == 1);
-                    REQUIRE(npos.get_line() == 1);
-                    REQUIRE(npos.get_total_line() == 1);
+                    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                    CATCH_REQUIRE(npos.get_page() == 1);
+                    CATCH_REQUIRE(npos.get_line() == 1);
+                    CATCH_REQUIRE(npos.get_total_line() == 1);
                 }
 
                 // sign
                 //if(i < 0)
                 //{
                 //    csspp::node::pointer_t integer(l.next_token());
-                //    REQUIRE(integer->is(csspp::node_type_t::SUBTRACT));
+                //    CATCH_REQUIRE(integer->is(csspp::node_type_t::SUBTRACT));
                 //    csspp::position const & npos(integer->get_position());
-                //    REQUIRE(npos.get_filename() == "test.css");
-                //    REQUIRE(npos.get_page() == 1);
-                //    REQUIRE(npos.get_line() == 1);
-                //    REQUIRE(npos.get_total_line() == 1);
+                //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                //    CATCH_REQUIRE(npos.get_page() == 1);
+                //    CATCH_REQUIRE(npos.get_line() == 1);
+                //    CATCH_REQUIRE(npos.get_total_line() == 1);
                 //}
 
                 // integer (separated!)
                 {
                     csspp::node::pointer_t integer(l.next_token());
-                    REQUIRE(integer->is(csspp::node_type_t::INTEGER));
-                    REQUIRE(integer->get_integer() == i);
-                    REQUIRE(integer->get_string() == "");
+                    CATCH_REQUIRE(integer->is(csspp::node_type_t::INTEGER));
+                    CATCH_REQUIRE(integer->get_integer() == i);
+                    CATCH_REQUIRE(integer->get_string() == "");
                     csspp::position const & npos(integer->get_position());
-                    REQUIRE(npos.get_filename() == "test.css");
-                    REQUIRE(npos.get_page() == 1);
-                    REQUIRE(npos.get_line() == 1);
-                    REQUIRE(npos.get_total_line() == 1);
+                    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                    CATCH_REQUIRE(npos.get_page() == 1);
+                    CATCH_REQUIRE(npos.get_line() == 1);
+                    CATCH_REQUIRE(npos.get_total_line() == 1);
                 }
 
                 // whitespace
                 {
                     csspp::node::pointer_t whitespace(l.next_token());
-                    REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+                    CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
                     csspp::position const & npos(whitespace->get_position());
-                    REQUIRE(npos.get_filename() == "test.css");
-                    REQUIRE(npos.get_page() == 1);
-                    REQUIRE(npos.get_line() == 1);
-                    REQUIRE(npos.get_total_line() == 1);
+                    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                    CATCH_REQUIRE(npos.get_page() == 1);
+                    CATCH_REQUIRE(npos.get_line() == 1);
+                    CATCH_REQUIRE(npos.get_total_line() == 1);
                 }
 
                 // "dimension" (as a separate identifier)
@@ -4353,15 +4376,15 @@ TEST_CASE("Dimensions", "[lexer] [number] [dimension] [identifier]")
                     // a dimension is an integer or a decimal number
                     // with a string expressing the dimension
                     csspp::node::pointer_t dimension(l.next_token());
-                    REQUIRE(dimension->is(csspp::node_type_t::IDENTIFIER));
-                    REQUIRE(dimension->get_string() == dimensions[j]);
+                    CATCH_REQUIRE(dimension->is(csspp::node_type_t::IDENTIFIER));
+                    CATCH_REQUIRE(dimension->get_string() == dimensions[j]);
                     csspp::position const & npos(dimension->get_position());
-                    REQUIRE(npos.get_filename() == "test.css");
-                    REQUIRE(npos.get_page() == 1);
-                    REQUIRE(npos.get_line() == 1);
-                    REQUIRE(npos.get_total_line() == 1);
+                    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                    CATCH_REQUIRE(npos.get_page() == 1);
+                    CATCH_REQUIRE(npos.get_line() == 1);
+                    CATCH_REQUIRE(npos.get_total_line() == 1);
                 }
-                REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+                CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
             }
         }
     }
@@ -4387,12 +4410,12 @@ TEST_CASE("Dimensions", "[lexer] [number] [dimension] [identifier]")
                 //if(i < 0)
                 //{
                 //    csspp::node::pointer_t integer(l.next_token());
-                //    REQUIRE(integer->is(csspp::node_type_t::SUBTRACT));
+                //    CATCH_REQUIRE(integer->is(csspp::node_type_t::SUBTRACT));
                 //    csspp::position const & npos(integer->get_position());
-                //    REQUIRE(npos.get_filename() == "test.css");
-                //    REQUIRE(npos.get_page() == 1);
-                //    REQUIRE(npos.get_line() == 1);
-                //    REQUIRE(npos.get_total_line() == 1);
+                //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                //    CATCH_REQUIRE(npos.get_page() == 1);
+                //    CATCH_REQUIRE(npos.get_line() == 1);
+                //    CATCH_REQUIRE(npos.get_total_line() == 1);
                 //}
 
                 // dimension
@@ -4400,61 +4423,61 @@ TEST_CASE("Dimensions", "[lexer] [number] [dimension] [identifier]")
                     // a dimension is an integer or a decimal number
                     // with a string expressing the dimension
                     csspp::node::pointer_t dimension(l.next_token());
-                    REQUIRE(dimension->is(csspp::node_type_t::DECIMAL_NUMBER));
-                    REQUIRE(fabs(dimension->get_decimal_number() - i / 100.0) < 0.00001);
-                    REQUIRE(dimension->get_string() == dimensions[j]);
+                    CATCH_REQUIRE(dimension->is(csspp::node_type_t::DECIMAL_NUMBER));
+                    CATCH_REQUIRE(fabs(dimension->get_decimal_number() - i / 100.0) < 0.00001);
+                    CATCH_REQUIRE(dimension->get_string() == dimensions[j]);
                     csspp::position const & npos(dimension->get_position());
-                    REQUIRE(npos.get_filename() == "test.css");
-                    REQUIRE(npos.get_page() == 1);
-                    REQUIRE(npos.get_line() == 1);
-                    REQUIRE(npos.get_total_line() == 1);
+                    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                    CATCH_REQUIRE(npos.get_page() == 1);
+                    CATCH_REQUIRE(npos.get_line() == 1);
+                    CATCH_REQUIRE(npos.get_total_line() == 1);
                 }
 
                 // comma
                 {
                     csspp::node::pointer_t comma(l.next_token());
-                    REQUIRE(comma->is(csspp::node_type_t::COMMA));
+                    CATCH_REQUIRE(comma->is(csspp::node_type_t::COMMA));
                     csspp::position const & npos(comma->get_position());
-                    REQUIRE(npos.get_filename() == "test.css");
-                    REQUIRE(npos.get_page() == 1);
-                    REQUIRE(npos.get_line() == 1);
-                    REQUIRE(npos.get_total_line() == 1);
+                    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                    CATCH_REQUIRE(npos.get_page() == 1);
+                    CATCH_REQUIRE(npos.get_line() == 1);
+                    CATCH_REQUIRE(npos.get_total_line() == 1);
                 }
 
                 // sign
                 //if(i < 0)
                 //{
                 //    csspp::node::pointer_t integer(l.next_token());
-                //    REQUIRE(integer->is(csspp::node_type_t::SUBTRACT));
+                //    CATCH_REQUIRE(integer->is(csspp::node_type_t::SUBTRACT));
                 //    csspp::position const & npos(integer->get_position());
-                //    REQUIRE(npos.get_filename() == "test.css");
-                //    REQUIRE(npos.get_page() == 1);
-                //    REQUIRE(npos.get_line() == 1);
-                //    REQUIRE(npos.get_total_line() == 1);
+                //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                //    CATCH_REQUIRE(npos.get_page() == 1);
+                //    CATCH_REQUIRE(npos.get_line() == 1);
+                //    CATCH_REQUIRE(npos.get_total_line() == 1);
                 //}
 
                 // decimal number (separated!)
                 {
                     csspp::node::pointer_t decimal_number(l.next_token());
-                    REQUIRE(decimal_number->is(csspp::node_type_t::DECIMAL_NUMBER));
-                    REQUIRE(fabs(decimal_number->get_decimal_number() - i / 100.0) < 0.00001);
-                    REQUIRE(decimal_number->get_string() == "");
+                    CATCH_REQUIRE(decimal_number->is(csspp::node_type_t::DECIMAL_NUMBER));
+                    CATCH_REQUIRE(fabs(decimal_number->get_decimal_number() - i / 100.0) < 0.00001);
+                    CATCH_REQUIRE(decimal_number->get_string() == "");
                     csspp::position const & npos(decimal_number->get_position());
-                    REQUIRE(npos.get_filename() == "test.css");
-                    REQUIRE(npos.get_page() == 1);
-                    REQUIRE(npos.get_line() == 1);
-                    REQUIRE(npos.get_total_line() == 1);
+                    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                    CATCH_REQUIRE(npos.get_page() == 1);
+                    CATCH_REQUIRE(npos.get_line() == 1);
+                    CATCH_REQUIRE(npos.get_total_line() == 1);
                 }
 
                 // whitespace
                 {
                     csspp::node::pointer_t whitespace(l.next_token());
-                    REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+                    CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
                     csspp::position const & npos(whitespace->get_position());
-                    REQUIRE(npos.get_filename() == "test.css");
-                    REQUIRE(npos.get_page() == 1);
-                    REQUIRE(npos.get_line() == 1);
-                    REQUIRE(npos.get_total_line() == 1);
+                    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                    CATCH_REQUIRE(npos.get_page() == 1);
+                    CATCH_REQUIRE(npos.get_line() == 1);
+                    CATCH_REQUIRE(npos.get_total_line() == 1);
                 }
 
                 // "dimension" (as a separate identifier)
@@ -4462,15 +4485,15 @@ TEST_CASE("Dimensions", "[lexer] [number] [dimension] [identifier]")
                     // a dimension is an integer or a decimal number
                     // with a string expressing the dimension
                     csspp::node::pointer_t dimension(l.next_token());
-                    REQUIRE(dimension->is(csspp::node_type_t::IDENTIFIER));
-                    REQUIRE(dimension->get_string() == dimensions[j]);
+                    CATCH_REQUIRE(dimension->is(csspp::node_type_t::IDENTIFIER));
+                    CATCH_REQUIRE(dimension->get_string() == dimensions[j]);
                     csspp::position const & npos(dimension->get_position());
-                    REQUIRE(npos.get_filename() == "test.css");
-                    REQUIRE(npos.get_page() == 1);
-                    REQUIRE(npos.get_line() == 1);
-                    REQUIRE(npos.get_total_line() == 1);
+                    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                    CATCH_REQUIRE(npos.get_page() == 1);
+                    CATCH_REQUIRE(npos.get_line() == 1);
+                    CATCH_REQUIRE(npos.get_total_line() == 1);
                 }
-                REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+                CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
             }
         }
     }
@@ -4496,12 +4519,12 @@ TEST_CASE("Dimensions", "[lexer] [number] [dimension] [identifier]")
                 //if(i < 0)
                 //{
                 //    csspp::node::pointer_t integer(l.next_token());
-                //    REQUIRE(integer->is(csspp::node_type_t::SUBTRACT));
+                //    CATCH_REQUIRE(integer->is(csspp::node_type_t::SUBTRACT));
                 //    csspp::position const & npos(integer->get_position());
-                //    REQUIRE(npos.get_filename() == "test.css");
-                //    REQUIRE(npos.get_page() == 1);
-                //    REQUIRE(npos.get_line() == 1);
-                //    REQUIRE(npos.get_total_line() == 1);
+                //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                //    CATCH_REQUIRE(npos.get_page() == 1);
+                //    CATCH_REQUIRE(npos.get_line() == 1);
+                //    CATCH_REQUIRE(npos.get_total_line() == 1);
                 //}
 
                 // dimension
@@ -4509,61 +4532,61 @@ TEST_CASE("Dimensions", "[lexer] [number] [dimension] [identifier]")
                     // a dimension is an integer or a decimal number
                     // with a string expressing the dimension
                     csspp::node::pointer_t dimension(l.next_token());
-                    REQUIRE(dimension->is(csspp::node_type_t::DECIMAL_NUMBER));
-                    REQUIRE(fabs(dimension->get_decimal_number() - i / 100.0) < 0.00001);
-                    REQUIRE(dimension->get_string() == dimensions[j]);
+                    CATCH_REQUIRE(dimension->is(csspp::node_type_t::DECIMAL_NUMBER));
+                    CATCH_REQUIRE(fabs(dimension->get_decimal_number() - i / 100.0) < 0.00001);
+                    CATCH_REQUIRE(dimension->get_string() == dimensions[j]);
                     csspp::position const & npos(dimension->get_position());
-                    REQUIRE(npos.get_filename() == "test.css");
-                    REQUIRE(npos.get_page() == 1);
-                    REQUIRE(npos.get_line() == 1);
-                    REQUIRE(npos.get_total_line() == 1);
+                    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                    CATCH_REQUIRE(npos.get_page() == 1);
+                    CATCH_REQUIRE(npos.get_line() == 1);
+                    CATCH_REQUIRE(npos.get_total_line() == 1);
                 }
 
                 // comma
                 {
                     csspp::node::pointer_t comma(l.next_token());
-                    REQUIRE(comma->is(csspp::node_type_t::COMMA));
+                    CATCH_REQUIRE(comma->is(csspp::node_type_t::COMMA));
                     csspp::position const & npos(comma->get_position());
-                    REQUIRE(npos.get_filename() == "test.css");
-                    REQUIRE(npos.get_page() == 1);
-                    REQUIRE(npos.get_line() == 1);
-                    REQUIRE(npos.get_total_line() == 1);
+                    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                    CATCH_REQUIRE(npos.get_page() == 1);
+                    CATCH_REQUIRE(npos.get_line() == 1);
+                    CATCH_REQUIRE(npos.get_total_line() == 1);
                 }
 
                 // sign
                 //if(i < 0)
                 //{
                 //    csspp::node::pointer_t integer(l.next_token());
-                //    REQUIRE(integer->is(csspp::node_type_t::SUBTRACT));
+                //    CATCH_REQUIRE(integer->is(csspp::node_type_t::SUBTRACT));
                 //    csspp::position const & npos(integer->get_position());
-                //    REQUIRE(npos.get_filename() == "test.css");
-                //    REQUIRE(npos.get_page() == 1);
-                //    REQUIRE(npos.get_line() == 1);
-                //    REQUIRE(npos.get_total_line() == 1);
+                //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                //    CATCH_REQUIRE(npos.get_page() == 1);
+                //    CATCH_REQUIRE(npos.get_line() == 1);
+                //    CATCH_REQUIRE(npos.get_total_line() == 1);
                 //}
 
                 // decimal number (separated!)
                 {
                     csspp::node::pointer_t decimal_number(l.next_token());
-                    REQUIRE(decimal_number->is(csspp::node_type_t::DECIMAL_NUMBER));
-                    REQUIRE(fabs(decimal_number->get_decimal_number() - i / 100.0) < 0.00001);
-                    REQUIRE(decimal_number->get_string() == "");
+                    CATCH_REQUIRE(decimal_number->is(csspp::node_type_t::DECIMAL_NUMBER));
+                    CATCH_REQUIRE(fabs(decimal_number->get_decimal_number() - i / 100.0) < 0.00001);
+                    CATCH_REQUIRE(decimal_number->get_string() == "");
                     csspp::position const & npos(decimal_number->get_position());
-                    REQUIRE(npos.get_filename() == "test.css");
-                    REQUIRE(npos.get_page() == 1);
-                    REQUIRE(npos.get_line() == 1);
-                    REQUIRE(npos.get_total_line() == 1);
+                    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                    CATCH_REQUIRE(npos.get_page() == 1);
+                    CATCH_REQUIRE(npos.get_line() == 1);
+                    CATCH_REQUIRE(npos.get_total_line() == 1);
                 }
 
                 // whitespace
                 {
                     csspp::node::pointer_t whitespace(l.next_token());
-                    REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+                    CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
                     csspp::position const & npos(whitespace->get_position());
-                    REQUIRE(npos.get_filename() == "test.css");
-                    REQUIRE(npos.get_page() == 1);
-                    REQUIRE(npos.get_line() == 1);
-                    REQUIRE(npos.get_total_line() == 1);
+                    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                    CATCH_REQUIRE(npos.get_page() == 1);
+                    CATCH_REQUIRE(npos.get_line() == 1);
+                    CATCH_REQUIRE(npos.get_total_line() == 1);
                 }
 
                 // "dimension" (as a separate identifier)
@@ -4571,15 +4594,15 @@ TEST_CASE("Dimensions", "[lexer] [number] [dimension] [identifier]")
                     // a dimension is an integer or a decimal number
                     // with a string expressing the dimension
                     csspp::node::pointer_t dimension(l.next_token());
-                    REQUIRE(dimension->is(csspp::node_type_t::IDENTIFIER));
-                    REQUIRE(dimension->get_string() == dimensions[j]);
+                    CATCH_REQUIRE(dimension->is(csspp::node_type_t::IDENTIFIER));
+                    CATCH_REQUIRE(dimension->get_string() == dimensions[j]);
                     csspp::position const & npos(dimension->get_position());
-                    REQUIRE(npos.get_filename() == "test.css");
-                    REQUIRE(npos.get_page() == 1);
-                    REQUIRE(npos.get_line() == 1);
-                    REQUIRE(npos.get_total_line() == 1);
+                    CATCH_REQUIRE(npos.get_filename() == "test.css");
+                    CATCH_REQUIRE(npos.get_page() == 1);
+                    CATCH_REQUIRE(npos.get_line() == 1);
+                    CATCH_REQUIRE(npos.get_total_line() == 1);
                 }
-                REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+                CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
             }
         }
     }
@@ -4596,26 +4619,26 @@ TEST_CASE("Dimensions", "[lexer] [number] [dimension] [identifier]")
             // a dimension is an integer or a decimal number
             // with a string expressing the dimension
             csspp::node::pointer_t dimension(l.next_token());
-            REQUIRE(dimension->is(csspp::node_type_t::DECIMAL_NUMBER));
-            REQUIRE(fabs(dimension->get_decimal_number() - 1.25) < 0.00001);
-            REQUIRE(dimension->get_string() == "e");
+            CATCH_REQUIRE(dimension->is(csspp::node_type_t::DECIMAL_NUMBER));
+            CATCH_REQUIRE(fabs(dimension->get_decimal_number() - 1.25) < 0.00001);
+            CATCH_REQUIRE(dimension->get_string() == "e");
             csspp::position const & npos(dimension->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
-        REQUIRE_ERRORS("test.css(1): error: spurious newline character after a \\ character outside of a string.\n");
+        VERIFY_ERRORS("test.css(1): error: spurious newline character after a \\ character outside of a string.\n");
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Percent", "[lexer] [number] [percent]")
+CATCH_TEST_CASE("Percent", "[lexer] [number] [percent]")
 {
     // percent with integers, converts to decimal number anyway
     {
@@ -4633,155 +4656,152 @@ TEST_CASE("Percent", "[lexer] [number] [percent]")
             //if(i < 0)
             //{
             //    csspp::node::pointer_t subtract(l.next_token());
-            //    REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
+            //    CATCH_REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
             //    csspp::position const & npos(subtract->get_position());
-            //    REQUIRE(npos.get_filename() == "test.css");
-            //    REQUIRE(npos.get_page() == 1);
-            //    REQUIRE(npos.get_line() == 1);
-            //    REQUIRE(npos.get_total_line() == 1);
+            //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+            //    CATCH_REQUIRE(npos.get_page() == 1);
+            //    CATCH_REQUIRE(npos.get_line() == 1);
+            //    CATCH_REQUIRE(npos.get_total_line() == 1);
             //}
 
             // percent
             {
                 csspp::node::pointer_t percent(l.next_token());
-                REQUIRE(percent->is(csspp::node_type_t::PERCENT));
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wfloat-equal"
-                REQUIRE(percent->get_decimal_number() == static_cast<csspp::decimal_number_t>(i) / 100.0);
-#pragma GCC diagnostic pop
+                CATCH_REQUIRE(percent->is(csspp::node_type_t::PERCENT));
+                CATCH_REQUIRE(SNAP_CATCH2_NAMESPACE::nearly_equal(percent->get_decimal_number(), static_cast<csspp::decimal_number_t>(i) / 100.0, 0.0));
                 csspp::position const & npos(percent->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // comma
             {
                 csspp::node::pointer_t comma(l.next_token());
-                REQUIRE(comma->is(csspp::node_type_t::COMMA));
+                CATCH_REQUIRE(comma->is(csspp::node_type_t::COMMA));
                 csspp::position const & npos(comma->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // sign
             //if(i < 0)
             //{
             //    csspp::node::pointer_t subtract(l.next_token());
-            //    REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
+            //    CATCH_REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
             //    csspp::position const & npos(subtract->get_position());
-            //    REQUIRE(npos.get_filename() == "test.css");
-            //    REQUIRE(npos.get_page() == 1);
-            //    REQUIRE(npos.get_line() == 1);
-            //    REQUIRE(npos.get_total_line() == 1);
+            //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+            //    CATCH_REQUIRE(npos.get_page() == 1);
+            //    CATCH_REQUIRE(npos.get_line() == 1);
+            //    CATCH_REQUIRE(npos.get_total_line() == 1);
             //}
 
             // dimension (because '%' written '\%' is not a PERCENT...)
             {
                 csspp::node::pointer_t integer(l.next_token());
-                REQUIRE(integer->is(csspp::node_type_t::INTEGER));
-                REQUIRE(integer->get_integer() == i);
-                REQUIRE(integer->get_string() == "%");
+                CATCH_REQUIRE(integer->is(csspp::node_type_t::INTEGER));
+                CATCH_REQUIRE(integer->get_integer() == i);
+                CATCH_REQUIRE(integer->get_string() == "%");
                 csspp::position const & npos(integer->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // comma
             {
                 csspp::node::pointer_t comma(l.next_token());
-                REQUIRE(comma->is(csspp::node_type_t::COMMA));
+                CATCH_REQUIRE(comma->is(csspp::node_type_t::COMMA));
                 csspp::position const & npos(comma->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // sign
             //if(i < 0)
             //{
             //    csspp::node::pointer_t subtract(l.next_token());
-            //    REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
+            //    CATCH_REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
             //    csspp::position const & npos(subtract->get_position());
-            //    REQUIRE(npos.get_filename() == "test.css");
-            //    REQUIRE(npos.get_page() == 1);
-            //    REQUIRE(npos.get_line() == 1);
-            //    REQUIRE(npos.get_total_line() == 1);
+            //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+            //    CATCH_REQUIRE(npos.get_page() == 1);
+            //    CATCH_REQUIRE(npos.get_line() == 1);
+            //    CATCH_REQUIRE(npos.get_total_line() == 1);
             //}
 
             // dimension (again \25 is not a PERCENT)
             {
                 csspp::node::pointer_t dimension(l.next_token());
-                REQUIRE(dimension->is(csspp::node_type_t::INTEGER));
-                REQUIRE(dimension->get_integer() == i);
-                REQUIRE(dimension->get_string() == "%");
+                CATCH_REQUIRE(dimension->is(csspp::node_type_t::INTEGER));
+                CATCH_REQUIRE(dimension->get_integer() == i);
+                CATCH_REQUIRE(dimension->get_string() == "%");
                 csspp::position const & npos(dimension->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // comma
             {
                 csspp::node::pointer_t comma(l.next_token());
-                REQUIRE(comma->is(csspp::node_type_t::COMMA));
+                CATCH_REQUIRE(comma->is(csspp::node_type_t::COMMA));
                 csspp::position const & npos(comma->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // sign
             //if(i < 0)
             //{
             //    csspp::node::pointer_t subtract(l.next_token());
-            //    REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
+            //    CATCH_REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
             //    csspp::position const & npos(subtract->get_position());
-            //    REQUIRE(npos.get_filename() == "test.css");
-            //    REQUIRE(npos.get_page() == 1);
-            //    REQUIRE(npos.get_line() == 1);
-            //    REQUIRE(npos.get_total_line() == 1);
+            //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+            //    CATCH_REQUIRE(npos.get_page() == 1);
+            //    CATCH_REQUIRE(npos.get_line() == 1);
+            //    CATCH_REQUIRE(npos.get_total_line() == 1);
             //}
 
             // integer (separated!)
             {
                 csspp::node::pointer_t integer(l.next_token());
-                REQUIRE(integer->is(csspp::node_type_t::INTEGER));
-                REQUIRE(integer->get_integer() == i);
-                REQUIRE(integer->get_string() == "");
-                REQUIRE(integer->get_string() == "");
+                CATCH_REQUIRE(integer->is(csspp::node_type_t::INTEGER));
+                CATCH_REQUIRE(integer->get_integer() == i);
+                CATCH_REQUIRE(integer->get_string() == "");
+                CATCH_REQUIRE(integer->get_string() == "");
                 csspp::position const & npos(integer->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // whitespace
             {
                 csspp::node::pointer_t whitespace(l.next_token());
-                REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+                CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
                 csspp::position const & npos(whitespace->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // "percent" by itself is MODULO
             {
-                REQUIRE(l.next_token()->is(csspp::node_type_t::MODULO));
-                REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+                CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::MODULO));
+                CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
-                REQUIRE_ERRORS("");
+                VERIFY_ERRORS("");
             }
         }
     }
@@ -4800,88 +4820,88 @@ TEST_CASE("Percent", "[lexer] [number] [percent]")
             //if(i < 0)
             //{
             //    csspp::node::pointer_t subtract(l.next_token());
-            //    REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
+            //    CATCH_REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
             //    csspp::position const & npos(subtract->get_position());
-            //    REQUIRE(npos.get_filename() == "test.css");
-            //    REQUIRE(npos.get_page() == 1);
-            //    REQUIRE(npos.get_line() == 1);
-            //    REQUIRE(npos.get_total_line() == 1);
+            //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+            //    CATCH_REQUIRE(npos.get_page() == 1);
+            //    CATCH_REQUIRE(npos.get_line() == 1);
+            //    CATCH_REQUIRE(npos.get_total_line() == 1);
             //}
 
             // percent
             {
                 csspp::node::pointer_t percent(l.next_token());
-                REQUIRE(percent->is(csspp::node_type_t::PERCENT));
-                REQUIRE(fabs(percent->get_decimal_number() - i / 10000.0) < 0.00001);
+                CATCH_REQUIRE(percent->is(csspp::node_type_t::PERCENT));
+                CATCH_REQUIRE(fabs(percent->get_decimal_number() - i / 10000.0) < 0.00001);
                 csspp::position const & npos(percent->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // comma
             {
                 csspp::node::pointer_t comma(l.next_token());
-                REQUIRE(comma->is(csspp::node_type_t::COMMA));
+                CATCH_REQUIRE(comma->is(csspp::node_type_t::COMMA));
                 csspp::position const & npos(comma->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // sign
             //if(i < 0)
             //{
             //    csspp::node::pointer_t subtract(l.next_token());
-            //    REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
+            //    CATCH_REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
             //    csspp::position const & npos(subtract->get_position());
-            //    REQUIRE(npos.get_filename() == "test.css");
-            //    REQUIRE(npos.get_page() == 1);
-            //    REQUIRE(npos.get_line() == 1);
-            //    REQUIRE(npos.get_total_line() == 1);
+            //    CATCH_REQUIRE(npos.get_filename() == "test.css");
+            //    CATCH_REQUIRE(npos.get_page() == 1);
+            //    CATCH_REQUIRE(npos.get_line() == 1);
+            //    CATCH_REQUIRE(npos.get_total_line() == 1);
             //}
 
             // decimal number (separated!)
             {
                 csspp::node::pointer_t decimal_number(l.next_token());
-                REQUIRE(decimal_number->is(csspp::node_type_t::DECIMAL_NUMBER));
-                REQUIRE(fabs(decimal_number->get_decimal_number() - i / 100.0) < 0.00001);
-                REQUIRE(decimal_number->get_string() == "");
+                CATCH_REQUIRE(decimal_number->is(csspp::node_type_t::DECIMAL_NUMBER));
+                CATCH_REQUIRE(fabs(decimal_number->get_decimal_number() - i / 100.0) < 0.00001);
+                CATCH_REQUIRE(decimal_number->get_string() == "");
                 csspp::position const & npos(decimal_number->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // whitespace
             {
                 csspp::node::pointer_t whitespace(l.next_token());
-                REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+                CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
                 csspp::position const & npos(whitespace->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // "percent" by itself is MODULO
             {
-                REQUIRE(l.next_token()->is(csspp::node_type_t::MODULO));
-                REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+                CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::MODULO));
+                CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
-                REQUIRE_ERRORS("");
+                VERIFY_ERRORS("");
             }
         }
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Unicode range", "[lexer] [unicode]")
+CATCH_TEST_CASE("Unicode range", "[lexer] [unicode]")
 {
     // a small test to make sure we get U or u as identifiers when
     // the + is not followed by the right character
@@ -4894,108 +4914,108 @@ TEST_CASE("Unicode range", "[lexer] [unicode]")
         // identifier
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(identifier->get_string() == "U");
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(identifier->get_string() == "U");
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // add
         {
             csspp::node::pointer_t add(l.next_token());
-            REQUIRE(add->is(csspp::node_type_t::ADD));
+            CATCH_REQUIRE(add->is(csspp::node_type_t::ADD));
             csspp::position const & npos(add->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // identifier
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(identifier->get_string() == "U");
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(identifier->get_string() == "U");
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // identifier
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(identifier->get_string() == "or");
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(identifier->get_string() == "or");
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // whitespace
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // identifier
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(identifier->get_string() == "u");
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(identifier->get_string() == "u");
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // add
         {
             csspp::node::pointer_t add(l.next_token());
-            REQUIRE(add->is(csspp::node_type_t::ADD));
+            CATCH_REQUIRE(add->is(csspp::node_type_t::ADD));
             csspp::position const & npos(add->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // identifier
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(identifier->get_string() == "u");
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(identifier->get_string() == "u");
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // one value (U+<value>)
@@ -5017,62 +5037,62 @@ TEST_CASE("Unicode range", "[lexer] [unicode]")
             // unicode range
             {
                 csspp::node::pointer_t unicode_range(l.next_token());
-                REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
-                REQUIRE(unicode_range->get_integer() == range.get_range());
+                CATCH_REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
+                CATCH_REQUIRE(unicode_range->get_integer() == static_cast<csspp::integer_t>(range.get_range()));
                 csspp::position const & npos(unicode_range->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // comma
             {
                 csspp::node::pointer_t comma(l.next_token());
-                REQUIRE(comma->is(csspp::node_type_t::COMMA));
+                CATCH_REQUIRE(comma->is(csspp::node_type_t::COMMA));
                 csspp::position const & npos(comma->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // unicode range
             {
                 csspp::node::pointer_t unicode_range(l.next_token());
-                REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
-                REQUIRE(unicode_range->get_integer() == range.get_range());
+                CATCH_REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
+                CATCH_REQUIRE(unicode_range->get_integer() == static_cast<csspp::integer_t>(range.get_range()));
                 csspp::position const & npos(unicode_range->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // comma
             {
                 csspp::node::pointer_t comma(l.next_token());
-                REQUIRE(comma->is(csspp::node_type_t::COMMA));
+                CATCH_REQUIRE(comma->is(csspp::node_type_t::COMMA));
                 csspp::position const & npos(comma->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // unicode range
             {
                 csspp::node::pointer_t unicode_range(l.next_token());
-                REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
-                REQUIRE(unicode_range->get_integer() == range.get_range());
+                CATCH_REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
+                CATCH_REQUIRE(unicode_range->get_integer() == static_cast<csspp::integer_t>(range.get_range()));
                 csspp::position const & npos(unicode_range->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
         }
 
         for(int i(0); i < 1000; ++i)
@@ -5090,62 +5110,62 @@ TEST_CASE("Unicode range", "[lexer] [unicode]")
             // unicode range
             {
                 csspp::node::pointer_t unicode_range(l.next_token());
-                REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
-                REQUIRE(unicode_range->get_integer() == range.get_range());
+                CATCH_REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
+                CATCH_REQUIRE(unicode_range->get_integer() == static_cast<csspp::integer_t>(range.get_range()));
                 csspp::position const & npos(unicode_range->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // comma
             {
                 csspp::node::pointer_t comma(l.next_token());
-                REQUIRE(comma->is(csspp::node_type_t::COMMA));
+                CATCH_REQUIRE(comma->is(csspp::node_type_t::COMMA));
                 csspp::position const & npos(comma->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // unicode range
             {
                 csspp::node::pointer_t unicode_range(l.next_token());
-                REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
-                REQUIRE(unicode_range->get_integer() == range.get_range());
+                CATCH_REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
+                CATCH_REQUIRE(unicode_range->get_integer() == static_cast<csspp::integer_t>(range.get_range()));
                 csspp::position const & npos(unicode_range->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // comma
             {
                 csspp::node::pointer_t comma(l.next_token());
-                REQUIRE(comma->is(csspp::node_type_t::COMMA));
+                CATCH_REQUIRE(comma->is(csspp::node_type_t::COMMA));
                 csspp::position const & npos(comma->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
             // unicode range
             {
                 csspp::node::pointer_t unicode_range(l.next_token());
-                REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
-                REQUIRE(unicode_range->get_integer() == range.get_range());
+                CATCH_REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
+                CATCH_REQUIRE(unicode_range->get_integer() == static_cast<csspp::integer_t>(range.get_range()));
                 csspp::position const & npos(unicode_range->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
             }
 
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
         }
     }
 
@@ -5162,28 +5182,28 @@ TEST_CASE("Unicode range", "[lexer] [unicode]")
         // unicode range
         {
             csspp::node::pointer_t unicode_range(l.next_token());
-            REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
-            REQUIRE(unicode_range->get_integer() == range.get_range());
+            CATCH_REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
+            CATCH_REQUIRE(unicode_range->get_integer() == static_cast<csspp::integer_t>(range.get_range()));
             csspp::position const & npos(unicode_range->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // identifier
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(identifier->get_string() == "Alexis");
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(identifier->get_string() == "Alexis");
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // test that we recover the number right after a Unicode Range
@@ -5199,28 +5219,28 @@ TEST_CASE("Unicode range", "[lexer] [unicode]")
         // unicode range
         {
             csspp::node::pointer_t unicode_range(l.next_token());
-            REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
-            REQUIRE(unicode_range->get_integer() == range.get_range());
+            CATCH_REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
+            CATCH_REQUIRE(unicode_range->get_integer() == static_cast<csspp::integer_t>(range.get_range()));
             csspp::position const & npos(unicode_range->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // integer
         {
             csspp::node::pointer_t integer(l.next_token());
-            REQUIRE(integer->is(csspp::node_type_t::INTEGER));
-            REQUIRE(integer->get_integer() == 123);
+            CATCH_REQUIRE(integer->is(csspp::node_type_t::INTEGER));
+            CATCH_REQUIRE(integer->get_integer() == 123);
             csspp::position const & npos(integer->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // try various masks
@@ -5236,16 +5256,16 @@ TEST_CASE("Unicode range", "[lexer] [unicode]")
         // unicode range
         {
             csspp::node::pointer_t unicode_range(l.next_token());
-            REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
-            REQUIRE(unicode_range->get_integer() == range.get_range());
+            CATCH_REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
+            CATCH_REQUIRE(unicode_range->get_integer() == static_cast<csspp::integer_t>(range.get_range()));
             csspp::position const & npos(unicode_range->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
     for(int i(0); i < 3; i++)
     {
@@ -5279,16 +5299,16 @@ TEST_CASE("Unicode range", "[lexer] [unicode]")
         // unicode range
         {
             csspp::node::pointer_t unicode_range(l.next_token());
-            REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
-            REQUIRE(unicode_range->get_integer() == range.get_range());
+            CATCH_REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
+            CATCH_REQUIRE(unicode_range->get_integer() == static_cast<csspp::integer_t>(range.get_range()));
             csspp::position const & npos(unicode_range->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
     for(int i(0); i < 0x11; ++i)
     {
@@ -5324,16 +5344,16 @@ TEST_CASE("Unicode range", "[lexer] [unicode]")
         // unicode range
         {
             csspp::node::pointer_t unicode_range(l.next_token());
-            REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
-            REQUIRE(unicode_range->get_integer() == range.get_range());
+            CATCH_REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
+            CATCH_REQUIRE(unicode_range->get_integer() == static_cast<csspp::integer_t>(range.get_range()));
             csspp::position const & npos(unicode_range->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
     for(int i(0); i < 1000; ++i) //1433656549
     {
@@ -5367,16 +5387,16 @@ TEST_CASE("Unicode range", "[lexer] [unicode]")
         // unicode range
         {
             csspp::node::pointer_t unicode_range(l.next_token());
-            REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
-            REQUIRE(unicode_range->get_integer() == range.get_range());
+            CATCH_REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
+            CATCH_REQUIRE(unicode_range->get_integer() == static_cast<csspp::integer_t>(range.get_range()));
             csspp::position const & npos(unicode_range->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // test simple range (start only) with values that are too large
@@ -5394,18 +5414,18 @@ TEST_CASE("Unicode range", "[lexer] [unicode]")
             // unicode range
             {
                 csspp::node::pointer_t unicode_range(l.next_token());
-                REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
-                //REQUIRE(unicode_range->get_integer() == range.f_range); -- there was an overflow
+                CATCH_REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
+                //CATCH_REQUIRE(unicode_range->get_integer() == range.f_range); -- there was an overflow
                 csspp::position const & npos(unicode_range->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
 
-                REQUIRE_ERRORS("test.css(1): error: unicode character too large, range is U+000000 to U+10FFFF.\n");
+                VERIFY_ERRORS("test.css(1): error: unicode character too large, range is U+000000 to U+10FFFF.\n");
             }
 
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
         }
 
         // check with the second unicode too large
@@ -5421,18 +5441,18 @@ TEST_CASE("Unicode range", "[lexer] [unicode]")
             // unicode range
             {
                 csspp::node::pointer_t unicode_range(l.next_token());
-                REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
-                //REQUIRE(unicode_range->get_integer() == range.f_range); -- there was an overflow
+                CATCH_REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
+                //CATCH_REQUIRE(unicode_range->get_integer() == range.f_range); -- there was an overflow
                 csspp::position const & npos(unicode_range->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
 
-                REQUIRE_ERRORS("test.css(1): error: unicode character too large, range is U+000000 to U+10FFFF.\n");
+                VERIFY_ERRORS("test.css(1): error: unicode character too large, range is U+000000 to U+10FFFF.\n");
             }
 
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
         }
 
         // check with a mask which is too large
@@ -5462,18 +5482,18 @@ TEST_CASE("Unicode range", "[lexer] [unicode]")
             // unicode range
             {
                 csspp::node::pointer_t unicode_range(l.next_token());
-                REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
-                //REQUIRE(unicode_range->get_integer() == range.f_range); -- there was an overflow, what could we check?
+                CATCH_REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
+                //CATCH_REQUIRE(unicode_range->get_integer() == range.f_range); -- there was an overflow, what could we check?
                 csspp::position const & npos(unicode_range->get_position());
-                REQUIRE(npos.get_filename() == "test.css");
-                REQUIRE(npos.get_page() == 1);
-                REQUIRE(npos.get_line() == 1);
-                REQUIRE(npos.get_total_line() == 1);
+                CATCH_REQUIRE(npos.get_filename() == "test.css");
+                CATCH_REQUIRE(npos.get_page() == 1);
+                CATCH_REQUIRE(npos.get_line() == 1);
+                CATCH_REQUIRE(npos.get_total_line() == 1);
 
-                REQUIRE_ERRORS("test.css(1): error: unicode character too large, range is U+000000 to U+10FFFF.\n");
+                VERIFY_ERRORS("test.css(1): error: unicode character too large, range is U+000000 to U+10FFFF.\n");
             }
 
-            REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+            CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
         }
     }
 
@@ -5505,48 +5525,48 @@ TEST_CASE("Unicode range", "[lexer] [unicode]")
         // unicode range
         {
             csspp::node::pointer_t unicode_range(l.next_token());
-            REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
-            REQUIRE(unicode_range->get_integer() == range.get_range());
+            CATCH_REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
+            CATCH_REQUIRE(unicode_range->get_integer() == static_cast<csspp::integer_t>(range.get_range()));
             csspp::position const & npos(unicode_range->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // comma
         {
             csspp::node::pointer_t whitespace(l.next_token());
-            REQUIRE(whitespace->is(csspp::node_type_t::COMMA));
+            CATCH_REQUIRE(whitespace->is(csspp::node_type_t::COMMA));
             csspp::position const & npos(whitespace->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // unicode range
         {
             csspp::node::pointer_t unicode_range(l.next_token());
-            REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
-            //REQUIRE(unicode_range->get_integer() == range.f_range); -- we get an error, we know what the range is, but we do not want to assume so in the test
+            CATCH_REQUIRE(unicode_range->is(csspp::node_type_t::UNICODE_RANGE));
+            //CATCH_REQUIRE(unicode_range->get_integer() == range.f_range); -- we get an error, we know what the range is, but we do not want to assume so in the test
             csspp::position const & npos(unicode_range->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): error: unicode range cannot have a start character larger than the end character.\n");
+            VERIFY_ERRORS("test.css(1): error: unicode range cannot have a start character larger than the end character.\n");
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Hash", "[lexer] [hash]")
+CATCH_TEST_CASE("Hash", "[lexer] [hash]")
 {
     // test a standard hash
     {
@@ -5558,16 +5578,16 @@ TEST_CASE("Hash", "[lexer] [hash]")
         // hash
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::HASH));
-            REQUIRE(identifier->get_string() == "-escape=33-");
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::HASH));
+            CATCH_REQUIRE(identifier->get_string() == "-escape=33-");
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // generate a set of simple and valid hashes
@@ -5607,16 +5627,16 @@ TEST_CASE("Hash", "[lexer] [hash]")
         // hash
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::HASH));
-            REQUIRE(identifier->get_string() == word);
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::HASH));
+            CATCH_REQUIRE(identifier->get_string() == word);
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // test a standard hash
@@ -5629,45 +5649,45 @@ TEST_CASE("Hash", "[lexer] [hash]")
         // hash
         {
             csspp::node::pointer_t hash(l.next_token());
-            REQUIRE(hash->is(csspp::node_type_t::HASH));
-            REQUIRE(hash->get_string() == "-escape");
+            CATCH_REQUIRE(hash->is(csspp::node_type_t::HASH));
+            CATCH_REQUIRE(hash->get_string() == "-escape");
             csspp::position const & npos(hash->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): error: escape character '\\0' is not acceptable in CSS.\n");
+            VERIFY_ERRORS("test.css(1): error: escape character '\\0' is not acceptable in CSS.\n");
         }
 
         // integer
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::INTEGER));
-            REQUIRE(identifier->get_integer() == 33);
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::INTEGER));
+            CATCH_REQUIRE(identifier->get_integer() == 33);
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // subtract
         {
             csspp::node::pointer_t subtract(l.next_token());
-            REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
+            CATCH_REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
             csspp::position const & npos(subtract->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 }
 
-TEST_CASE("Invalid hash", "[lexer] [hash]")
+CATCH_TEST_CASE("Invalid hash", "[lexer] [hash]")
 {
     // test an empty hash
     {
@@ -5679,28 +5699,28 @@ TEST_CASE("Invalid hash", "[lexer] [hash]")
         // identifier (empty)
         {
             csspp::node::pointer_t hash(l.next_token());
-            REQUIRE(hash->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(hash->get_string() == "empty");
+            CATCH_REQUIRE(hash->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(hash->get_string() == "empty");
             csspp::position const & npos(hash->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
         }
 
         // whitespace
         {
             csspp::node::pointer_t hash(l.next_token());
-            REQUIRE(hash->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(hash->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(hash->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
         }
 
         // hash
@@ -5709,36 +5729,36 @@ TEST_CASE("Invalid hash", "[lexer] [hash]")
         // whitespace
         {
             csspp::node::pointer_t hash(l.next_token());
-            REQUIRE(hash->is(csspp::node_type_t::WHITESPACE));
+            CATCH_REQUIRE(hash->is(csspp::node_type_t::WHITESPACE));
             csspp::position const & npos(hash->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): error: '#' by itself is not valid.\n");
+            VERIFY_ERRORS("test.css(1): error: '#' by itself is not valid.\n");
         }
 
         // identifier (here)
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(identifier->get_string() == "here");
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(identifier->get_string() == "here");
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Placeholders", "[lexer] [hash]")
+CATCH_TEST_CASE("Placeholders", "[lexer] [hash]")
 {
     // test a standard placeholder
     {
@@ -5750,16 +5770,16 @@ TEST_CASE("Placeholders", "[lexer] [hash]")
         // hash
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::PLACEHOLDER));
-            REQUIRE(identifier->get_string() == "es-cape=33-");
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::PLACEHOLDER));
+            CATCH_REQUIRE(identifier->get_string() == "es-cape=33-");
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // generate a set of simple and valid placeholders
@@ -5801,17 +5821,17 @@ TEST_CASE("Placeholders", "[lexer] [hash]")
         // placeholder
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::PLACEHOLDER));
-            REQUIRE(identifier->get_string() == word);
-            REQUIRE(identifier->get_lowercase_string() == lword);
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::PLACEHOLDER));
+            CATCH_REQUIRE(identifier->get_string() == word);
+            CATCH_REQUIRE(identifier->get_lowercase_string() == lword);
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // test a standard placeholder
@@ -5824,48 +5844,48 @@ TEST_CASE("Placeholders", "[lexer] [hash]")
         // placeholder
         {
             csspp::node::pointer_t hash(l.next_token());
-            REQUIRE(hash->is(csspp::node_type_t::PLACEHOLDER));
-            REQUIRE(hash->get_string() == "es-cape");
+            CATCH_REQUIRE(hash->is(csspp::node_type_t::PLACEHOLDER));
+            CATCH_REQUIRE(hash->get_string() == "es-cape");
             csspp::position const & npos(hash->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
 
-            REQUIRE_ERRORS("test.css(1): error: escape character '\\0' is not acceptable in CSS.\n");
+            VERIFY_ERRORS("test.css(1): error: escape character '\\0' is not acceptable in CSS.\n");
         }
 
         // integer
         {
             csspp::node::pointer_t identifier(l.next_token());
-            REQUIRE(identifier->is(csspp::node_type_t::INTEGER));
-            REQUIRE(identifier->get_integer() == 33);
+            CATCH_REQUIRE(identifier->is(csspp::node_type_t::INTEGER));
+            CATCH_REQUIRE(identifier->get_integer() == 33);
             csspp::position const & npos(identifier->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // subtract
         {
             csspp::node::pointer_t subtract(l.next_token());
-            REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
+            CATCH_REQUIRE(subtract->is(csspp::node_type_t::SUBTRACT));
             csspp::position const & npos(subtract->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Variables", "[lexer] [variable]")
+CATCH_TEST_CASE("Variables", "[lexer] [variable]")
 {
     // test variables
     for(int i(0); i < 1000; ++i)
@@ -5912,19 +5932,19 @@ TEST_CASE("Variables", "[lexer] [variable]")
         // variable
         {
             csspp::node::pointer_t variable(l.next_token());
-            REQUIRE(variable->is(csspp::node_type_t::VARIABLE));
-            REQUIRE(variable->get_string() == lword);
+            CATCH_REQUIRE(variable->is(csspp::node_type_t::VARIABLE));
+            CATCH_REQUIRE(variable->get_string() == lword);
             csspp::position const & npos(variable->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // test variable functions
@@ -5972,50 +5992,43 @@ TEST_CASE("Variables", "[lexer] [variable]")
         // variable function
         {
             csspp::node::pointer_t variable(l.next_token());
-            REQUIRE(variable->is(csspp::node_type_t::VARIABLE_FUNCTION));
-            REQUIRE(variable->get_string() == lword);
+            CATCH_REQUIRE(variable->is(csspp::node_type_t::VARIABLE_FUNCTION));
+            CATCH_REQUIRE(variable->get_string() == lword);
             csspp::position const & npos(variable->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // args
         {
             csspp::node::pointer_t variable(l.next_token());
-            REQUIRE(variable->is(csspp::node_type_t::IDENTIFIER));
-            REQUIRE(variable->get_string() == "args");
+            CATCH_REQUIRE(variable->is(csspp::node_type_t::IDENTIFIER));
+            CATCH_REQUIRE(variable->get_string() == "args");
             csspp::position const & npos(variable->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
         // ')'
         {
             csspp::node::pointer_t variable(l.next_token());
-            REQUIRE(variable->is(csspp::node_type_t::CLOSE_PARENTHESIS));
+            CATCH_REQUIRE(variable->is(csspp::node_type_t::CLOSE_PARENTHESIS));
             csspp::position const & npos(variable->get_position());
-            REQUIRE(npos.get_filename() == "test.css");
-            REQUIRE(npos.get_page() == 1);
-            REQUIRE(npos.get_line() == 1);
-            REQUIRE(npos.get_total_line() == 1);
+            CATCH_REQUIRE(npos.get_filename() == "test.css");
+            CATCH_REQUIRE(npos.get_page() == 1);
+            CATCH_REQUIRE(npos.get_line() == 1);
+            CATCH_REQUIRE(npos.get_total_line() == 1);
         }
 
-        REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
+        CATCH_REQUIRE(l.next_token()->is(csspp::node_type_t::EOF_TOKEN));
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 }
-
-// Local Variables:
-// mode: cpp
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// tab-width: 4
-// End:
 
 // vim: ts=4 sw=4 et

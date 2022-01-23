@@ -1,5 +1,7 @@
-// CSS Preprocessor -- Test Suite
-// Copyright (c) 2015-2021  Made to Order Software Corp.  All Rights Reserved
+// Copyright (c) 2015-2022  Made to Order Software Corp.  All Rights Reserved
+//
+// https://snapwebsites.org/project/csspp
+// contact@m2osw.com
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -11,9 +13,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 /** \file
  * \brief Test the compiler.cpp file.
@@ -23,20 +25,36 @@
  * CSS Preprocessor extensions.
  */
 
-#include "catch_tests.h"
+// self
+//
+#include    "catch_main.h"
 
-#include "csspp/compiler.h"
-#include "csspp/exceptions.h"
-#include "csspp/parser.h"
 
-#include <fstream>
-#include <iostream>
-#include <sstream>
+// csspp lib
+//
+#include    <csspp/compiler.h>
+#include    <csspp/exceptions.h>
+#include    <csspp/parser.h>
 
-#include <string.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/stat.h>
+
+// C++ lib
+//
+#include    <fstream>
+#include    <iostream>
+#include    <sstream>
+
+
+// C lib
+//
+#include    <string.h>
+#include    <unistd.h>
+#include    <sys/stat.h>
+
+
+// last include
+//
+#include    <snapdev/poison.h>
+
 
 
 void free_char(char * ptr)
@@ -44,13 +62,13 @@ void free_char(char * ptr)
     free(ptr);
 }
 
-TEST_CASE("Compile set_date_time_variables() called too soon", "[compiler] [invalid]")
+CATCH_TEST_CASE("Compile set_date_time_variables() called too soon", "[compiler] [invalid]")
 {
         csspp::compiler c;
-        REQUIRE_THROWS_AS(c.set_date_time_variables(csspp_test::get_now()), csspp::csspp_exception_logic &);
+        CATCH_REQUIRE_THROWS_AS(c.set_date_time_variables(csspp_test::get_now()), csspp::csspp_exception_logic);
 }
 
-TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
+CATCH_TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
 {
     // with many spaces
     {
@@ -66,7 +84,7 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -81,7 +99,7 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -130,9 +148,9 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // without spaces
@@ -149,7 +167,7 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -164,7 +182,7 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -213,9 +231,9 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // rules with !important
@@ -230,7 +248,7 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -245,7 +263,7 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -263,9 +281,9 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // rules with ! important
@@ -280,7 +298,7 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -295,7 +313,7 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -313,9 +331,9 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // rules with !important and no spaces
@@ -330,7 +348,7 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -345,7 +363,7 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -363,9 +381,9 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // empty rules have to compile too
@@ -382,7 +400,7 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -397,7 +415,7 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables()
@@ -406,9 +424,9 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // special IE8 value which has to be skipped
@@ -428,7 +446,7 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -440,7 +458,7 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
         c.compile(false);
 
         // no error left over
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(4): warning: the alpha(), chroma() and similar functions of the filter field are Internet Explorer specific extensions which are not supported across browsers.\n"
                 "test.css(5): warning: the alpha(), chroma() and similar functions of the filter field are Internet Explorer specific extensions which are not supported across browsers.\n"
             );
@@ -449,7 +467,7 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -487,9 +505,9 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // a simple test with '--no-logo' specified
@@ -507,7 +525,7 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -522,11 +540,11 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables(csspp_test::flag_no_logo_true) +
@@ -543,15 +561,15 @@ TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 }
 
-TEST_CASE("Compile user defined functions", "[compiler] [function]")
+CATCH_TEST_CASE("Compile user defined functions", "[compiler] [function]")
 {
-    SECTION("deg2rad() function and translate() CSS function")
+    CATCH_START_SECTION("deg2rad() function and translate() CSS function")
     {
         std::stringstream ss;
         ss << "/* testing user defined functions */\n"
@@ -566,7 +584,7 @@ TEST_CASE("Compile user defined functions", "[compiler] [function]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -581,7 +599,7 @@ TEST_CASE("Compile user defined functions", "[compiler] [function]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -611,12 +629,13 @@ TEST_CASE("Compile user defined functions", "[compiler] [function]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("define an $undefined variable but no undefined() function")
+    CATCH_START_SECTION("define an $undefined variable but no undefined() function")
     {
         // this is not invalid, until we check for all the CSS function names
         std::stringstream ss;
@@ -632,7 +651,7 @@ TEST_CASE("Compile user defined functions", "[compiler] [function]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -647,7 +666,7 @@ TEST_CASE("Compile user defined functions", "[compiler] [function]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -670,12 +689,13 @@ TEST_CASE("Compile user defined functions", "[compiler] [function]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("function with default parameters")
+    CATCH_START_SECTION("function with default parameters")
     {
         // this is not invalid, until we check for all the CSS function names
         std::stringstream ss;
@@ -690,7 +710,7 @@ TEST_CASE("Compile user defined functions", "[compiler] [function]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -705,7 +725,7 @@ TEST_CASE("Compile user defined functions", "[compiler] [function]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -722,12 +742,13 @@ TEST_CASE("Compile user defined functions", "[compiler] [function]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("function with *complex* default parameter")
+    CATCH_START_SECTION("function with *complex* default parameter")
     {
         // this is not invalid, until we check for all the CSS function names
         std::stringstream ss;
@@ -743,7 +764,7 @@ TEST_CASE("Compile user defined functions", "[compiler] [function]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -758,7 +779,7 @@ TEST_CASE("Compile user defined functions", "[compiler] [function]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -791,12 +812,13 @@ TEST_CASE("Compile user defined functions", "[compiler] [function]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("function called with a *complex* parameter")
+    CATCH_START_SECTION("function called with a *complex* parameter")
     {
         // this is not invalid, until we check for all the CSS function names
         std::stringstream ss;
@@ -812,7 +834,7 @@ TEST_CASE("Compile user defined functions", "[compiler] [function]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -827,7 +849,7 @@ TEST_CASE("Compile user defined functions", "[compiler] [function]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -853,15 +875,16 @@ TEST_CASE("Compile user defined functions", "[compiler] [function]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 }
 
-TEST_CASE("Compile invalid declaration in link with user defined functions", "[compiler] [invalid] [function]")
+CATCH_TEST_CASE("Compile invalid declaration in link with user defined functions", "[compiler] [invalid] [function]")
 {
-    SECTION("attempt to call a function with an invalid definition")
+    CATCH_START_SECTION("attempt to call a function with an invalid definition")
     {
         std::stringstream ss;
         ss << "/* testing user defined functions */\n"
@@ -876,7 +899,7 @@ TEST_CASE("Compile invalid declaration in link with user defined functions", "[c
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -890,12 +913,13 @@ TEST_CASE("Compile invalid declaration in link with user defined functions", "[c
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
         // no error left over
-        REQUIRE_ERRORS("test.css(2): error: function declarations expect variables for each of their arguments, not a IDENTIFIER.\n");
+        VERIFY_ERRORS("test.css(2): error: function declarations expect variables for each of their arguments, not a IDENTIFIER.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("attempt to call a function with a missing argument")
+    CATCH_START_SECTION("attempt to call a function with a missing argument")
     {
         std::stringstream ss;
         ss << "/* testing user defined functions */\n"
@@ -909,7 +933,7 @@ TEST_CASE("Compile invalid declaration in link with user defined functions", "[c
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -923,12 +947,13 @@ TEST_CASE("Compile invalid declaration in link with user defined functions", "[c
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
         // no error left over
-        REQUIRE_ERRORS("scripts/system/functions.scss(39): error: missing function variable named \"percent\" when calling desaturate();.\n");
+        VERIFY_ERRORS("scripts/system/functions.scss(39): error: missing function variable named \"percent\" when calling desaturate();.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("@return is empty")
+    CATCH_START_SECTION("@return is empty")
     {
         std::stringstream ss;
         ss << "/* testing user defined functions */\n"
@@ -943,7 +968,7 @@ TEST_CASE("Compile invalid declaration in link with user defined functions", "[c
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -957,12 +982,13 @@ TEST_CASE("Compile invalid declaration in link with user defined functions", "[c
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
         // no error left over
-        REQUIRE_ERRORS("test.css(2): error: @return must be followed by a valid expression.\n");
+        VERIFY_ERRORS("test.css(2): error: @return must be followed by a valid expression.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("@return with an invalid expression")
+    CATCH_START_SECTION("@return with an invalid expression")
     {
         std::stringstream ss;
         ss << "/* testing user defined functions */\n"
@@ -977,7 +1003,7 @@ TEST_CASE("Compile invalid declaration in link with user defined functions", "[c
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -991,15 +1017,16 @@ TEST_CASE("Compile invalid declaration in link with user defined functions", "[c
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
         // no error left over
-        REQUIRE_ERRORS("test.css(2): error: unsupported type EOF_TOKEN as a unary expression token.\n");
+        VERIFY_ERRORS("test.css(2): error: unsupported type EOF_TOKEN as a unary expression token.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Check all argify", "[compiler] [stylesheet]")
+CATCH_TEST_CASE("Check all argify", "[compiler] [stylesheet]")
 {
     // valid argify with/without spaces
     {
@@ -1020,7 +1047,7 @@ TEST_CASE("Check all argify", "[compiler] [stylesheet]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -1034,7 +1061,7 @@ TEST_CASE("Check all argify", "[compiler] [stylesheet]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -1104,9 +1131,9 @@ TEST_CASE("Check all argify", "[compiler] [stylesheet]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // now check declarations with multiple entries like text-shadow
@@ -1125,7 +1152,7 @@ TEST_CASE("Check all argify", "[compiler] [stylesheet]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -1139,7 +1166,7 @@ TEST_CASE("Check all argify", "[compiler] [stylesheet]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -1195,13 +1222,13 @@ TEST_CASE("Check all argify", "[compiler] [stylesheet]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 }
 
-TEST_CASE("Invalid arguments", "[compiler] [invalid]")
+CATCH_TEST_CASE("Invalid arguments", "[compiler] [invalid]")
 {
     // A starting comma is illegal
     {
@@ -1215,7 +1242,7 @@ TEST_CASE("Invalid arguments", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -1228,9 +1255,9 @@ TEST_CASE("Invalid arguments", "[compiler] [invalid]")
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
         // no error left over
-        REQUIRE_ERRORS("test.css(1): error: dangling comma at the beginning of a list of arguments or selectors.\n");
+        VERIFY_ERRORS("test.css(1): error: dangling comma at the beginning of a list of arguments or selectors.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // An ending comma is illegal
@@ -1245,7 +1272,7 @@ TEST_CASE("Invalid arguments", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -1258,9 +1285,9 @@ TEST_CASE("Invalid arguments", "[compiler] [invalid]")
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
         // no error left over
-        REQUIRE_ERRORS("test.css(1): error: dangling comma at the end of a list of arguments or selectors.\n");
+        VERIFY_ERRORS("test.css(1): error: dangling comma at the end of a list of arguments or selectors.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // Two commas in a row is illegal
@@ -1275,7 +1302,7 @@ TEST_CASE("Invalid arguments", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -1288,9 +1315,9 @@ TEST_CASE("Invalid arguments", "[compiler] [invalid]")
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
         // no error left over
-        REQUIRE_ERRORS("test.css(1): error: two commas in a row are invalid in a list of arguments or selectors.\n");
+        VERIFY_ERRORS("test.css(1): error: two commas in a row are invalid in a list of arguments or selectors.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // Just a comma is illegal
@@ -1305,7 +1332,7 @@ TEST_CASE("Invalid arguments", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -1318,9 +1345,9 @@ TEST_CASE("Invalid arguments", "[compiler] [invalid]")
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
         // no error left over
-        REQUIRE_ERRORS("test.css(1): error: dangling comma at the beginning of a list of arguments or selectors.\n");
+        VERIFY_ERRORS("test.css(1): error: dangling comma at the beginning of a list of arguments or selectors.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // A repeated hash
@@ -1335,7 +1362,7 @@ TEST_CASE("Invalid arguments", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -1347,9 +1374,9 @@ TEST_CASE("Invalid arguments", "[compiler] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: found #color twice in selector: \"#color div #color\".\n");
+        VERIFY_ERRORS("test.css(1): error: found #color twice in selector: \"#color div #color\".\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // rules with !important at the wrong place
@@ -1364,7 +1391,7 @@ TEST_CASE("Invalid arguments", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -1377,11 +1404,11 @@ TEST_CASE("Invalid arguments", "[compiler] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): warning: A special flag, !important in this case, must only appear at the end of a declaration.\n");
+        VERIFY_ERRORS("test.css(1): warning: A special flag, !important in this case, must only appear at the end of a declaration.\n");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1399,16 +1426,16 @@ TEST_CASE("Invalid arguments", "[compiler] [invalid]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Selector attribute tests", "[compiler] [stylesheet] [attribute]")
+CATCH_TEST_CASE("Selector attribute tests", "[compiler] [stylesheet] [attribute]")
 {
     char const * op[] =
     {
@@ -1472,7 +1499,7 @@ TEST_CASE("Selector attribute tests", "[compiler] [stylesheet] [attribute]")
                 csspp::node::pointer_t n(p.stylesheet());
 
                 // no errors so far
-                REQUIRE_ERRORS("");
+                VERIFY_ERRORS("");
 
                 csspp::compiler c;
                 c.set_root(n);
@@ -1484,7 +1511,7 @@ TEST_CASE("Selector attribute tests", "[compiler] [stylesheet] [attribute]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-                REQUIRE_ERRORS("");
+                VERIFY_ERRORS("");
 
                 std::stringstream out;
                 out << *n;
@@ -1503,9 +1530,9 @@ TEST_CASE("Selector attribute tests", "[compiler] [stylesheet] [attribute]")
                         "        ARG\n"
                         "          COLOR H:ff0000ff\n"
                     ;
-                REQUIRE_TREES(out.str(), expected.str());
+                VERIFY_TREES(out.str(), expected.str());
 
-                REQUIRE(c.get_root() == n);
+                CATCH_REQUIRE(c.get_root() == n);
             }
         }
     }
@@ -1551,7 +1578,7 @@ TEST_CASE("Selector attribute tests", "[compiler] [stylesheet] [attribute]")
             csspp::node::pointer_t n(p.stylesheet());
 
             // no errors so far
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             csspp::compiler c;
             c.set_root(n);
@@ -1563,7 +1590,7 @@ TEST_CASE("Selector attribute tests", "[compiler] [stylesheet] [attribute]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             std::stringstream out;
             out << *n;
@@ -1584,9 +1611,9 @@ TEST_CASE("Selector attribute tests", "[compiler] [stylesheet] [attribute]")
                     "        ARG\n"
                     "          COLOR H:ff0000ff\n"
                 ;
-            REQUIRE_TREES(out.str(), expected.str());
+            VERIFY_TREES(out.str(), expected.str());
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
 
@@ -1620,7 +1647,7 @@ TEST_CASE("Selector attribute tests", "[compiler] [stylesheet] [attribute]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -1632,7 +1659,7 @@ TEST_CASE("Selector attribute tests", "[compiler] [stylesheet] [attribute]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
@@ -1649,17 +1676,17 @@ TEST_CASE("Selector attribute tests", "[compiler] [stylesheet] [attribute]")
                 "        ARG\n"
                 "          COLOR H:ff0000ff\n"
             ;
-        REQUIRE_TREES(out.str(), expected.str());
+        VERIFY_TREES(out.str(), expected.str());
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 }
 
-TEST_CASE("Invalid attributes", "[compiler] [invalid]")
+CATCH_TEST_CASE("Invalid attributes", "[compiler] [invalid]")
 {
     // attribute name cannot be an integer, decimal number, opening
     // brackets or parenthesis, delimiter, etc. only an identifier
-    SECTION("Missing operator or value")
+    CATCH_START_SECTION("Missing operator or value")
     {
         char const * invalid_value[] =
         {
@@ -1709,7 +1736,7 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             csspp::node::pointer_t n(p.stylesheet());
 
             // no errors so far
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             csspp::compiler c;
             c.set_root(n);
@@ -1721,15 +1748,16 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-            REQUIRE_ERRORS("test.css(1): error: an attribute selector expects to first find an identifier.\n");
+            VERIFY_ERRORS("test.css(1): error: an attribute selector expects to first find an identifier.\n");
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
     // attribute only accept a very few binary operators: =, |=, ~=, $=, ^=, *=
     // anything else is an error (including another identifier)
-    SECTION("Not an attribute operator")
+    CATCH_START_SECTION("Not an attribute operator")
     {
         char const * invalid_value[] =
         {
@@ -1778,7 +1806,7 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             csspp::node::pointer_t n(p.stylesheet());
 
             // no errors so far
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             csspp::compiler c;
             c.set_root(n);
@@ -1787,15 +1815,16 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-            REQUIRE_ERRORS("test.css(1): error: expected attribute operator missing, supported operators are '=', '!=', '~=', '^=', '$=', '*=', and '|='.\n");
+            VERIFY_ERRORS("test.css(1): error: expected attribute operator missing, supported operators are '=', '!=', '~=', '^=', '$=', '*=', and '|='.\n");
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
     // attribute and a binary operators: =, |=, ~=, $=, ^=, *=
     // not followed by any value
-    SECTION("Valid operators, missing right hand side value")
+    CATCH_START_SECTION("Valid operators, missing right hand side value")
     {
         char const * invalid_value[] =
         {
@@ -1842,7 +1871,7 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             csspp::node::pointer_t n(p.stylesheet());
 
             // no errors so far
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             csspp::compiler c;
             c.set_root(n);
@@ -1851,15 +1880,16 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-            REQUIRE_ERRORS("test.css(1): error: the attribute selector is expected to be an IDENTIFIER optionally followed by an operator and a value.\n");
+            VERIFY_ERRORS("test.css(1): error: the attribute selector is expected to be an IDENTIFIER optionally followed by an operator and a value.\n");
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
     // attribute value can only be identifier, string, integer,
     // and decimal number
-    SECTION("Valid operators, invalid right hand side value")
+    CATCH_START_SECTION("Valid operators, invalid right hand side value")
     {
         char const * invalid_value[] =
         {
@@ -1914,7 +1944,7 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             csspp::node::pointer_t n(p.stylesheet());
 
             // no errors so far
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             csspp::compiler c;
             c.set_root(n);
@@ -1938,9 +1968,9 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             errmsg << "test.css(1): error: attribute selector value must be an identifier, a string, an integer, or a decimal number, a "
                    << op_node->get_type()
                    << " is not acceptable.\n";
-            REQUIRE_ERRORS(errmsg.str());
+            VERIFY_ERRORS(errmsg.str());
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         for(auto iv : invalid_value)
@@ -1956,7 +1986,7 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             csspp::node::pointer_t n(p.stylesheet());
 
             // no errors so far
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             csspp::compiler c;
             c.set_root(n);
@@ -1980,9 +2010,9 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             errmsg << "test.css(1): error: attribute selector value must be an identifier, a string, an integer, or a decimal number, a "
                    << op_node->get_type()
                    << " is not acceptable.\n";
-            REQUIRE_ERRORS(errmsg.str());
+            VERIFY_ERRORS(errmsg.str());
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         for(auto iv : invalid_value)
@@ -1998,7 +2028,7 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             csspp::node::pointer_t n(p.stylesheet());
 
             // no errors so far
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             csspp::compiler c;
             c.set_root(n);
@@ -2022,9 +2052,9 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             errmsg << "test.css(1): error: attribute selector value must be an identifier, a string, an integer, or a decimal number, a "
                    << op_node->get_type()
                    << " is not acceptable.\n";
-            REQUIRE_ERRORS(errmsg.str());
+            VERIFY_ERRORS(errmsg.str());
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         for(auto iv : invalid_value)
@@ -2040,7 +2070,7 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             csspp::node::pointer_t n(p.stylesheet());
 
             // no errors so far
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             csspp::compiler c;
             c.set_root(n);
@@ -2064,14 +2094,15 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             errmsg << "test.css(1): error: attribute selector value must be an identifier, a string, an integer, or a decimal number, a "
                    << op_node->get_type()
                    << " is not acceptable.\n";
-            REQUIRE_ERRORS(errmsg.str());
+            VERIFY_ERRORS(errmsg.str());
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
     // attribute value can only be one token
-    SECTION("Valid operators, right hand side value followed by something")
+    CATCH_START_SECTION("Valid operators, right hand side value followed by something")
     {
         char const * invalid_value[] =
         {
@@ -2138,7 +2169,7 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             csspp::node::pointer_t n(p.stylesheet());
 
             // no errors so far
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             csspp::compiler c;
             c.set_root(n);
@@ -2162,9 +2193,9 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             errmsg << "test.css(1): error: attribute selector cannot be followed by more than one value, found "
                    << op_node->get_type()
                    << " after the value, missing quotes?\n";
-            REQUIRE_ERRORS(errmsg.str());
+            VERIFY_ERRORS(errmsg.str());
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         for(auto iv : invalid_value)
@@ -2180,7 +2211,7 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             csspp::node::pointer_t n(p.stylesheet());
 
             // no errors so far
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             csspp::compiler c;
             c.set_root(n);
@@ -2204,9 +2235,9 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             errmsg << "test.css(1): error: attribute selector cannot be followed by more than one value, found "
                    << op_node->get_type()
                    << " after the value, missing quotes?\n";
-            REQUIRE_ERRORS(errmsg.str());
+            VERIFY_ERRORS(errmsg.str());
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         for(auto iv : invalid_value)
@@ -2230,7 +2261,7 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             csspp::node::pointer_t n(p.stylesheet());
 
             // no errors so far
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             csspp::compiler c;
             c.set_root(n);
@@ -2254,9 +2285,9 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             errmsg << "test.css(1): error: attribute selector cannot be followed by more than one value, found "
                    << op_node->get_type()
                    << " after the value, missing quotes?\n";
-            REQUIRE_ERRORS(errmsg.str());
+            VERIFY_ERRORS(errmsg.str());
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         for(auto iv : invalid_value)
@@ -2272,7 +2303,7 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             csspp::node::pointer_t n(p.stylesheet());
 
             // no errors so far
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             csspp::compiler c;
             c.set_root(n);
@@ -2296,14 +2327,15 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             errmsg << "test.css(1): error: attribute selector cannot be followed by more than one value, found "
                    << op_node->get_type()
                    << " after the value, missing quotes?\n";
-            REQUIRE_ERRORS(errmsg.str());
+            VERIFY_ERRORS(errmsg.str());
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
     // attribute value can only be one token
-    SECTION("Valid operators, right hand side value missing, no spaces")
+    CATCH_START_SECTION("Valid operators, right hand side value missing, no spaces")
     {
         char const *op[] =
         {
@@ -2329,7 +2361,7 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             csspp::node::pointer_t n(p.stylesheet());
 
             // no errors so far
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             csspp::compiler c;
             c.set_root(n);
@@ -2351,9 +2383,9 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
 
             std::stringstream errmsg;
             errmsg << "test.css(1): error: the attribute selector is expected to be an IDENTIFIER optionally followed by an operator and a value.\n";
-            REQUIRE_ERRORS(errmsg.str());
+            VERIFY_ERRORS(errmsg.str());
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         for(auto o : op)
@@ -2369,7 +2401,7 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
             csspp::node::pointer_t n(p.stylesheet());
 
             // no errors so far
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             csspp::compiler c;
             c.set_root(n);
@@ -2391,17 +2423,18 @@ TEST_CASE("Invalid attributes", "[compiler] [invalid]")
 
             std::stringstream errmsg;
             errmsg << "test.css(1): error: the attribute selector is expected to be an IDENTIFIER optionally followed by an operator and a value.\n";
-            REQUIRE_ERRORS(errmsg.str());
+            VERIFY_ERRORS(errmsg.str());
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Undefined paths", "[compiler] [invalid]")
+CATCH_TEST_CASE("Undefined paths", "[compiler] [invalid]")
 {
     // compile without defining the paths
     //
@@ -2419,7 +2452,7 @@ TEST_CASE("Undefined paths", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -2439,7 +2472,7 @@ TEST_CASE("Undefined paths", "[compiler] [invalid]")
             // that the result is fine
             std::stringstream out;
             out << *n;
-            REQUIRE_TREES(out.str(),
+            VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2457,17 +2490,17 @@ TEST_CASE("Undefined paths", "[compiler] [invalid]")
         }
         catch(csspp::csspp_exception_exit const &)
         {
-            REQUIRE(ignore.str() == "validation/pseudo-nth-functions(1): fatal: validation script \"validation/pseudo-nth-functions\" was not found.\n");
+            CATCH_REQUIRE(ignore.str() == "validation/pseudo-nth-functions(1): fatal: validation script \"validation/pseudo-nth-functions\" was not found.\n");
         }
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no left over?
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Simple terms", "[compiler] [stylesheet]")
+CATCH_TEST_CASE("Simple terms", "[compiler] [stylesheet]")
 {
     // simple terms are:
     //      HASH
@@ -2496,7 +2529,7 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -2507,13 +2540,13 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
         c.compile(true);
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2585,9 +2618,9 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // check all pseudo-classes
@@ -2628,7 +2661,7 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
             csspp::node::pointer_t n(p.stylesheet());
 
             // no errors so far
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             csspp::compiler c;
             c.set_root(n);
@@ -2642,7 +2675,7 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
 
             std::stringstream out;
             out << *n;
-            REQUIRE_TREES(out.str(),
+            VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2656,11 +2689,11 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
 
             );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // check all pseudo-classes
@@ -2701,7 +2734,7 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
             csspp::node::pointer_t n(p.stylesheet());
 
             // no errors so far
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             csspp::compiler c;
             c.set_root(n);
@@ -2715,7 +2748,7 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
 
             std::stringstream out;
             out << *n;
-            REQUIRE_TREES(out.str(),
+            VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2729,11 +2762,11 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
 
             );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // test all nth pseudo-functions
@@ -2758,7 +2791,7 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
             csspp::node::pointer_t n(p.stylesheet());
 
             // no errors so far
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             csspp::compiler c;
             c.set_root(n);
@@ -2769,13 +2802,13 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
             c.compile(true);
 
             // no error left over
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
             std::stringstream out;
             out << *n;
-            REQUIRE_TREES(out.str(),
+            VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2796,11 +2829,11 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
 
                 );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // test the lang() function
@@ -2816,7 +2849,7 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -2827,13 +2860,13 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
         c.compile(true);
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2855,9 +2888,9 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test the lang() function with 3 parameters
@@ -2873,7 +2906,7 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -2884,13 +2917,13 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
         c.compile(true);
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2912,9 +2945,9 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test the lang() multiple times to verify that the cache works
@@ -2930,7 +2963,7 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -2941,13 +2974,13 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
         c.compile(true);
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2978,9 +3011,9 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // one :not(...)
@@ -2995,7 +3028,7 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3009,7 +3042,7 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -3029,9 +3062,9 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
 
             );
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // two :not(...) in a row
@@ -3046,7 +3079,7 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3060,7 +3093,7 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -3085,9 +3118,9 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
 
             );
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // two #hash generate an information message
@@ -3102,7 +3135,7 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3114,11 +3147,11 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): info: found multiple #id entries, note that in most cases, assuming your HTML is proper (identifiers are not repeated) then only the last #id is necessary.\n");
+        VERIFY_ERRORS("test.css(1): info: found multiple #id entries, note that in most cases, assuming your HTML is proper (identifiers are not repeated) then only the last #id is necessary.\n");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -3137,11 +3170,11 @@ TEST_CASE("Simple terms", "[compiler] [stylesheet]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 }
 
-TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
+CATCH_TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 {
     // two terms in one :not(...)
     {
@@ -3155,7 +3188,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3165,9 +3198,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: the :not() function accepts at most one simple term.\n");
+        VERIFY_ERRORS("test.css(1): error: the :not() function accepts at most one simple term.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // scope must be followed by * or IDENTIFIER
@@ -3182,7 +3215,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3192,9 +3225,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: the scope operator (|) requires a right hand side identifier or '*'.\n");
+        VERIFY_ERRORS("test.css(1): error: the scope operator (|) requires a right hand side identifier or '*'.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // scope must be followed by * or IDENTIFIER
@@ -3209,7 +3242,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3219,9 +3252,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: the right hand side of a scope operator (|) must be an identifier or '*'.\n");
+        VERIFY_ERRORS("test.css(1): error: the right hand side of a scope operator (|) must be an identifier or '*'.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // scope must be followed by * or IDENTIFIER
@@ -3236,7 +3269,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3246,9 +3279,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: a scope selector (|) must be followed by an identifier or '*'.\n");
+        VERIFY_ERRORS("test.css(1): error: a scope selector (|) must be followed by an identifier or '*'.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // scope must be followed by * or IDENTIFIER
@@ -3263,7 +3296,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3273,9 +3306,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: the right hand side of a scope operator (|) must be an identifier or '*'.\n");
+        VERIFY_ERRORS("test.css(1): error: the right hand side of a scope operator (|) must be an identifier or '*'.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // scope must be followed by * or IDENTIFIER
@@ -3290,7 +3323,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3300,9 +3333,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: found #hash twice in selector: \"#hash and #hash\".\n");
+        VERIFY_ERRORS("test.css(1): error: found #hash twice in selector: \"#hash and #hash\".\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // ':' must be followed by an IDENTIFIER or a FUNCTION
@@ -3317,7 +3350,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3327,9 +3360,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: a selector list cannot end with a standalone ':'.\n");
+        VERIFY_ERRORS("test.css(1): error: a selector list cannot end with a standalone ':'.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // ':' must be followed a known pseudo-class name
@@ -3344,7 +3377,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3354,9 +3387,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("scripts/validation/pseudo-classes.scss(38): error: unknown is not a valid name for a pseudo class; CSS only supports root, first-child, last-child, first-of-type, last-of-type, only-child, only-of-type, empty, link, visitived, active, hover, focus, target, enabled, disabled, and checked. (functions are not included in this list since you did not use '(' at the end of the word.)\n");
+        VERIFY_ERRORS("scripts/validation/pseudo-classes.scss(38): error: unknown is not a valid name for a pseudo class; CSS only supports root, first-child, last-child, first-of-type, last-of-type, only-child, only-of-type, empty, link, visitived, active, hover, focus, target, enabled, disabled, and checked. (functions are not included in this list since you did not use '(' at the end of the word.)\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // ':' must be followed a known pseudo-function name
@@ -3371,7 +3404,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3381,9 +3414,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("scripts/validation/pseudo-functions.scss(20): error: unknown is not a valid name for a pseudo function; CSS only supports lang() and not().\n");
+        VERIFY_ERRORS("scripts/validation/pseudo-functions.scss(20): error: unknown is not a valid name for a pseudo function; CSS only supports lang() and not().\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // ':' must be followed an identifier or a function
@@ -3398,7 +3431,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3408,9 +3441,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: a ':' selector must be followed by an identifier or a function, a PERIOD was found instead.\n");
+        VERIFY_ERRORS("test.css(1): error: a ':' selector must be followed by an identifier or a function, a PERIOD was found instead.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // '>' at the wrong place
@@ -3425,7 +3458,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3435,9 +3468,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: found token GREATER_THAN, which is expected to be followed by another selector term.\n");
+        VERIFY_ERRORS("test.css(1): error: found token GREATER_THAN, which is expected to be followed by another selector term.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // :not(INTEGER) is not good
@@ -3452,7 +3485,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3462,9 +3495,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: found token INTEGER, which is not a valid selector token (simple term).\n");
+        VERIFY_ERRORS("test.css(1): error: found token INTEGER, which is not a valid selector token (simple term).\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // :not(FUNCTION) is not good
@@ -3479,7 +3512,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3489,9 +3522,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: found function \"func()\", which may be a valid selector token but only if immediately preceeded by one ':' (simple term).\n");
+        VERIFY_ERRORS("test.css(1): error: found function \"func()\", which may be a valid selector token but only if immediately preceeded by one ':' (simple term).\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // :not(>) is not good
@@ -3506,7 +3539,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3516,9 +3549,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: found token GREATER_THAN, which cannot be used to start a selector expression.\n");
+        VERIFY_ERRORS("test.css(1): error: found token GREATER_THAN, which cannot be used to start a selector expression.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // :not(+) is not good
@@ -3533,7 +3566,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3543,9 +3576,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: found token ADD, which cannot be used to start a selector expression.\n");
+        VERIFY_ERRORS("test.css(1): error: found token ADD, which cannot be used to start a selector expression.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // :not(~) is not good
@@ -3560,7 +3593,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3570,9 +3603,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: found token PRECEDED, which cannot be used to start a selector expression.\n");
+        VERIFY_ERRORS("test.css(1): error: found token PRECEDED, which cannot be used to start a selector expression.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // :not(:) is not good
@@ -3587,7 +3620,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3597,9 +3630,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: a selector list cannot end with a standalone ':'.\n");
+        VERIFY_ERRORS("test.css(1): error: a selector list cannot end with a standalone ':'.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // '.' by itself (at the end)
@@ -3614,7 +3647,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3624,9 +3657,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: a selector list cannot end with a standalone '.'.\n");
+        VERIFY_ERRORS("test.css(1): error: a selector list cannot end with a standalone '.'.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // '.' must be followed by IDENTIFIER
@@ -3641,7 +3674,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3651,9 +3684,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: a class selector (after a period: '.') must be an identifier.\n");
+        VERIFY_ERRORS("test.css(1): error: a class selector (after a period: '.') must be an identifier.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test an invalid An+B in an :nth-child() function
@@ -3668,7 +3701,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3678,9 +3711,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: The first number has to be followed by the 'n' character.\n");
+        VERIFY_ERRORS("test.css(1): error: The first number has to be followed by the 'n' character.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // :not(:not(...))
@@ -3695,7 +3728,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3705,9 +3738,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: the :not() selector does not accept an inner :not().\n");
+        VERIFY_ERRORS("test.css(1): error: the :not() selector does not accept an inner :not().\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // :not(:.white)
@@ -3722,7 +3755,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3732,9 +3765,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: a ':' selector must be followed by an identifier or a function, a FUNCTION was found instead.\n");
+        VERIFY_ERRORS("test.css(1): error: a ':' selector must be followed by an identifier or a function, a FUNCTION was found instead.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // :lang() accepts only one argument
@@ -3749,7 +3782,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3761,9 +3794,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: a lang() function selector must have exactly one identifier as its parameter.\n");
+        VERIFY_ERRORS("test.css(1): error: a lang() function selector must have exactly one identifier as its parameter.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // invalid name for :lang()
@@ -3778,7 +3811,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3790,9 +3823,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("scripts/validation/languages.scss(154): error: notalanguagename is not a valid language name for :lang().\n");
+        VERIFY_ERRORS("scripts/validation/languages.scss(154): error: notalanguagename is not a valid language name for :lang().\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // invalid name for :lang(), with a valid country
@@ -3807,7 +3840,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3819,9 +3852,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("scripts/validation/languages.scss(154): error: stillnotalanguagename is not a valid language name for :lang().\n");
+        VERIFY_ERRORS("scripts/validation/languages.scss(154): error: stillnotalanguagename is not a valid language name for :lang().\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // invalid name for :lang(), with a valid country
@@ -3836,7 +3869,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3848,9 +3881,9 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("scripts/validation/countries.scss(267): error: withaninvalidcountry is not a valid country name for :lang().\n");
+        VERIFY_ERRORS("scripts/validation/countries.scss(267): error: withaninvalidcountry is not a valid country name for :lang().\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // :lang() name must be an identifier
@@ -3865,7 +3898,7 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3877,16 +3910,16 @@ TEST_CASE("Invalid simple terms", "[compiler] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: a lang() function selector expects an identifier as its parameter.\n");
+        VERIFY_ERRORS("test.css(1): error: a lang() function selector expects an identifier as its parameter.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no left over?
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Complex terms", "[compiler] [stylesheet]")
+CATCH_TEST_CASE("Complex terms", "[compiler] [stylesheet]")
 {
     // [complex] terms are:
     // term: simple-term
@@ -3895,7 +3928,7 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
     //     | ':' FUNCTION (="not") component-value-list ')'
     //     | ':' ':' IDENTIFIER
 
-    SECTION("test a placeholder")
+    CATCH_START_SECTION("test a placeholder")
     {
         std::stringstream ss;
         ss << "div p%image"
@@ -3910,7 +3943,7 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3923,11 +3956,11 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -3947,12 +3980,13 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("test a reference")
+    CATCH_START_SECTION("test a reference")
     {
         std::stringstream ss;
         ss << "div a"
@@ -3965,7 +3999,7 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -3978,11 +4012,11 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -4014,12 +4048,13 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("test the not() function")
+    CATCH_START_SECTION("test the not() function")
     {
         std::stringstream ss;
         ss << "div a:not(:hover)"
@@ -4032,7 +4067,7 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4043,13 +4078,13 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
         c.compile(true);
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -4072,12 +4107,13 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("test the not() function + a sub-function")
+    CATCH_START_SECTION("test the not() function + a sub-function")
     {
         std::stringstream ss;
         ss << "div a:not(:nth-last-of-type(5n+3))"
@@ -4090,7 +4126,7 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4101,13 +4137,13 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
         c.compile(true);
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -4131,12 +4167,13 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("check all pseudo-elements")
+    CATCH_START_SECTION("check all pseudo-elements")
     {
         char const * pseudo_name_table[] =
         {
@@ -4160,7 +4197,7 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
             csspp::node::pointer_t n(p.stylesheet());
 
             // no errors so far
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             csspp::compiler c;
             c.set_root(n);
@@ -4174,7 +4211,7 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
 
             std::stringstream out;
             out << *n;
-            REQUIRE_TREES(out.str(),
+            VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -4191,14 +4228,15 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
 
             );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
+    CATCH_END_SECTION()
 
-    SECTION("check filter with alpha() function")
+    CATCH_START_SECTION("check filter with alpha() function")
     {
         std::stringstream ss;
         ss << "div {\n"
@@ -4213,7 +4251,7 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4225,11 +4263,11 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(3): warning: the alpha(), chroma() and similar functions of the filter field are Internet Explorer specific extensions which are not supported across browsers.\n");
+        VERIFY_ERRORS("test.css(3): warning: the alpha(), chroma() and similar functions of the filter field are Internet Explorer specific extensions which are not supported across browsers.\n");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -4250,13 +4288,14 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
+    CATCH_END_SECTION()
 
-    SECTION("check \"-filter\" with alpha() function")
+    CATCH_START_SECTION("check \"-filter\" with alpha() function")
     {
         std::stringstream ss;
         ss << "div {\n"
@@ -4271,7 +4310,7 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4283,11 +4322,11 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(3): warning: the alpha(), chroma() and similar functions of the filter field are Internet Explorer specific extensions which are not supported across browsers.\n");
+        VERIFY_ERRORS("test.css(3): warning: the alpha(), chroma() and similar functions of the filter field are Internet Explorer specific extensions which are not supported across browsers.\n");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -4308,13 +4347,14 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
+    CATCH_END_SECTION()
 
-    SECTION("check progid:...")
+    CATCH_START_SECTION("check progid:...")
     {
         std::stringstream ss;
         ss << "div {\n"
@@ -4329,7 +4369,7 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4341,11 +4381,11 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(2): warning: the alpha(), chroma() and similar functions of the filter field are Internet Explorer specific extensions which are not supported across browsers.\n");
+        VERIFY_ERRORS("test.css(2): warning: the alpha(), chroma() and similar functions of the filter field are Internet Explorer specific extensions which are not supported across browsers.\n");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -4370,14 +4410,15 @@ TEST_CASE("Complex terms", "[compiler] [stylesheet]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
+    CATCH_END_SECTION()
 }
 
-TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
+CATCH_TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
 {
     // '::' must be followed by an IDENTIFIER
     {
@@ -4391,7 +4432,7 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4401,9 +4442,9 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: a selector list cannot end with a '::' without an identifier after it.\n");
+        VERIFY_ERRORS("test.css(1): error: a selector list cannot end with a '::' without an identifier after it.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // '::' must be followed a known pseudo-element name
@@ -4418,7 +4459,7 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4428,7 +4469,7 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("scripts/validation/pseudo-elements.scss(39): error: unknown is not a valid name for a pseudo element; CSS only supports after, before, first-letter, first-line, grammar-error, marker, placeholder, selection, and spelling-error.\n");
+        VERIFY_ERRORS("scripts/validation/pseudo-elements.scss(39): error: unknown is not a valid name for a pseudo element; CSS only supports after, before, first-letter, first-line, grammar-error, marker, placeholder, selection, and spelling-error.\n");
     }
 
     // '::' must be followed an IDENTIFIER
@@ -4443,7 +4484,7 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4453,9 +4494,9 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: a pseudo element name (defined after a '::' in a list of selectors) must be defined using an identifier.\n");
+        VERIFY_ERRORS("test.css(1): error: a pseudo element name (defined after a '::' in a list of selectors) must be defined using an identifier.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // '>' cannot start a selector list
@@ -4470,7 +4511,7 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4480,9 +4521,9 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: found token GREATER_THAN, which cannot be used to start a selector expression.\n");
+        VERIFY_ERRORS("test.css(1): error: found token GREATER_THAN, which cannot be used to start a selector expression.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // '+' cannot start a selector list
@@ -4497,7 +4538,7 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4507,9 +4548,9 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: found token ADD, which cannot be used to start a selector expression.\n");
+        VERIFY_ERRORS("test.css(1): error: found token ADD, which cannot be used to start a selector expression.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // '~' cannot start a selector list
@@ -4524,7 +4565,7 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4534,9 +4575,9 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: found token PRECEDED, which cannot be used to start a selector expression.\n");
+        VERIFY_ERRORS("test.css(1): error: found token PRECEDED, which cannot be used to start a selector expression.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // selector cannot start with a FUNCTION
@@ -4551,7 +4592,7 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4561,9 +4602,9 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: found function \"func()\", which may be a valid selector token but only if immediately preceeded by one ':' (term).\n");
+        VERIFY_ERRORS("test.css(1): error: found function \"func()\", which may be a valid selector token but only if immediately preceeded by one ':' (term).\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // selectors do not support INTEGER
@@ -4578,7 +4619,7 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4588,9 +4629,9 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: found token INTEGER, which is not a valid selector token (term).\n");
+        VERIFY_ERRORS("test.css(1): error: found token INTEGER, which is not a valid selector token (term).\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // selectors do not support DECIMAL_NUMBER
@@ -4605,7 +4646,7 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4615,9 +4656,9 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: found token DECIMAL_NUMBER, which is not a valid selector token (term).\n");
+        VERIFY_ERRORS("test.css(1): error: found token DECIMAL_NUMBER, which is not a valid selector token (term).\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // selectors do not support PERCENT
@@ -4632,7 +4673,7 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4642,9 +4683,9 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: found token PERCENT, which is not a valid selector token (term).\n");
+        VERIFY_ERRORS("test.css(1): error: found token PERCENT, which is not a valid selector token (term).\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // check pseudo-elements not at the end
@@ -4671,7 +4712,7 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
             csspp::node::pointer_t n(p.stylesheet());
 
             // no errors so far
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             csspp::compiler c;
             c.set_root(n);
@@ -4683,13 +4724,13 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-            REQUIRE_ERRORS("test.css(1): error: a pseudo element name (defined after a '::' in a list of selectors) must be defined as the last element in the list of selectors.\n");
+            VERIFY_ERRORS("test.css(1): error: a pseudo element name (defined after a '::' in a list of selectors) must be defined as the last element in the list of selectors.\n");
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // check the few invalid characters before "identifier ':' ..."
@@ -4709,7 +4750,7 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4721,7 +4762,7 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(2): warning: the '[*|.|!]<field-name>: ...' syntax is not allowed in csspp, we offer other ways to control field names per browser and do not allow such tricks.\n"
                 "test.css(3): warning: the '[*|.|!]<field-name>: ...' syntax is not allowed in csspp, we offer other ways to control field names per browser and do not allow such tricks.\n"
                 "test.css(3): warning: the alpha(), chroma() and similar functions of the filter field are Internet Explorer specific extensions which are not supported across browsers.\n"
@@ -4731,7 +4772,7 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -4758,10 +4799,10 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // check that & cannot be used in the middle of a selector list
@@ -4780,7 +4821,7 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4792,18 +4833,18 @@ TEST_CASE("Invalid complex terms", "[compiler] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: a selector reference (&) can only appear as the very first item in a list of selectors.\n"
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no left over?
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Invalid node", "[compiler] [invalid]")
+CATCH_TEST_CASE("Invalid node", "[compiler] [invalid]")
 {
     // create a fake node tree with some invalid node types to
     // exercise the compile() switch default entry
@@ -4826,9 +4867,9 @@ TEST_CASE("Invalid node", "[compiler] [invalid]")
             c.add_path(csspp_test::get_script_path());
             c.add_path(csspp_test::get_version_script_path());
 
-            REQUIRE_THROWS_AS(c.compile(true), csspp::csspp_exception_unexpected_token &);
+            CATCH_REQUIRE_THROWS_AS(c.compile(true), csspp::csspp_exception_unexpected_token);
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
 
@@ -4844,7 +4885,7 @@ TEST_CASE("Invalid node", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4854,9 +4895,9 @@ TEST_CASE("Invalid node", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: a qualified rule without selectors is not valid.\n");
+        VERIFY_ERRORS("test.css(1): error: a qualified rule without selectors is not valid.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // qualified rule must start with an identifier
@@ -4871,7 +4912,7 @@ TEST_CASE("Invalid node", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // the qualified rule is invalid...
-        REQUIRE_ERRORS("test.css(1): error: A qualified rule must end with a { ... } block.\n");
+        VERIFY_ERRORS("test.css(1): error: A qualified rule must end with a { ... } block.\n");
 
         // ...but we still compile it so we get a specific error that we do
         // not get otherwise.
@@ -4883,9 +4924,9 @@ TEST_CASE("Invalid node", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: expected a ':' after the identifier of this declaration value; got a: COMPONENT_VALUE instead.\n");
+        VERIFY_ERRORS("test.css(1): error: expected a ':' after the identifier of this declaration value; got a: COMPONENT_VALUE instead.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // a declaration needs an identifier
@@ -4900,7 +4941,7 @@ TEST_CASE("Invalid node", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4910,9 +4951,9 @@ TEST_CASE("Invalid node", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: expected an identifier to start a declaration value; got a: ADD instead.\n");
+        VERIFY_ERRORS("test.css(1): error: expected an identifier to start a declaration value; got a: ADD instead.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // a declaration needs an identifier
@@ -4931,7 +4972,7 @@ TEST_CASE("Invalid node", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4941,19 +4982,19 @@ TEST_CASE("Invalid node", "[compiler] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(2): error: somehow a declaration list is missing a field name or ':'.\n"
                 "test.css(3): error: somehow a declaration list is missing a field name or ':'.\n"
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no left over?
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Compile font metrics", "[compiler] [font-metrics]")
+CATCH_TEST_CASE("Compile font metrics", "[compiler] [font-metrics]")
 {
     // define a sub-declaration inside a declaration
     {
@@ -4971,7 +5012,7 @@ TEST_CASE("Compile font metrics", "[compiler] [font-metrics]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -4983,11 +5024,11 @@ TEST_CASE("Compile font metrics", "[compiler] [font-metrics]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        //REQUIRE_ERRORS("");
+        //VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -5021,7 +5062,7 @@ TEST_CASE("Compile font metrics", "[compiler] [font-metrics]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // define a sub-declaration inside a declaration
@@ -5040,7 +5081,7 @@ TEST_CASE("Compile font metrics", "[compiler] [font-metrics]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -5052,11 +5093,11 @@ TEST_CASE("Compile font metrics", "[compiler] [font-metrics]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        //REQUIRE_ERRORS("");
+        //VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -5090,14 +5131,14 @@ TEST_CASE("Compile font metrics", "[compiler] [font-metrics]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // still no errors
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Nested declarations", "[compiler] [nested]")
+CATCH_TEST_CASE("Nested declarations", "[compiler] [nested]")
 {
     // define a sub-declaration inside a declaration
     {
@@ -5131,7 +5172,7 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -5143,11 +5184,11 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -5196,7 +5237,7 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // define a sub-declaration inside a declaration
@@ -5213,7 +5254,7 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -5225,11 +5266,11 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:size\n"
@@ -5258,10 +5299,10 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
-    SECTION("just one sub-declaration inside a field definition")
+    CATCH_START_SECTION("just one sub-declaration inside a field definition")
     {
         std::stringstream ss;
         ss << "p.boxed { border: { width: 25px + 5px; }; }";
@@ -5273,7 +5314,7 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -5285,11 +5326,11 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -5304,8 +5345,9 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
     // define the sub-declaration in a variable
     {
@@ -5320,7 +5362,7 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -5332,11 +5374,11 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:m\n"
@@ -5379,7 +5421,7 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // 5 levels nested declarations
@@ -5411,7 +5453,7 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -5423,11 +5465,11 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -5512,7 +5554,7 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // Test that functions prevent a field to look like a declaration
@@ -5531,7 +5573,7 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -5543,11 +5585,11 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
         //ss << "border {\n"
         //   << "  left:not(.long) div{color: red};\n"
@@ -5575,7 +5617,7 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
 //    // define the sub-declaration in a variable
@@ -5592,7 +5634,7 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
 //        csspp::node::pointer_t n(p.stylesheet());
 //
 //        // no errors so far
-//        REQUIRE_ERRORS("");
+//        VERIFY_ERRORS("");
 //
 //        csspp::compiler c;
 //        c.set_root(n);
@@ -5604,11 +5646,11 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
 //
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 //
-//        REQUIRE_ERRORS("");
+//        VERIFY_ERRORS("");
 //
 //        std::stringstream out;
 //        out << *n;
-//        REQUIRE_TREES(out.str(),
+//        VERIFY_TREES(out.str(),
 //
 //"LIST\n"
 //"    V:m\n"
@@ -5647,14 +5689,14 @@ TEST_CASE("Nested declarations", "[compiler] [nested]")
 //
 //            );
 //
-//        REQUIRE(c.get_root() == n);
+//        CATCH_REQUIRE(c.get_root() == n);
 //    }
 
     // no left over?
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Invalid nested declarations", "[compiler] [nested] [invalid]")
+CATCH_TEST_CASE("Invalid nested declarations", "[compiler] [nested] [invalid]")
 {
     // define a sub-declaration inside a declaration
     {
@@ -5675,7 +5717,7 @@ TEST_CASE("Invalid nested declarations", "[compiler] [nested] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -5687,16 +5729,16 @@ TEST_CASE("Invalid nested declarations", "[compiler] [nested] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(5): error: a nested declaration cannot include a rule.\n");
+        VERIFY_ERRORS("test.css(5): error: a nested declaration cannot include a rule.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no left over?
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Advanced variables", "[compiler] [variable]")
+CATCH_TEST_CASE("Advanced variables", "[compiler] [variable]")
 {
     // define a variable function with a parameter
     {
@@ -5713,7 +5755,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -5725,11 +5767,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:m\n"
@@ -5777,7 +5819,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // define a variable function with a parameter and more spaces
@@ -5793,7 +5835,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -5805,11 +5847,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:m\n"
@@ -5857,7 +5899,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test a variable function default parameter
@@ -5873,7 +5915,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -5885,11 +5927,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:m\n"
@@ -5937,7 +5979,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // a multi value default
@@ -5953,7 +5995,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -5965,11 +6007,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:m\n"
@@ -6017,7 +6059,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // a variable function with multiple fields copied
@@ -6035,7 +6077,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -6047,11 +6089,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:m\n"
@@ -6078,7 +6120,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test a default variable
@@ -6095,7 +6137,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -6107,11 +6149,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:m\n"
@@ -6128,7 +6170,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test a variable inside a qualified rule {}-block
@@ -6151,7 +6193,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -6163,11 +6205,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -6191,7 +6233,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test that blocks define locations to save variables as expected
@@ -6215,7 +6257,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -6227,11 +6269,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:size\n"
@@ -6266,7 +6308,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test that !global forces definitions to be global
@@ -6290,7 +6332,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -6302,11 +6344,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:size\n"
@@ -6337,7 +6379,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test that !default prevents redefinitions of existing variables
@@ -6361,7 +6403,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -6373,11 +6415,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:size\n"
@@ -6408,7 +6450,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test a null variable
@@ -6424,7 +6466,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -6436,11 +6478,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:empty_variable\n"
@@ -6459,7 +6501,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test inexistant variable when 'accept empty' flag is ON
@@ -6474,7 +6516,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -6487,11 +6529,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -6506,7 +6548,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test @include instead of $blah
@@ -6522,7 +6564,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -6535,11 +6577,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:var\n"
@@ -6572,7 +6614,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test @include with a function definition
@@ -6588,7 +6630,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -6601,11 +6643,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:var\n"
@@ -6640,7 +6682,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test @include with @mixin
@@ -6658,7 +6700,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -6671,11 +6713,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:nice-button\n"
@@ -6708,7 +6750,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test @include with @mixin
@@ -6726,7 +6768,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -6739,11 +6781,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:var\n"
@@ -6778,7 +6820,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test $var with @mixin definition
@@ -6796,7 +6838,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -6809,11 +6851,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:var\n"
@@ -6840,7 +6882,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test $var with @mixin definition
@@ -6858,7 +6900,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -6871,11 +6913,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): info: found an #id entry which is not at the beginning of the list of selectors; unless your HTML changes that much, #id should be the first selector only.\n");
+        VERIFY_ERRORS("test.css(1): info: found an #id entry which is not at the beginning of the list of selectors; unless your HTML changes that much, #id should be the first selector only.\n");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:var\n"
@@ -6900,7 +6942,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test $var with @mixin definition
@@ -6918,7 +6960,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -6931,14 +6973,14 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): info: found an #id entry which is not at the beginning of the list of selectors; unless your HTML changes that much, #id should be the first selector only.\n"
                 "test.css(1): info: found an #id entry which is not at the beginning of the list of selectors; unless your HTML changes that much, #id should be the first selector only.\n"
             );
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:var\n"
@@ -6974,7 +7016,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test $var with @mixin definition
@@ -6992,7 +7034,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7005,11 +7047,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): info: found an #id entry which is not at the beginning of the list of selectors; unless your HTML changes that much, #id should be the first selector only.\n");
+        VERIFY_ERRORS("test.css(1): info: found an #id entry which is not at the beginning of the list of selectors; unless your HTML changes that much, #id should be the first selector only.\n");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:var\n"
@@ -7045,7 +7087,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test $var with @mixin definition
@@ -7063,7 +7105,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7076,11 +7118,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:var\n"
@@ -7111,7 +7153,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test $var with @mixin definition
@@ -7129,7 +7171,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7142,11 +7184,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:var\n"
@@ -7175,7 +7217,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test $var with @mixin definition
@@ -7256,7 +7298,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
             // no errors so far
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             csspp::compiler c;
             c.set_root(n);
@@ -7269,7 +7311,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-            REQUIRE_ERRORS("");
+            VERIFY_ERRORS("");
 
             std::stringstream out;
             out << *n;
@@ -7321,9 +7363,9 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 "        ARG\n"
 "          COLOR H:ffeeeeee\n";
 
-            REQUIRE_TREES(out.str(), expected.str());
+            VERIFY_TREES(out.str(), expected.str());
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
 
@@ -7342,7 +7384,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7355,12 +7397,12 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
 
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:var\n"
@@ -7399,7 +7441,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // wrote this test out of a mistake really,
@@ -7419,7 +7461,7 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7432,11 +7474,11 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:b\n"
@@ -7455,14 +7497,14 @@ TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no left over?
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
+CATCH_TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 {
     // undefined variable with whitespace before
     {
@@ -7476,7 +7518,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7488,12 +7530,12 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: variable named \"m\" is not set.\n"
                 "test.css(1): error: somehow a declaration list is missing fields, this happens if you used an invalid variable.\n"
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // null variable in a place where something is required
@@ -7509,7 +7551,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7521,11 +7563,11 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(2): error: somehow a declaration list is missing fields, this happens if you used an invalid variable.\n"
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // undefined variable without whitespace
@@ -7540,7 +7582,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7552,12 +7594,12 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: variable named \"m\" is not set.\n"
                 "test.css(1): error: somehow a declaration list is missing fields, this happens if you used an invalid variable.\n"
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // variable type mismatch (func/var)
@@ -7573,7 +7615,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7585,12 +7627,12 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: variable named \"m\" is not a function and it cannot be referenced as such.\n"
                 "test.css(1): error: somehow a declaration list is missing fields, this happens if you used an invalid variable.\n"
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // variable type mismatch (var/func)
@@ -7606,7 +7648,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7618,12 +7660,12 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: variable named \"m\" is a function and it can only be referenced with a function ($m() or @include m;).\n"
                 "test.css(1): error: somehow a declaration list is missing fields, this happens if you used an invalid variable.\n"
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // variable is missing in function call
@@ -7639,7 +7681,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7651,12 +7693,12 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: missing function variable named \"a3\" when calling sum() or using @include sum();).\n"
                 "test.css(1): error: somehow a declaration list is missing fields, this happens if you used an invalid variable.\n"
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // variable parameter is not a variable
@@ -7672,7 +7714,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7684,13 +7726,13 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: function declarations expect variables for each of their arguments, not a IDENTIFIER.\n"
                 //"test.css(1): error: function declaration requires all parameters to be variables, IDENTIFIER is not acceptable.\n" -- removed not useful
                 "test.css(1): error: somehow a declaration list is missing fields, this happens if you used an invalid variable.\n"
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // missing value for optional parameter
@@ -7706,7 +7748,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7718,12 +7760,12 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: function declarations with optional parameters must make all parameters optional from the first one that is given an optional value up to the end of the list of arguments.\n"
                 //"test.css(1): error: unsupported type LIST as a unary expression token.\n"
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // missing ':' to define the optional value
@@ -7739,7 +7781,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7751,12 +7793,12 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: function declarations expect variable with optional parameters to use a ':' after the variable name and before the optional value.\n"
                 //"test.css(1): error: unsupported type LIST as a unary expression token.\n"
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test @include with something else than an identifier or function
@@ -7771,7 +7813,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7784,9 +7826,9 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: @include is expected to be followed by an IDENTIFIER or a FUNCTION naming the variable/mixin to include.\n");
+        VERIFY_ERRORS("test.css(1): error: @include is expected to be followed by an IDENTIFIER or a FUNCTION naming the variable/mixin to include.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test @include with something else than an identifier or function
@@ -7802,7 +7844,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7815,9 +7857,9 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(2): error: a qualified rule without selectors is not valid.\n");
+        VERIFY_ERRORS("test.css(2): error: a qualified rule without selectors is not valid.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // @mixin with one parameter
@@ -7834,7 +7876,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7847,9 +7889,9 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: a @mixin definition expects exactly two parameters: an identifier or function and a {}-block.\n");
+        VERIFY_ERRORS("test.css(1): error: a @mixin definition expects exactly two parameters: an identifier or function and a {}-block.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // @mixin with one parameter
@@ -7866,7 +7908,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7879,9 +7921,9 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: a @mixin definition expects exactly two parameters: an identifier or function and a {}-block.\n");
+        VERIFY_ERRORS("test.css(1): error: a @mixin definition expects exactly two parameters: an identifier or function and a {}-block.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // @mixin with too many entries (i.e. "color" " " "#ff3241")
@@ -7898,7 +7940,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7911,9 +7953,9 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: a @mixin definition expects exactly two parameters: an identifier or function and a {}-block.\n");
+        VERIFY_ERRORS("test.css(1): error: a @mixin definition expects exactly two parameters: an identifier or function and a {}-block.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // @mixin not with a {}-block
@@ -7930,7 +7972,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7943,9 +7985,9 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: a @mixin definition expects a {}-block as its second parameter.\n");
+        VERIFY_ERRORS("test.css(1): error: a @mixin definition expects a {}-block as its second parameter.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // @mixin not with a IDENTIFIER or FUNCTION as first parameter
@@ -7962,7 +8004,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -7975,9 +8017,9 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: a @mixin expects either an IDENTIFIER or a FUNCTION as its first parameter.\n");
+        VERIFY_ERRORS("test.css(1): error: a @mixin expects either an IDENTIFIER or a FUNCTION as its first parameter.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // @mixin with VARIABLE generates an special error
@@ -7994,7 +8036,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8007,9 +8049,9 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: a @mixin must use an IDENTIFIER or FUNCTION and no a VARIABLE or VARIABLE_FUNCTION.\n");
+        VERIFY_ERRORS("test.css(1): error: a @mixin must use an IDENTIFIER or FUNCTION and no a VARIABLE or VARIABLE_FUNCTION.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // @mixin with VARIABLE generates an special error
@@ -8026,7 +8068,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8039,9 +8081,9 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: a @mixin must use an IDENTIFIER or FUNCTION and no a VARIABLE or VARIABLE_FUNCTION.\n");
+        VERIFY_ERRORS("test.css(1): error: a @mixin must use an IDENTIFIER or FUNCTION and no a VARIABLE or VARIABLE_FUNCTION.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // try !global at the wrong place and see the warning
@@ -8065,7 +8107,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8077,14 +8119,14 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(2): warning: A special flag, !global in this case, must only appear at the end of a declaration.\n"
                 "test.css(3): warning: A special flag, !global in this case, must only appear at the end of a declaration.\n"
             );
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:size\n"
@@ -8115,7 +8157,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // try !default at the wrong place and see the warning
@@ -8139,7 +8181,7 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8151,14 +8193,14 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(2): warning: A special flag, !default in this case, must only appear at the end of a declaration.\n"
                 "test.css(3): warning: A special flag, !default in this case, must only appear at the end of a declaration.\n"
             );
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:size\n"
@@ -8189,14 +8231,14 @@ TEST_CASE("Invalid variables", "[compiler] [variable] [invalid]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no left over?
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("At-Keyword ignored", "[compiler] [at-keyword]")
+CATCH_TEST_CASE("At-Keyword ignored", "[compiler] [at-keyword]")
 {
     // make sure @<not supported> is left alone as expected by CSS 3
     {
@@ -8210,7 +8252,7 @@ TEST_CASE("At-Keyword ignored", "[compiler] [at-keyword]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8220,11 +8262,11 @@ TEST_CASE("At-Keyword ignored", "[compiler] [at-keyword]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  AT_KEYWORD \"unknown\" I:0\n"
@@ -8232,7 +8274,7 @@ TEST_CASE("At-Keyword ignored", "[compiler] [at-keyword]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // make sure @<not supported> is left alone as expected by CSS 3
@@ -8247,7 +8289,7 @@ TEST_CASE("At-Keyword ignored", "[compiler] [at-keyword]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8257,11 +8299,11 @@ TEST_CASE("At-Keyword ignored", "[compiler] [at-keyword]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  AT_KEYWORD \"unknown\" I:0\n"
@@ -8280,14 +8322,14 @@ TEST_CASE("At-Keyword ignored", "[compiler] [at-keyword]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no left over?
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("At-Keyword messages", "[compiler] [output]")
+CATCH_TEST_CASE("At-Keyword messages", "[compiler] [output]")
 {
     // generate an error with @error
     {
@@ -8301,7 +8343,7 @@ TEST_CASE("At-Keyword messages", "[compiler] [output]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8311,9 +8353,9 @@ TEST_CASE("At-Keyword messages", "[compiler] [output]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: This is an error.\n");
+        VERIFY_ERRORS("test.css(1): error: This is an error.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // generate a warning with @warning
@@ -8328,7 +8370,7 @@ TEST_CASE("At-Keyword messages", "[compiler] [output]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8338,9 +8380,9 @@ TEST_CASE("At-Keyword messages", "[compiler] [output]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): warning: This is a warning.\n");
+        VERIFY_ERRORS("test.css(1): warning: This is a warning.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // output a message with @info
@@ -8355,7 +8397,7 @@ TEST_CASE("At-Keyword messages", "[compiler] [output]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8365,9 +8407,9 @@ TEST_CASE("At-Keyword messages", "[compiler] [output]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): info: This is an info message.\n");
+        VERIFY_ERRORS("test.css(1): info: This is an info message.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // make sure @message does the same as @info
@@ -8382,7 +8424,7 @@ TEST_CASE("At-Keyword messages", "[compiler] [output]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8392,9 +8434,9 @@ TEST_CASE("At-Keyword messages", "[compiler] [output]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): info: This is an info message.\n");
+        VERIFY_ERRORS("test.css(1): info: This is an info message.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // test @debug does nothing by default
@@ -8409,7 +8451,7 @@ TEST_CASE("At-Keyword messages", "[compiler] [output]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8420,9 +8462,9 @@ TEST_CASE("At-Keyword messages", "[compiler] [output]")
         c.compile(true);
 
         // by default debug messages do not make it to the output
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // make sure @debug does the same as @info
@@ -8437,7 +8479,7 @@ TEST_CASE("At-Keyword messages", "[compiler] [output]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8449,16 +8491,16 @@ TEST_CASE("At-Keyword messages", "[compiler] [output]")
         c.compile(true);
         csspp::error::instance().set_show_debug(false);
 
-        REQUIRE_ERRORS("test.css(1): debug: This is a debug message.\n");
+        VERIFY_ERRORS("test.css(1): debug: This is a debug message.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no left over?
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("At-Keyword with qualified rules", "[compiler] [at-keyword]")
+CATCH_TEST_CASE("At-Keyword with qualified rules", "[compiler] [at-keyword]")
 {
     // a valid @document
     {
@@ -8472,7 +8514,7 @@ TEST_CASE("At-Keyword with qualified rules", "[compiler] [at-keyword]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8484,11 +8526,11 @@ TEST_CASE("At-Keyword with qualified rules", "[compiler] [at-keyword]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  AT_KEYWORD \"document\" I:0\n"
@@ -8503,7 +8545,7 @@ TEST_CASE("At-Keyword with qualified rules", "[compiler] [at-keyword]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // a valid @document with @if inside of there
@@ -8522,7 +8564,7 @@ TEST_CASE("At-Keyword with qualified rules", "[compiler] [at-keyword]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8534,11 +8576,11 @@ TEST_CASE("At-Keyword with qualified rules", "[compiler] [at-keyword]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:agent\n"
@@ -8575,7 +8617,7 @@ TEST_CASE("At-Keyword with qualified rules", "[compiler] [at-keyword]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // a valid @media
@@ -8590,7 +8632,7 @@ TEST_CASE("At-Keyword with qualified rules", "[compiler] [at-keyword]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8602,11 +8644,11 @@ TEST_CASE("At-Keyword with qualified rules", "[compiler] [at-keyword]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  AT_KEYWORD \"media\" I:0\n"
@@ -8623,7 +8665,7 @@ TEST_CASE("At-Keyword with qualified rules", "[compiler] [at-keyword]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // nested @media
@@ -8643,7 +8685,7 @@ TEST_CASE("At-Keyword with qualified rules", "[compiler] [at-keyword]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8655,11 +8697,11 @@ TEST_CASE("At-Keyword with qualified rules", "[compiler] [at-keyword]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  AT_KEYWORD \"media\" I:0\n"
@@ -8689,7 +8731,7 @@ TEST_CASE("At-Keyword with qualified rules", "[compiler] [at-keyword]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // a valid @supports
@@ -8704,7 +8746,7 @@ TEST_CASE("At-Keyword with qualified rules", "[compiler] [at-keyword]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8716,11 +8758,11 @@ TEST_CASE("At-Keyword with qualified rules", "[compiler] [at-keyword]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  AT_KEYWORD \"supports\" I:0\n"
@@ -8743,14 +8785,14 @@ TEST_CASE("At-Keyword with qualified rules", "[compiler] [at-keyword]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no left over?
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Invalid at-keyword expecting qualified rules", "[compiler] [at-keyword]")
+CATCH_TEST_CASE("Invalid at-keyword expecting qualified rules", "[compiler] [at-keyword]")
 {
     // a @supports without a {}-block
     {
@@ -8764,7 +8806,7 @@ TEST_CASE("Invalid at-keyword expecting qualified rules", "[compiler] [at-keywor
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8776,11 +8818,11 @@ TEST_CASE("Invalid at-keyword expecting qualified rules", "[compiler] [at-keywor
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  AT_KEYWORD \"supports\" I:0\n"
@@ -8794,14 +8836,14 @@ TEST_CASE("Invalid at-keyword expecting qualified rules", "[compiler] [at-keywor
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no left over?
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("At-Keyword with declarations", "[compiler] [at-keyword]")
+CATCH_TEST_CASE("At-Keyword with declarations", "[compiler] [at-keyword]")
 {
     // a valid @page
     {
@@ -8815,7 +8857,7 @@ TEST_CASE("At-Keyword with declarations", "[compiler] [at-keyword]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8827,11 +8869,11 @@ TEST_CASE("At-Keyword with declarations", "[compiler] [at-keyword]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  AT_KEYWORD \"page\" I:0\n"
@@ -8846,7 +8888,7 @@ TEST_CASE("At-Keyword with declarations", "[compiler] [at-keyword]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // @page with an @media inside
@@ -8867,7 +8909,7 @@ TEST_CASE("At-Keyword with declarations", "[compiler] [at-keyword]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8879,11 +8921,11 @@ TEST_CASE("At-Keyword with declarations", "[compiler] [at-keyword]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  AT_KEYWORD \"page\" I:0\n"
@@ -8911,7 +8953,7 @@ TEST_CASE("At-Keyword with declarations", "[compiler] [at-keyword]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // a valid @supports
@@ -8926,7 +8968,7 @@ TEST_CASE("At-Keyword with declarations", "[compiler] [at-keyword]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8938,11 +8980,11 @@ TEST_CASE("At-Keyword with declarations", "[compiler] [at-keyword]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  AT_KEYWORD \"font-face\" I:0\n"
@@ -8957,14 +8999,14 @@ TEST_CASE("At-Keyword with declarations", "[compiler] [at-keyword]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no left over?
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Charset", "[compiler] [invalid]")
+CATCH_TEST_CASE("Charset", "[compiler] [invalid]")
 {
     // a valid @charset
     {
@@ -8979,7 +9021,7 @@ TEST_CASE("Charset", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -8991,11 +9033,11 @@ TEST_CASE("Charset", "[compiler] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -9008,7 +9050,7 @@ TEST_CASE("Charset", "[compiler] [invalid]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // a valid @charset with many spaces
@@ -9024,7 +9066,7 @@ TEST_CASE("Charset", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9036,11 +9078,11 @@ TEST_CASE("Charset", "[compiler] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -9053,7 +9095,7 @@ TEST_CASE("Charset", "[compiler] [invalid]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // an @charset with a refused encoding
@@ -9069,7 +9111,7 @@ TEST_CASE("Charset", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9081,11 +9123,11 @@ TEST_CASE("Charset", "[compiler] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: we only support @charset \"utf-8\";, any other encoding is refused.\n");
+        VERIFY_ERRORS("test.css(1): error: we only support @charset \"utf-8\";, any other encoding is refused.\n");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -9098,7 +9140,7 @@ TEST_CASE("Charset", "[compiler] [invalid]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // an @charset with a decimal number
@@ -9114,7 +9156,7 @@ TEST_CASE("Charset", "[compiler] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9126,11 +9168,11 @@ TEST_CASE("Charset", "[compiler] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: the @charset is expected to be followed by exactly one string.\n");
+        VERIFY_ERRORS("test.css(1): error: the @charset is expected to be followed by exactly one string.\n");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -9143,14 +9185,14 @@ TEST_CASE("Charset", "[compiler] [invalid]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no left over?
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Conditional compilation", "[compiler] [conditional]")
+CATCH_TEST_CASE("Conditional compilation", "[compiler] [conditional]")
 {
     // script with @if / @else if / @else keywords
     {
@@ -9170,7 +9212,7 @@ TEST_CASE("Conditional compilation", "[compiler] [conditional]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9182,11 +9224,11 @@ TEST_CASE("Conditional compilation", "[compiler] [conditional]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(2): info: Got here! (1)\n");
+        VERIFY_ERRORS("test.css(2): info: Got here! (1)\n");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:var\n"
@@ -9203,7 +9245,7 @@ TEST_CASE("Conditional compilation", "[compiler] [conditional]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // script with @if / @else if / @else keywords
@@ -9222,7 +9264,7 @@ TEST_CASE("Conditional compilation", "[compiler] [conditional]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9234,11 +9276,11 @@ TEST_CASE("Conditional compilation", "[compiler] [conditional]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(3): info: Got here! (2)\n");
+        VERIFY_ERRORS("test.css(3): info: Got here! (2)\n");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:var\n"
@@ -9255,7 +9297,7 @@ TEST_CASE("Conditional compilation", "[compiler] [conditional]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // script with @if / @else if / @else keywords
@@ -9274,7 +9316,7 @@ TEST_CASE("Conditional compilation", "[compiler] [conditional]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9286,11 +9328,11 @@ TEST_CASE("Conditional compilation", "[compiler] [conditional]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(4): info: Got here! (3)\n");
+        VERIFY_ERRORS("test.css(4): info: Got here! (3)\n");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:var\n"
@@ -9307,14 +9349,14 @@ TEST_CASE("Conditional compilation", "[compiler] [conditional]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no left over?
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Invalid conditional", "[compiler] [conditional] [invalid]")
+CATCH_TEST_CASE("Invalid conditional", "[compiler] [conditional] [invalid]")
 {
     // script with @if / @else if / @else keywords
     // invalid "@else if" which includes an expression
@@ -9335,7 +9377,7 @@ TEST_CASE("Invalid conditional", "[compiler] [conditional] [invalid]")
 //std::cerr << "Parser result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9348,7 +9390,7 @@ TEST_CASE("Invalid conditional", "[compiler] [conditional] [invalid]")
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(2): error: @if is expected to have exactly 2 parameters: an expression and a block. This @if has 1 parameters.\n"
                 "test.css(3): error: '@else if ...' is missing an expression or a block.\n"
                 //"test.css(3): error: a standalone @else is not legal, it has to be preceeded by an @if ... or @else if ...\n"
@@ -9357,7 +9399,7 @@ TEST_CASE("Invalid conditional", "[compiler] [conditional] [invalid]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -9376,7 +9418,7 @@ TEST_CASE("Invalid conditional", "[compiler] [conditional] [invalid]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // script with @if / @else if / @else keywords
@@ -9396,7 +9438,7 @@ TEST_CASE("Invalid conditional", "[compiler] [conditional] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9408,7 +9450,7 @@ TEST_CASE("Invalid conditional", "[compiler] [conditional] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(3): error: unsupported type OPEN_CURLYBRACKET as a unary expression token.\n"
                 "test.css(3): error: '@else { ... }' is expected to have 1 parameter, '@else if ... { ... }' is expected to have 2 parameters. This @else has 2 parameters.\n"
                 //"test.css(4): error: a standalone @else is not legal, it has to be preceeded by an @if ... or @else if ...\n"
@@ -9416,7 +9458,7 @@ TEST_CASE("Invalid conditional", "[compiler] [conditional] [invalid]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:var\n"
@@ -9433,7 +9475,7 @@ TEST_CASE("Invalid conditional", "[compiler] [conditional] [invalid]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // script with @if / @else if / @else keywords
@@ -9453,7 +9495,7 @@ TEST_CASE("Invalid conditional", "[compiler] [conditional] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9465,7 +9507,7 @@ TEST_CASE("Invalid conditional", "[compiler] [conditional] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(""
+        VERIFY_ERRORS(""
                 "test.css(4): error: '@else { ... }' is expected to have 1 parameter, '@else if ... { ... }' is expected to have 2 parameters. This @else has 2 parameters.\n"
                 //"test.css(3): error: '@else if ...' is missing an expression or a block.\n"
                 //"test.css(3): error: '@else { ... }' cannot follow another '@else { ... }'. Maybe you are missing an 'if expr'?\n"
@@ -9475,7 +9517,7 @@ TEST_CASE("Invalid conditional", "[compiler] [conditional] [invalid]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:var\n"
@@ -9492,7 +9534,7 @@ TEST_CASE("Invalid conditional", "[compiler] [conditional] [invalid]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // script with @if / @else if / @else keywords
@@ -9513,7 +9555,7 @@ TEST_CASE("Invalid conditional", "[compiler] [conditional] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9525,7 +9567,7 @@ TEST_CASE("Invalid conditional", "[compiler] [conditional] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(""
+        VERIFY_ERRORS(""
                 "test.css(4): error: '@else { ... }' cannot follow another '@else { ... }'. Maybe you are missing an 'if expr'?\n"
                 "test.css(5): error: a standalone @else is not legal, it has to be preceeded by an @if ... or @else if ...\n"
                 //"test.css(4): info: Got here! (3)\n"
@@ -9533,7 +9575,7 @@ TEST_CASE("Invalid conditional", "[compiler] [conditional] [invalid]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "    V:var\n"
@@ -9550,14 +9592,14 @@ TEST_CASE("Invalid conditional", "[compiler] [conditional] [invalid]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no left over?
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("User @import", "[compiler] [at-keyword]")
+CATCH_TEST_CASE("User @import", "[compiler] [at-keyword]")
 {
     // @import with a valid URL
     {
@@ -9565,7 +9607,7 @@ TEST_CASE("User @import", "[compiler] [at-keyword]")
         {
             std::ofstream importing;
             importing.open("importing.scss");
-            REQUIRE(!!importing);
+            CATCH_REQUIRE(!!importing);
             importing << "/* @preserve this worked! {$_csspp_version} */";
         }
         std::stringstream ss;
@@ -9583,7 +9625,7 @@ TEST_CASE("User @import", "[compiler] [at-keyword]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9594,11 +9636,11 @@ TEST_CASE("User @import", "[compiler] [at-keyword]")
 
         c.compile(false);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -9609,7 +9651,7 @@ TEST_CASE("User @import", "[compiler] [at-keyword]")
 
         unlink("importing.scss");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // @import with a valid path as a URL (thus not recognized as a file://)
@@ -9624,7 +9666,7 @@ TEST_CASE("User @import", "[compiler] [at-keyword]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9634,11 +9676,11 @@ TEST_CASE("User @import", "[compiler] [at-keyword]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  AT_KEYWORD \"import\" I:0\n"
@@ -9646,7 +9688,7 @@ TEST_CASE("User @import", "[compiler] [at-keyword]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // @import with a valid path as a URL (thus not recognized as a file://)
@@ -9661,7 +9703,7 @@ TEST_CASE("User @import", "[compiler] [at-keyword]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9671,11 +9713,11 @@ TEST_CASE("User @import", "[compiler] [at-keyword]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  AT_KEYWORD \"import\" I:0\n"
@@ -9683,14 +9725,14 @@ TEST_CASE("User @import", "[compiler] [at-keyword]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no left over?
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Invalid @import", "[compiler] [at-keyword] [invalid]")
+CATCH_TEST_CASE("Invalid @import", "[compiler] [at-keyword] [invalid]")
 {
     // @import with URL representing a an inexistant file
     {
@@ -9704,7 +9746,7 @@ TEST_CASE("Invalid @import", "[compiler] [at-keyword] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9714,11 +9756,11 @@ TEST_CASE("Invalid @import", "[compiler] [at-keyword] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): info: @import uri(/this/shall/not/exist/anywhere/on/your/drive); left alone by the CSS Preprocessor, no matching file found.\n");
+        VERIFY_ERRORS("test.css(1): info: @import uri(/this/shall/not/exist/anywhere/on/your/drive); left alone by the CSS Preprocessor, no matching file found.\n");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  AT_KEYWORD \"import\" I:0\n"
@@ -9726,7 +9768,7 @@ TEST_CASE("Invalid @import", "[compiler] [at-keyword] [invalid]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // @import with URL representing a an inexistant file
@@ -9741,7 +9783,7 @@ TEST_CASE("Invalid @import", "[compiler] [at-keyword] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9751,11 +9793,11 @@ TEST_CASE("Invalid @import", "[compiler] [at-keyword] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): info: @import uri(/this/shall/not/exist/either/on/your/drive); left alone by the CSS Preprocessor, no matching file found.\n");
+        VERIFY_ERRORS("test.css(1): info: @import uri(/this/shall/not/exist/either/on/your/drive); left alone by the CSS Preprocessor, no matching file found.\n");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  AT_KEYWORD \"import\" I:0\n"
@@ -9763,7 +9805,7 @@ TEST_CASE("Invalid @import", "[compiler] [at-keyword] [invalid]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // @import with a string that includes a URL
@@ -9778,7 +9820,7 @@ TEST_CASE("Invalid @import", "[compiler] [at-keyword] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9788,11 +9830,11 @@ TEST_CASE("Invalid @import", "[compiler] [at-keyword] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): info: @import \"/this/shall/not/ever/exist/on/your/drive\"; left alone by the CSS Preprocessor, no matching file found.\n");
+        VERIFY_ERRORS("test.css(1): info: @import \"/this/shall/not/ever/exist/on/your/drive\"; left alone by the CSS Preprocessor, no matching file found.\n");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  AT_KEYWORD \"import\" I:0\n"
@@ -9800,7 +9842,7 @@ TEST_CASE("Invalid @import", "[compiler] [at-keyword] [invalid]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // @import with a string that includes a URL
@@ -9815,7 +9857,7 @@ TEST_CASE("Invalid @import", "[compiler] [at-keyword] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9825,11 +9867,11 @@ TEST_CASE("Invalid @import", "[compiler] [at-keyword] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): info: @import \"include/a/file:///in/the/filename/but/still/a/regular/filename\"; left alone by the CSS Preprocessor, no matching file found.\n");
+        VERIFY_ERRORS("test.css(1): info: @import \"include/a/file:///in/the/filename/but/still/a/regular/filename\"; left alone by the CSS Preprocessor, no matching file found.\n");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  AT_KEYWORD \"import\" I:0\n"
@@ -9837,7 +9879,7 @@ TEST_CASE("Invalid @import", "[compiler] [at-keyword] [invalid]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // @import a script named "" (empty string!)
@@ -9852,7 +9894,7 @@ TEST_CASE("Invalid @import", "[compiler] [at-keyword] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9862,11 +9904,11 @@ TEST_CASE("Invalid @import", "[compiler] [at-keyword] [invalid]")
 
         c.compile(true);
 
-        REQUIRE_ERRORS("test.css(1): error: @import \"\"; and @import url(); are not valid.\n");
+        VERIFY_ERRORS("test.css(1): error: @import \"\"; and @import url(); are not valid.\n");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  AT_KEYWORD \"import\" I:0\n"
@@ -9874,14 +9916,14 @@ TEST_CASE("Invalid @import", "[compiler] [at-keyword] [invalid]")
 
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no left over?
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Invalid variable in comment", "[compiler] [conditional] [invalid]")
+CATCH_TEST_CASE("Invalid variable in comment", "[compiler] [conditional] [invalid]")
 {
     // variable is not defined
     {
@@ -9895,7 +9937,7 @@ TEST_CASE("Invalid variable in comment", "[compiler] [conditional] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9908,11 +9950,11 @@ TEST_CASE("Invalid variable in comment", "[compiler] [conditional] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): warning: variable named \"unknown\", used in a comment, is not set.\n"
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // variable is not defined
@@ -9928,7 +9970,7 @@ TEST_CASE("Invalid variable in comment", "[compiler] [conditional] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9941,11 +9983,11 @@ TEST_CASE("Invalid variable in comment", "[compiler] [conditional] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(2): warning: variable named \"func\", is a function which is not supported in a comment.\n"
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // variable is not defined
@@ -9961,7 +10003,7 @@ TEST_CASE("Invalid variable in comment", "[compiler] [conditional] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -9974,18 +10016,18 @@ TEST_CASE("Invalid variable in comment", "[compiler] [conditional] [invalid]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(2): warning: variable named \"simple_var\", is not a function, yet you referenced it as such (and functions are not yet supported in comments).\n"
             );
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // no left over?
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
+CATCH_TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
 {
     {
         std::stringstream ss;
@@ -10019,7 +10061,7 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -10034,7 +10076,7 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -10089,9 +10131,9 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // without spaces
@@ -10108,7 +10150,7 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -10123,7 +10165,7 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -10172,9 +10214,9 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // rules with !important
@@ -10189,7 +10231,7 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -10204,7 +10246,7 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -10222,9 +10264,9 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // rules with ! important
@@ -10239,7 +10281,7 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -10254,7 +10296,7 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -10272,9 +10314,9 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // rules with !important and no spaces
@@ -10289,7 +10331,7 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -10304,7 +10346,7 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -10322,9 +10364,9 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // empty rules have to compile too
@@ -10341,7 +10383,7 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -10356,7 +10398,7 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables()
@@ -10365,9 +10407,9 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // special IE8 value which has to be skipped
@@ -10387,7 +10429,7 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -10399,7 +10441,7 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
         c.compile(false);
 
         // no error left over
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(4): warning: the alpha(), chroma() and similar functions of the filter field are Internet Explorer specific extensions which are not supported across browsers.\n"
                 "test.css(5): warning: the alpha(), chroma() and similar functions of the filter field are Internet Explorer specific extensions which are not supported across browsers.\n"
             );
@@ -10408,7 +10450,7 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -10446,9 +10488,9 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 
     // a simple test with '--no-logo' specified
@@ -10466,7 +10508,7 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         csspp::compiler c;
         c.set_root(n);
@@ -10481,11 +10523,11 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables(csspp_test::flag_no_logo_true) +
@@ -10502,23 +10544,23 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
 }
 
 // This does not work under Linux, the ifstream.open() accepts a
 // directory name as input without generating an error
 //
-//TEST_CASE("Cannot open file", "[compiler] [invalid] [input]")
+//CATCH_TEST_CASE("Cannot open file", "[compiler] [invalid] [input]")
 //{
 //    // generate an error with @error
 //    {
 //        // create a directory in place of the script, so it exists
 //        // and is readable but cannot be opened
 //        rmdir("pseudo-nth-functions.scss"); // in case you run more than once
-//        REQUIRE(mkdir("pseudo-nth-functions.scss", 0700) == 0);
+//        CATCH_REQUIRE(mkdir("pseudo-nth-functions.scss", 0700) == 0);
 //
 //        std::stringstream ss;
 //        ss << "div:nth-child(3n+2){font-style:normal}";
@@ -10530,32 +10572,25 @@ TEST_CASE("Compile keyframes", "[compiler] [stylesheet] [attribute]")
 //        csspp::node::pointer_t n(p.stylesheet());
 //
 //        // no errors so far
-//        REQUIRE_ERRORS("");
+//        VERIFY_ERRORS("");
 //
 //        csspp::compiler c;
 //        c.set_root(n);
 //        c.clear_paths();
 //        c.add_path(".");
 //
-//        REQUIRE_THROWS_AS(c.compile(true), csspp::csspp_exception_exit &);
+//        CATCH_REQUIRE_THROWS_AS(c.compile(true), csspp::csspp_exception_exit);
 //
 //        // TODO: use an RAII class instead
 //        rmdir("pseudo-nth-functions.scss"); // in case you run more than once
 //
-//        REQUIRE_ERRORS("pseudo-nth-functions(1): fatal: validation script \"pseudo-nth-functions\" was not found.\n");
+//        VERIFY_ERRORS("pseudo-nth-functions(1): fatal: validation script \"pseudo-nth-functions\" was not found.\n");
 //
-//        REQUIRE(c.get_root() == n);
+//        CATCH_REQUIRE(c.get_root() == n);
 //    }
 //
 //    // no left over?
-//    REQUIRE_ERRORS("");
+//    VERIFY_ERRORS("");
 //}
-
-// Local Variables:
-// mode: cpp
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// tab-width: 4
-// End:
 
 // vim: ts=4 sw=4 et

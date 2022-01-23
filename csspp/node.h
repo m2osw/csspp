@@ -1,5 +1,3 @@
-#ifndef CSSPP_NODE_H
-#define CSSPP_NODE_H
 // Copyright (c) 2015-2022  Made to Order Software Corp.  All Rights Reserved
 //
 // This program is free software; you can redistribute it and/or modify
@@ -15,12 +13,19 @@
 // You should have received a copy of the GNU General Public License along
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#pragma once
 
-#include <csspp/color.h>
-#include <csspp/error.h>
+// self
+//
+#include    "csspp/color.h"
+#include    "csspp/error.h"
 
-#include <map>
-#include <vector>
+
+// C++ lib
+//
+#include    <map>
+#include    <vector>
+
 
 namespace csspp
 {
@@ -214,15 +219,5 @@ std::ostream & operator << (std::ostream & out, csspp::node_type_t const type);
 std::ostream & operator << (std::ostream & out, csspp::node const & n);
 
 csspp::error & operator << (csspp::error & out, csspp::node_type_t const type);
-
-#endif
-// #ifndef CSSPP_NODE_H
-
-// Local Variables:
-// mode: cpp
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// tab-width: 4
-// End:
 
 // vim: ts=4 sw=4 et

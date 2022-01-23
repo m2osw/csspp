@@ -1,5 +1,7 @@
-// CSS Preprocessor -- Test Suite
-// Copyright (c) 2015-2021  Made to Order Software Corp.  All Rights Reserved
+// Copyright (c) 2015-2022  Made to Order Software Corp.  All Rights Reserved
+//
+// https://snapwebsites.org/project/csspp
+// contact@m2osw.com
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -11,9 +13,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 /** \file
  * \brief Test the parser.cpp file.
@@ -29,14 +31,32 @@
  * is not known at the time the parser returns.
  */
 
-#include "catch_tests.h"
+// self
+//
+#include    "catch_main.h"
 
-#include "csspp/exceptions.h"
-#include "csspp/parser.h"
 
+// csspp lib
+//
+#include    <csspp/exceptions.h>
+#include    <csspp/parser.h>
+
+
+// C++ lib
+//
 #include <sstream>
 
+
+// C lib
+//
 #include <string.h>
+
+
+// last include
+//
+#include    <snapdev/poison.h>
+
+
 
 namespace
 {
@@ -46,7 +66,7 @@ namespace
 
 
 
-TEST_CASE("Simple stylesheets", "[parser] [stylesheet] [rules]")
+CATCH_TEST_CASE("Simple stylesheets", "[parser] [stylesheet] [rules]")
 {
     {
         std::stringstream ss;
@@ -62,7 +82,7 @@ TEST_CASE("Simple stylesheets", "[parser] [stylesheet] [rules]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -80,7 +100,7 @@ TEST_CASE("Simple stylesheets", "[parser] [stylesheet] [rules]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     {
@@ -97,7 +117,7 @@ TEST_CASE("Simple stylesheets", "[parser] [stylesheet] [rules]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -123,7 +143,7 @@ TEST_CASE("Simple stylesheets", "[parser] [stylesheet] [rules]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // one large rule with semicolons inside
@@ -146,7 +166,7 @@ TEST_CASE("Simple stylesheets", "[parser] [stylesheet] [rules]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -192,7 +212,7 @@ TEST_CASE("Simple stylesheets", "[parser] [stylesheet] [rules]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // a comment, a simple rule, a comment
@@ -212,7 +232,7 @@ TEST_CASE("Simple stylesheets", "[parser] [stylesheet] [rules]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -228,7 +248,7 @@ TEST_CASE("Simple stylesheets", "[parser] [stylesheet] [rules]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // one empty C-like comment
@@ -246,7 +266,7 @@ TEST_CASE("Simple stylesheets", "[parser] [stylesheet] [rules]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -261,7 +281,7 @@ TEST_CASE("Simple stylesheets", "[parser] [stylesheet] [rules]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // multiple empty C-like comments
@@ -279,7 +299,7 @@ TEST_CASE("Simple stylesheets", "[parser] [stylesheet] [rules]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -294,7 +314,7 @@ TEST_CASE("Simple stylesheets", "[parser] [stylesheet] [rules]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // cascading fields
@@ -313,11 +333,11 @@ TEST_CASE("Simple stylesheets", "[parser] [stylesheet] [rules]")
         csspp::node::pointer_t n(p.stylesheet());
 
 //std::cerr << "Result is: [" << *n << "]\n";
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -368,7 +388,7 @@ TEST_CASE("Simple stylesheets", "[parser] [stylesheet] [rules]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // verify support of an empty {}-block
@@ -384,11 +404,11 @@ TEST_CASE("Simple stylesheets", "[parser] [stylesheet] [rules]")
         csspp::node::pointer_t n(p.stylesheet());
 
 //std::cerr << "Result is: [" << *n << "]\n";
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -411,11 +431,11 @@ TEST_CASE("Simple stylesheets", "[parser] [stylesheet] [rules]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 }
 
-TEST_CASE("Invalid stylesheets", "[parser] [stylesheet] [invalid]")
+CATCH_TEST_CASE("Invalid stylesheets", "[parser] [stylesheet] [invalid]")
 {
     // closing '}' one too many times
     {
@@ -432,7 +452,7 @@ TEST_CASE("Invalid stylesheets", "[parser] [stylesheet] [invalid]")
 
         // this failed with an error, no need to check the "broken" output
 
-        REQUIRE_ERRORS("test.css(1): error: Unexpected closing block of type: CLOSE_CURLYBRACKET.\n");
+        VERIFY_ERRORS("test.css(1): error: Unexpected closing block of type: CLOSE_CURLYBRACKET.\n");
     }
 
     // closing ']' one too many times
@@ -450,7 +470,7 @@ TEST_CASE("Invalid stylesheets", "[parser] [stylesheet] [invalid]")
 
         // this failed with an error, no need to check the "broken" output
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: A qualified rule must end with a { ... } block.\n"
                 "test.css(1): error: Unexpected closing block of type: CLOSE_SQUAREBRACKET.\n"
             );
@@ -471,7 +491,7 @@ TEST_CASE("Invalid stylesheets", "[parser] [stylesheet] [invalid]")
 
         // this failed with an error, no need to check the "broken" output
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: Block expected to end with CLOSE_CURLYBRACKET but got CLOSE_PARENTHESIS instead.\n"
                 //"test.css(1): error: Unexpected closing block of type: CLOSE_PARENTHESIS.\n"
             );
@@ -492,16 +512,16 @@ TEST_CASE("Invalid stylesheets", "[parser] [stylesheet] [invalid]")
 
         // this failed with an error, no need to check the "broken" output
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: A qualified rule cannot end a { ... } block with a ';'.\n"
             );
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Simple rules", "[parser] [rule-list]")
+CATCH_TEST_CASE("Simple rules", "[parser] [rule-list]")
 {
     // a simple valid rule
     {
@@ -519,7 +539,7 @@ TEST_CASE("Simple rules", "[parser] [rule-list]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -549,7 +569,7 @@ TEST_CASE("Simple rules", "[parser] [rule-list]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // a simple valid rule
@@ -570,7 +590,7 @@ TEST_CASE("Simple rules", "[parser] [rule-list]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -608,11 +628,11 @@ TEST_CASE("Simple rules", "[parser] [rule-list]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 }
 
-TEST_CASE("Nested rules", "[parser] [rule-list]")
+CATCH_TEST_CASE("Nested rules", "[parser] [rule-list]")
 {
     // at rule inside another at rule
     {
@@ -626,13 +646,13 @@ TEST_CASE("Nested rules", "[parser] [rule-list]")
         csspp::node::pointer_t n(p.rule_list());
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  AT_KEYWORD \"if\" I:0\n"
@@ -646,7 +666,7 @@ TEST_CASE("Nested rules", "[parser] [rule-list]")
     }
 }
 
-TEST_CASE("Invalid rules", "[parser] [rule-list] [invalid]")
+CATCH_TEST_CASE("Invalid rules", "[parser] [rule-list] [invalid]")
 {
     // breaks on the <!--
     {
@@ -664,7 +684,7 @@ TEST_CASE("Invalid rules", "[parser] [rule-list] [invalid]")
 
         // this failed with an error, no need to check the "broken" output
 
-        REQUIRE_ERRORS("test.css(1): error: HTML comment delimiters (<!-- and -->) are not allowed in this CSS document.\n");
+        VERIFY_ERRORS("test.css(1): error: HTML comment delimiters (<!-- and -->) are not allowed in this CSS document.\n");
     }
 
     // breaks on the -->
@@ -683,7 +703,7 @@ TEST_CASE("Invalid rules", "[parser] [rule-list] [invalid]")
 
         // this failed with an error, no need to check the "broken" output
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: A qualified rule cannot be empty; you are missing a { ... } block.\n"
                 "test.css(1): error: HTML comment delimiters (<!-- and -->) are not allowed in this CSS document.\n"
             );
@@ -705,7 +725,7 @@ TEST_CASE("Invalid rules", "[parser] [rule-list] [invalid]")
 
         // this failed with an error, no need to check the "broken" output
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: A qualified rule cannot be empty; you are missing a { ... } block.\n"
                 "test.css(1): error: Unexpected closing block of type: CLOSE_CURLYBRACKET.\n"
             );
@@ -727,7 +747,7 @@ TEST_CASE("Invalid rules", "[parser] [rule-list] [invalid]")
 
         // this failed with an error, no need to check the "broken" output
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: A qualified rule must end with a { ... } block.\n"
                 "test.css(1): error: Unexpected closing block of type: CLOSE_SQUAREBRACKET.\n"
             );
@@ -749,7 +769,7 @@ TEST_CASE("Invalid rules", "[parser] [rule-list] [invalid]")
 
         // this failed with an error, no need to check the "broken" output
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: Block expected to end with CLOSE_CURLYBRACKET but got CLOSE_PARENTHESIS instead.\n"
                 //"test.css(1): error: Unexpected closing block of type: CLOSE_PARENTHESIS.\n"
             );
@@ -770,7 +790,7 @@ TEST_CASE("Invalid rules", "[parser] [rule-list] [invalid]")
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: At '@' command cannot be empty (missing expression or block) unless ended by a semicolon (;).\n");
+        VERIFY_ERRORS("test.css(1): error: At '@' command cannot be empty (missing expression or block) unless ended by a semicolon (;).\n");
     }
 
     // a @-rule cannot be empty
@@ -787,7 +807,7 @@ TEST_CASE("Invalid rules", "[parser] [rule-list] [invalid]")
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: At '@' command must end with a block or a ';'.\n");
+        VERIFY_ERRORS("test.css(1): error: At '@' command must end with a block or a ';'.\n");
     }
 
     // :INTEGER is not valid, plus it is viewed as a nested rule!
@@ -801,14 +821,14 @@ TEST_CASE("Invalid rules", "[parser] [rule-list] [invalid]")
 
         csspp::node::pointer_t n(p.stylesheet());
 
-        REQUIRE_ERRORS("test.css(1): error: Variable set to a block and a nested property block must end with a semicolon (;) after said block.\n");
+        VERIFY_ERRORS("test.css(1): error: Variable set to a block and a nested property block must end with a semicolon (;) after said block.\n");
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("One simple rule", "[parser] [rule]")
+CATCH_TEST_CASE("One simple rule", "[parser] [rule]")
 {
     // a simple valid rule
     {
@@ -825,7 +845,7 @@ TEST_CASE("One simple rule", "[parser] [rule]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "COMPONENT_VALUE\n"
 "  IDENTIFIER \"body\"\n"
@@ -872,7 +892,7 @@ TEST_CASE("One simple rule", "[parser] [rule]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "COMPONENT_VALUE\n"
 "  IDENTIFIER \"div\"\n"
@@ -889,7 +909,7 @@ TEST_CASE("One simple rule", "[parser] [rule]")
 
         out.str("");
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "AT_KEYWORD \"media\" I:0\n"
 "  IDENTIFIER \"screen\"\n"
@@ -908,7 +928,7 @@ TEST_CASE("One simple rule", "[parser] [rule]")
 
         out.str("");
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "COMPONENT_VALUE\n"
 "  IDENTIFIER \"div\"\n"
@@ -929,10 +949,10 @@ TEST_CASE("One simple rule", "[parser] [rule]")
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Invalid one rule", "[parser] [rule] [invalid]")
+CATCH_TEST_CASE("Invalid one rule", "[parser] [rule] [invalid]")
 {
     // breaks on the <!--
     {
@@ -949,7 +969,7 @@ TEST_CASE("Invalid one rule", "[parser] [rule] [invalid]")
 
         // this failed with an error, no need to check the "broken" output
 
-        REQUIRE_ERRORS("test.css(1): error: HTML comment delimiters (<!-- and -->) are not allowed in this CSS document.\n");
+        VERIFY_ERRORS("test.css(1): error: HTML comment delimiters (<!-- and -->) are not allowed in this CSS document.\n");
     }
 
     // breaks on the -->
@@ -967,7 +987,7 @@ TEST_CASE("Invalid one rule", "[parser] [rule] [invalid]")
 
         // this failed with an error, no need to check the "broken" output
 
-        REQUIRE_ERRORS("test.css(1): error: HTML comment delimiters (<!-- and -->) are not allowed in this CSS document.\n");
+        VERIFY_ERRORS("test.css(1): error: HTML comment delimiters (<!-- and -->) are not allowed in this CSS document.\n");
     }
 
     // breaks on the }
@@ -986,7 +1006,7 @@ TEST_CASE("Invalid one rule", "[parser] [rule] [invalid]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "COMPONENT_VALUE\n"
 "  IDENTIFIER \"body\"\n"
@@ -1005,7 +1025,7 @@ TEST_CASE("Invalid one rule", "[parser] [rule] [invalid]")
         // this failed with an error, no need to check the "broken" output
         n = p.rule();
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: A qualified rule cannot be empty; you are missing a { ... } block.\n"
                 //"test.css(1): error: Unexpected closing block of type: CLOSE_CURLYBRACKET.\n"
             );
@@ -1027,7 +1047,7 @@ TEST_CASE("Invalid one rule", "[parser] [rule] [invalid]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "COMPONENT_VALUE\n"
 "  IDENTIFIER \"body\"\n"
@@ -1041,7 +1061,7 @@ TEST_CASE("Invalid one rule", "[parser] [rule] [invalid]")
         // this failed with an error, no need to check the "broken" output
         n = p.rule();
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: A qualified rule must end with a { ... } block.\n"
                 "test.css(1): error: Unexpected closing block of type: CLOSE_SQUAREBRACKET.\n"
             );
@@ -1062,7 +1082,7 @@ TEST_CASE("Invalid one rule", "[parser] [rule] [invalid]")
 
         // this failed with an error, no need to check the "broken" output
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: Block expected to end with CLOSE_CURLYBRACKET but got CLOSE_PARENTHESIS instead.\n"
                 //"test.css(1): error: Unexpected closing block of type: CLOSE_PARENTHESIS.\n"
             );
@@ -1084,7 +1104,7 @@ TEST_CASE("Invalid one rule", "[parser] [rule] [invalid]")
 //
 //        std::stringstream out;
 //        out << *n;
-//        REQUIRE_TREES(out.str(),
+//        VERIFY_TREES(out.str(),
 //
 //"COMPONENT_VALUE\n"
 //"  IDENTIFIER \"div\"\n"
@@ -1099,7 +1119,7 @@ TEST_CASE("Invalid one rule", "[parser] [rule] [invalid]")
 //        // this failed with an error, no need to check the "broken" output
 //        n = p.rule();
 //
-//        REQUIRE_ERRORS("test.css(1): error: At '@' command cannot be empty (missing expression or block) unless ended by a semicolon (;).\n");
+//        VERIFY_ERRORS("test.css(1): error: At '@' command cannot be empty (missing expression or block) unless ended by a semicolon (;).\n");
 //    }
 //
 //    // a @-rule cannot be empty
@@ -1115,14 +1135,14 @@ TEST_CASE("Invalid one rule", "[parser] [rule] [invalid]")
 //
 ////std::cerr << "Result is: [" << *n << "]\n";
 //
-//        REQUIRE_ERRORS("test.css(1): error: At '@' command must end with a block or a ';'.\n");
+//        VERIFY_ERRORS("test.css(1): error: At '@' command must end with a block or a ';'.\n");
 //    }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Simple component values", "[parser] [component-value]")
+CATCH_TEST_CASE("Simple component values", "[parser] [component-value]")
 {
     // a simple valid rule
     {
@@ -1139,7 +1159,7 @@ TEST_CASE("Simple component values", "[parser] [component-value]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "COMPONENT_VALUE\n"
 "  IDENTIFIER \"body\"\n"
@@ -1186,7 +1206,7 @@ TEST_CASE("Simple component values", "[parser] [component-value]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "COMPONENT_VALUE\n"
 "  IDENTIFIER \"div\"\n"
@@ -1203,7 +1223,7 @@ TEST_CASE("Simple component values", "[parser] [component-value]")
 
         out.str("");
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "AT_KEYWORD \"media\" I:0\n"
 "  IDENTIFIER \"screen\"\n"
@@ -1222,7 +1242,7 @@ TEST_CASE("Simple component values", "[parser] [component-value]")
 
         out.str("");
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "COMPONENT_VALUE\n"
 "  IDENTIFIER \"div\"\n"
@@ -1243,10 +1263,10 @@ TEST_CASE("Simple component values", "[parser] [component-value]")
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Invalid component values", "[parser] [component-value] [invalid]")
+CATCH_TEST_CASE("Invalid component values", "[parser] [component-value] [invalid]")
 {
     // breaks on missing }
     {
@@ -1263,7 +1283,7 @@ TEST_CASE("Invalid component values", "[parser] [component-value] [invalid]")
 
         // this failed with an error, no need to check the "broken" output
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: Block expected to end with CLOSE_CURLYBRACKET but got EOF_TOKEN instead.\n"
             );
     }
@@ -1284,7 +1304,7 @@ TEST_CASE("Invalid component values", "[parser] [component-value] [invalid]")
 
         // this failed with an error, no need to check the "broken" output
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: Block expected to end with CLOSE_SQUAREBRACKET but got CLOSE_CURLYBRACKET instead.\n"
             );
     }
@@ -1304,16 +1324,16 @@ TEST_CASE("Invalid component values", "[parser] [component-value] [invalid]")
 
         // this failed with an error, no need to check the "broken" output
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: Block expected to end with CLOSE_PARENTHESIS but got CLOSE_CURLYBRACKET instead.\n"
             );
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Simple one component value", "[parser] [component-value]")
+CATCH_TEST_CASE("Simple one component value", "[parser] [component-value]")
 {
     // a simple valid rule
     {
@@ -1384,17 +1404,17 @@ TEST_CASE("Simple one component value", "[parser] [component-value]")
             csspp::node::pointer_t n(p.component_value());
             std::stringstream out;
             out << *n;
-            REQUIRE_TREES(out.str(), results[i]);
+            VERIFY_TREES(out.str(), results[i]);
             csspp_test::compare(out.str(), results[i], __FILE__, i + 1);
         }
 
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Invalid one component value", "[parser] [component-value] [invalid]")
+CATCH_TEST_CASE("Invalid one component value", "[parser] [component-value] [invalid]")
 {
     // breaks on missing }
     {
@@ -1429,11 +1449,11 @@ TEST_CASE("Invalid one component value", "[parser] [component-value] [invalid]")
             csspp::node::pointer_t n(p.component_value());
             std::stringstream out;
             out << *n;
-            REQUIRE_TREES(out.str(), results[i]);
+            VERIFY_TREES(out.str(), results[i]);
             csspp_test::compare(out.str(), results[i], __FILE__, i + 1);
         }
 
-        REQUIRE_ERRORS("test.css(1): error: Block expected to end with CLOSE_CURLYBRACKET but got EOF_TOKEN instead.\n");
+        VERIFY_ERRORS("test.css(1): error: Block expected to end with CLOSE_CURLYBRACKET but got EOF_TOKEN instead.\n");
     }
 
     // breaks on missing ]
@@ -1464,11 +1484,11 @@ TEST_CASE("Invalid one component value", "[parser] [component-value] [invalid]")
             csspp::node::pointer_t n(p.component_value());
             std::stringstream out;
             out << *n;
-            REQUIRE_TREES(out.str(), results[i]);
+            VERIFY_TREES(out.str(), results[i]);
             csspp_test::compare(out.str(), results[i], __FILE__, i + 1);
         }
 
-        REQUIRE_ERRORS("test.css(1): error: Block expected to end with CLOSE_SQUAREBRACKET but got EOF_TOKEN instead.\n");
+        VERIFY_ERRORS("test.css(1): error: Block expected to end with CLOSE_SQUAREBRACKET but got EOF_TOKEN instead.\n");
     }
 
     // breaks on missing )
@@ -1503,18 +1523,18 @@ TEST_CASE("Invalid one component value", "[parser] [component-value] [invalid]")
             csspp::node::pointer_t n(p.component_value());
             std::stringstream out;
             out << *n;
-            REQUIRE_TREES(out.str(), results[i]);
+            VERIFY_TREES(out.str(), results[i]);
             csspp_test::compare(out.str(), results[i], __FILE__, i + 1);
         }
 
-        REQUIRE_ERRORS("test.css(1): error: Block expected to end with CLOSE_PARENTHESIS but got CLOSE_CURLYBRACKET instead.\n");
+        VERIFY_ERRORS("test.css(1): error: Block expected to end with CLOSE_PARENTHESIS but got CLOSE_CURLYBRACKET instead.\n");
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Simple declarations", "[parser] [declaration]")
+CATCH_TEST_CASE("Simple declarations", "[parser] [declaration]")
 {
     // a simple valid declaration
     {
@@ -1532,7 +1552,7 @@ TEST_CASE("Simple declarations", "[parser] [declaration]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  DECLARATION \"background\"\n"
@@ -1562,7 +1582,7 @@ TEST_CASE("Simple declarations", "[parser] [declaration]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // a @-rule in a declaration
@@ -1581,7 +1601,7 @@ TEST_CASE("Simple declarations", "[parser] [declaration]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  AT_KEYWORD \"enhanced\" I:0\n"
@@ -1611,7 +1631,7 @@ TEST_CASE("Simple declarations", "[parser] [declaration]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // multiple declarations require a ';'
@@ -1630,7 +1650,7 @@ TEST_CASE("Simple declarations", "[parser] [declaration]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  DECLARATION \"a\"\n"
@@ -1646,7 +1666,7 @@ TEST_CASE("Simple declarations", "[parser] [declaration]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // multiple declarations require a ';'
@@ -1665,7 +1685,7 @@ TEST_CASE("Simple declarations", "[parser] [declaration]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  DECLARATION \"a\"\n"
@@ -1686,11 +1706,11 @@ TEST_CASE("Simple declarations", "[parser] [declaration]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 }
 
-TEST_CASE("Invalid declarations", "[parser] [declaration] [invalid]")
+CATCH_TEST_CASE("Invalid declarations", "[parser] [declaration] [invalid]")
 {
     // declarations must end with EOF
     {
@@ -1706,7 +1726,7 @@ TEST_CASE("Invalid declarations", "[parser] [declaration] [invalid]")
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: the end of the stream was not reached in this declaration, we stopped on a CDO.\n");
+        VERIFY_ERRORS("test.css(1): error: the end of the stream was not reached in this declaration, we stopped on a CDO.\n");
     }
 
     // declarations missing a ':'
@@ -1723,7 +1743,7 @@ TEST_CASE("Invalid declarations", "[parser] [declaration] [invalid]")
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: ':' missing in your declaration starting with \"background\".\n"
             );
     }
@@ -1742,17 +1762,17 @@ TEST_CASE("Invalid declarations", "[parser] [declaration] [invalid]")
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
-        REQUIRE_ERRORS(
+        VERIFY_ERRORS(
                 "test.css(1): error: A '!' must be followed by an identifier, got a FUNCTION instead.\n"
                 //"test.css(1): error: the end of the stream was not reached in this declaration, we stopped on a FUNCTION.\n"
             );
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Multi-line, multi-level stylesheet", "[parser] [rules]")
+CATCH_TEST_CASE("Multi-line, multi-level stylesheet", "[parser] [rules]")
 {
     {
         std::stringstream ss;
@@ -1771,13 +1791,13 @@ TEST_CASE("Multi-line, multi-level stylesheet", "[parser] [rules]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no error happened
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -1879,10 +1899,10 @@ TEST_CASE("Multi-line, multi-level stylesheet", "[parser] [rules]")
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Is variable set", "[parser] [variable] [invalid]")
+CATCH_TEST_CASE("Is variable set", "[parser] [variable] [invalid]")
 {
     // simple test with a value + value (SASS compatible)
     {
@@ -1896,13 +1916,13 @@ TEST_CASE("Is variable set", "[parser] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no error happened
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -1914,8 +1934,8 @@ TEST_CASE("Is variable set", "[parser] [variable] [invalid]")
             );
 
         csspp::node::pointer_t var(n->get_child(0));
-        REQUIRE(csspp::parser::is_variable_set(var, false));
-        REQUIRE_FALSE(csspp::parser::is_variable_set(var, true));
+        CATCH_REQUIRE(csspp::parser::is_variable_set(var, false));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_variable_set(var, true));
     }
 
     // case were we actually use a variable to define a selector
@@ -1931,13 +1951,13 @@ TEST_CASE("Is variable set", "[parser] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no error happened
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -1955,8 +1975,8 @@ TEST_CASE("Is variable set", "[parser] [variable] [invalid]")
             );
 
         csspp::node::pointer_t var(n->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_variable_set(var, false));
-        REQUIRE_FALSE(csspp::parser::is_variable_set(var, true));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_variable_set(var, false));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_variable_set(var, true));
     }
 
     // test with a variable block
@@ -1971,13 +1991,13 @@ TEST_CASE("Is variable set", "[parser] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no error happened
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -1993,8 +2013,8 @@ TEST_CASE("Is variable set", "[parser] [variable] [invalid]")
             );
 
         csspp::node::pointer_t var(n->get_child(0));
-        REQUIRE(csspp::parser::is_variable_set(var, false));
-        REQUIRE(csspp::parser::is_variable_set(var, true));
+        CATCH_REQUIRE(csspp::parser::is_variable_set(var, false));
+        CATCH_REQUIRE(csspp::parser::is_variable_set(var, true));
     }
 
     // test with the missing ';'
@@ -2009,7 +2029,7 @@ TEST_CASE("Is variable set", "[parser] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // the ';' at the end is missing
-        REQUIRE_ERRORS("test.css(1): error: Variable set to a block and a nested property block must end with a semicolon (;) after said block.\n");
+        VERIFY_ERRORS("test.css(1): error: Variable set to a block and a nested property block must end with a semicolon (;) after said block.\n");
     }
 
     // simple test with a value + value (SASS compatible)
@@ -2024,13 +2044,13 @@ TEST_CASE("Is variable set", "[parser] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no error happened
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2043,8 +2063,8 @@ TEST_CASE("Is variable set", "[parser] [variable] [invalid]")
             );
 
         csspp::node::pointer_t var(n->get_child(0));
-        REQUIRE(csspp::parser::is_variable_set(var, false));
-        REQUIRE_FALSE(csspp::parser::is_variable_set(var, true));
+        CATCH_REQUIRE(csspp::parser::is_variable_set(var, false));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_variable_set(var, true));
     }
 
     // case were we actually use a variable to define a selector
@@ -2060,13 +2080,13 @@ TEST_CASE("Is variable set", "[parser] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no error happened
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2085,8 +2105,8 @@ TEST_CASE("Is variable set", "[parser] [variable] [invalid]")
             );
 
         csspp::node::pointer_t var(n->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_variable_set(var, false));
-        REQUIRE_FALSE(csspp::parser::is_variable_set(var, true));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_variable_set(var, false));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_variable_set(var, true));
     }
 
     // test with a variable block
@@ -2101,13 +2121,13 @@ TEST_CASE("Is variable set", "[parser] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no error happened
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2124,8 +2144,8 @@ TEST_CASE("Is variable set", "[parser] [variable] [invalid]")
             );
 
         csspp::node::pointer_t var(n->get_child(0));
-        REQUIRE(csspp::parser::is_variable_set(var, false));
-        REQUIRE(csspp::parser::is_variable_set(var, true));
+        CATCH_REQUIRE(csspp::parser::is_variable_set(var, false));
+        CATCH_REQUIRE(csspp::parser::is_variable_set(var, true));
     }
 
     // test with the missing ';'
@@ -2140,14 +2160,14 @@ TEST_CASE("Is variable set", "[parser] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // the ';' at the end is missing
-        REQUIRE_ERRORS("test.css(1): error: Variable set to a block and a nested property block must end with a semicolon (;) after said block.\n");
+        VERIFY_ERRORS("test.css(1): error: Variable set to a block and a nested property block must end with a semicolon (;) after said block.\n");
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
+CATCH_TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
 {
     // which a field name with a simple nested declaration
     {
@@ -2161,13 +2181,13 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no error happened
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2185,7 +2205,7 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
             );
 
         csspp::node::pointer_t var(n->get_child(0));
-        REQUIRE(csspp::parser::is_nested_declaration(var));
+        CATCH_REQUIRE(csspp::parser::is_nested_declaration(var));
     }
 
     // which a field name with a simple nested declaration
@@ -2200,13 +2220,13 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no error happened
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2229,7 +2249,7 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
             );
 
         csspp::node::pointer_t var(n->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(var));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(var));
     }
 
     // which a field name with a simple nested declaration
@@ -2244,13 +2264,13 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no error happened
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2271,7 +2291,7 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
             );
 
         csspp::node::pointer_t var(n->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(var));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(var));
     }
 
     // in this case it is clear that none are declarations
@@ -2288,13 +2308,13 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no error happened
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2322,15 +2342,15 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
 
         // check the first COMPONENT_VALUE
         csspp::node::pointer_t div(n->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(div));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(div));
 
         // check the second COMPONENT_VALUE
         csspp::node::pointer_t span(n->get_child(0)->get_child(1)->get_child(0)->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(span));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(span));
 
         // check the third COMPONENT_VALUE
         csspp::node::pointer_t p_tag(n->get_child(0)->get_child(1)->get_child(0)->get_child(1));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(p_tag));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(p_tag));
     }
 
     // in this case it is clear that none are declarations
@@ -2347,13 +2367,13 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no error happened
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2375,15 +2395,15 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
 
         // check the first COMPONENT_VALUE
         csspp::node::pointer_t div(n->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(div));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(div));
 
         // check the second COMPONENT_VALUE
         csspp::node::pointer_t span(n->get_child(0)->get_child(1)->get_child(0));
-        REQUIRE(csspp::parser::is_nested_declaration(span));
+        CATCH_REQUIRE(csspp::parser::is_nested_declaration(span));
 
         // check the third COMPONENT_VALUE
         csspp::node::pointer_t p_tag(n->get_child(0)->get_child(1)->get_child(0)->get_child(3)->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(p_tag));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(p_tag));
     }
 
     // ':' always marks a selector
@@ -2398,13 +2418,13 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no error happened
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2430,15 +2450,15 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
 
         // check the first COMPONENT_VALUE
         csspp::node::pointer_t div(n->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(div));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(div));
 
         // check the second COMPONENT_VALUE
         csspp::node::pointer_t span(n->get_child(0)->get_child(1)->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(span));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(span));
 
         // check the third COMPONENT_VALUE
         csspp::node::pointer_t p_tag(n->get_child(0)->get_child(1)->get_child(0)->get_child(6)->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(p_tag));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(p_tag));
     }
 
     // '%<id>' always marks a selector
@@ -2453,13 +2473,13 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no error happened
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2484,15 +2504,15 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
 
         // check the first COMPONENT_VALUE
         csspp::node::pointer_t div(n->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(div));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(div));
 
         // check the second COMPONENT_VALUE
         csspp::node::pointer_t span(n->get_child(0)->get_child(1)->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(span));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(span));
 
         // check the third COMPONENT_VALUE
         csspp::node::pointer_t p_tag(n->get_child(0)->get_child(1)->get_child(0)->get_child(5)->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(p_tag));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(p_tag));
     }
 
     // 'E ~ E' always marks a selector
@@ -2507,13 +2527,13 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no error happened
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2541,15 +2561,15 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
 
         // check the first COMPONENT_VALUE
         csspp::node::pointer_t div(n->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(div));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(div));
 
         // check the second COMPONENT_VALUE
         csspp::node::pointer_t span(n->get_child(0)->get_child(1)->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(span));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(span));
 
         // check the third COMPONENT_VALUE
         csspp::node::pointer_t p_tag(n->get_child(0)->get_child(1)->get_child(0)->get_child(8)->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(p_tag));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(p_tag));
     }
 
     // 'E & E' always marks a selector
@@ -2564,13 +2584,13 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no error happened
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2598,15 +2618,15 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
 
         // check the first COMPONENT_VALUE
         csspp::node::pointer_t div(n->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(div));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(div));
 
         // check the second COMPONENT_VALUE
         csspp::node::pointer_t span(n->get_child(0)->get_child(1)->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(span));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(span));
 
         // check the third COMPONENT_VALUE
         csspp::node::pointer_t p_tag(n->get_child(0)->get_child(1)->get_child(0)->get_child(8)->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(p_tag));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(p_tag));
     }
 
     // 'E|E' always marks a selector
@@ -2621,13 +2641,13 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no error happened
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2655,15 +2675,15 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
 
         // check the first COMPONENT_VALUE
         csspp::node::pointer_t div(n->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(div));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(div));
 
         // check the second COMPONENT_VALUE
         csspp::node::pointer_t span(n->get_child(0)->get_child(1)->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(span));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(span));
 
         // check the third COMPONENT_VALUE
         csspp::node::pointer_t p_tag(n->get_child(0)->get_child(1)->get_child(0)->get_child(8)->get_child(0));
-        REQUIRE_FALSE(csspp::parser::is_nested_declaration(p_tag));
+        CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(p_tag));
     }
 
     // a nested block must end with a ';'
@@ -2678,7 +2698,7 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no error happened
-        REQUIRE_ERRORS("test.css(1): error: Variable set to a block and a nested property block must end with a semicolon (;) after said block.\n");
+        VERIFY_ERRORS("test.css(1): error: Variable set to a block and a nested property block must end with a semicolon (;) after said block.\n");
     }
 
     // test special cases which woudl be really hard to get from the
@@ -2727,21 +2747,21 @@ TEST_CASE("Is nested declaration", "[parser] [variable] [invalid]")
         case 0x1D:
         case 0x17:
         case 0x15:
-            REQUIRE(csspp::parser::is_nested_declaration(root));
+            CATCH_REQUIRE(csspp::parser::is_nested_declaration(root));
             break;
 
         default:
-            REQUIRE_FALSE(csspp::parser::is_nested_declaration(root));
+            CATCH_REQUIRE_FALSE(csspp::parser::is_nested_declaration(root));
             break;
 
         }
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Rules defined inside an @-Keyword", "[parser] [variable] [invalid]")
+CATCH_TEST_CASE("Rules defined inside an @-Keyword", "[parser] [variable] [invalid]")
 {
     // which a field name with a simple nested declaration
     {
@@ -2760,13 +2780,13 @@ TEST_CASE("Rules defined inside an @-Keyword", "[parser] [variable] [invalid]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no error happened
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  AT_KEYWORD \"document\" I:0\n"
@@ -2820,10 +2840,10 @@ TEST_CASE("Rules defined inside an @-Keyword", "[parser] [variable] [invalid]")
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Parse argify", "[parser] [stylesheet]")
+CATCH_TEST_CASE("Parse argify", "[parser] [stylesheet]")
 {
     {
         std::stringstream ss;
@@ -2846,7 +2866,7 @@ TEST_CASE("Parse argify", "[parser] [stylesheet]")
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -2920,24 +2940,24 @@ TEST_CASE("Parse argify", "[parser] [stylesheet]")
             );
 
         // Argify the list under each COMPONENT_VALUE
-        REQUIRE(n->is(csspp::node_type_t::LIST));
+        CATCH_REQUIRE(n->is(csspp::node_type_t::LIST));
 
         size_t const max_children(n->size());
         for(size_t idx(0); idx < max_children; ++idx)
         {
             csspp::node::pointer_t component_value(n->get_child(idx));
-            REQUIRE(component_value->is(csspp::node_type_t::COMPONENT_VALUE));
-            REQUIRE(csspp::parser::argify(component_value));
+            CATCH_REQUIRE(component_value->is(csspp::node_type_t::COMPONENT_VALUE));
+            CATCH_REQUIRE(csspp::parser::argify(component_value));
         }
 
 //std::cerr << "Argified result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out2;
         out2 << *n;
-        REQUIRE_TREES(out2.str(),
+        VERIFY_TREES(out2.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -3014,11 +3034,11 @@ TEST_CASE("Parse argify", "[parser] [stylesheet]")
             );
 
         // no error left over
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 }
 
-TEST_CASE("Invalid argify", "[parser] [stylesheet]")
+CATCH_TEST_CASE("Invalid argify", "[parser] [stylesheet]")
 {
     // A starting comma is illegal
     {
@@ -3034,11 +3054,11 @@ TEST_CASE("Invalid argify", "[parser] [stylesheet]")
 //std::cerr << "Result is: [" << *n << "]\n";
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -3053,17 +3073,17 @@ TEST_CASE("Invalid argify", "[parser] [stylesheet]")
             );
 
         // Argify the list under each COMPONENT_VALUE
-        REQUIRE(n->is(csspp::node_type_t::LIST));
+        CATCH_REQUIRE(n->is(csspp::node_type_t::LIST));
 
         size_t const max_children(n->size());
         for(size_t idx(0); idx < max_children; ++idx)
         {
             csspp::node::pointer_t component_value(n->get_child(idx));
-            REQUIRE(component_value->is(csspp::node_type_t::COMPONENT_VALUE));
-            REQUIRE_FALSE(csspp::parser::argify(component_value));
+            CATCH_REQUIRE(component_value->is(csspp::node_type_t::COMPONENT_VALUE));
+            CATCH_REQUIRE_FALSE(csspp::parser::argify(component_value));
         }
 
-        REQUIRE_ERRORS("test.css(1): error: dangling comma at the beginning of a list of arguments or selectors.\n");
+        VERIFY_ERRORS("test.css(1): error: dangling comma at the beginning of a list of arguments or selectors.\n");
     }
 
     // An ending comma is illegal
@@ -3078,13 +3098,13 @@ TEST_CASE("Invalid argify", "[parser] [stylesheet]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -3099,17 +3119,17 @@ TEST_CASE("Invalid argify", "[parser] [stylesheet]")
             );
 
         // Argify the list under each COMPONENT_VALUE
-        REQUIRE(n->is(csspp::node_type_t::LIST));
+        CATCH_REQUIRE(n->is(csspp::node_type_t::LIST));
 
         size_t const max_children(n->size());
         for(size_t idx(0); idx < max_children; ++idx)
         {
             csspp::node::pointer_t component_value(n->get_child(idx));
-            REQUIRE(component_value->is(csspp::node_type_t::COMPONENT_VALUE));
-            REQUIRE_FALSE(csspp::parser::argify(component_value));
+            CATCH_REQUIRE(component_value->is(csspp::node_type_t::COMPONENT_VALUE));
+            CATCH_REQUIRE_FALSE(csspp::parser::argify(component_value));
         }
 
-        REQUIRE_ERRORS("test.css(1): error: dangling comma at the end of a list of arguments or selectors.\n");
+        VERIFY_ERRORS("test.css(1): error: dangling comma at the end of a list of arguments or selectors.\n");
     }
 
     // Two commas in a row is illegal
@@ -3124,13 +3144,13 @@ TEST_CASE("Invalid argify", "[parser] [stylesheet]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -3147,17 +3167,17 @@ TEST_CASE("Invalid argify", "[parser] [stylesheet]")
             );
 
         // Argify the list under each COMPONENT_VALUE
-        REQUIRE(n->is(csspp::node_type_t::LIST));
+        CATCH_REQUIRE(n->is(csspp::node_type_t::LIST));
 
         size_t const max_children(n->size());
         for(size_t idx(0); idx < max_children; ++idx)
         {
             csspp::node::pointer_t component_value(n->get_child(idx));
-            REQUIRE(component_value->is(csspp::node_type_t::COMPONENT_VALUE));
-            REQUIRE_FALSE(csspp::parser::argify(component_value));
+            CATCH_REQUIRE(component_value->is(csspp::node_type_t::COMPONENT_VALUE));
+            CATCH_REQUIRE_FALSE(csspp::parser::argify(component_value));
         }
 
-        REQUIRE_ERRORS("test.css(1): error: two commas in a row are invalid in a list of arguments or selectors.\n");
+        VERIFY_ERRORS("test.css(1): error: two commas in a row are invalid in a list of arguments or selectors.\n");
     }
 
     // Just a comma is illegal
@@ -3172,13 +3192,13 @@ TEST_CASE("Invalid argify", "[parser] [stylesheet]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -3192,17 +3212,17 @@ TEST_CASE("Invalid argify", "[parser] [stylesheet]")
             );
 
         // Argify the list under each COMPONENT_VALUE
-        REQUIRE(n->is(csspp::node_type_t::LIST));
+        CATCH_REQUIRE(n->is(csspp::node_type_t::LIST));
 
         size_t const max_children(n->size());
         for(size_t idx(0); idx < max_children; ++idx)
         {
             csspp::node::pointer_t component_value(n->get_child(idx));
-            REQUIRE(component_value->is(csspp::node_type_t::COMPONENT_VALUE));
-            REQUIRE_FALSE(csspp::parser::argify(component_value));
+            CATCH_REQUIRE(component_value->is(csspp::node_type_t::COMPONENT_VALUE));
+            CATCH_REQUIRE_FALSE(csspp::parser::argify(component_value));
         }
 
-        REQUIRE_ERRORS("test.css(1): error: dangling comma at the beginning of a list of arguments or selectors.\n");
+        VERIFY_ERRORS("test.css(1): error: dangling comma at the beginning of a list of arguments or selectors.\n");
     }
 
     // calling argify with the wrong separators
@@ -3217,13 +3237,13 @@ TEST_CASE("Invalid argify", "[parser] [stylesheet]")
         csspp::node::pointer_t n(p.stylesheet());
 
         // no errors so far
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
 
 //std::cerr << "Result is: [" << *n << "]\n";
 
         std::stringstream out;
         out << *n;
-        REQUIRE_TREES(out.str(),
+        VERIFY_TREES(out.str(),
 
 "LIST\n"
 "  COMPONENT_VALUE\n"
@@ -3240,13 +3260,13 @@ TEST_CASE("Invalid argify", "[parser] [stylesheet]")
 
         // Attempt to argify the list under each COMPONENT_VALUE using
         // the wrong type
-        REQUIRE(n->is(csspp::node_type_t::LIST));
+        CATCH_REQUIRE(n->is(csspp::node_type_t::LIST));
 
         size_t const max_children(n->size());
         for(size_t idx(0); idx < max_children; ++idx)
         {
             csspp::node::pointer_t component_value(n->get_child(idx));
-            REQUIRE(component_value->is(csspp::node_type_t::COMPONENT_VALUE));
+            CATCH_REQUIRE(component_value->is(csspp::node_type_t::COMPONENT_VALUE));
 
             for(csspp::node_type_t w(csspp::node_type_t::UNKNOWN);
                 w <= csspp::node_type_t::max_type;
@@ -3262,22 +3282,15 @@ TEST_CASE("Invalid argify", "[parser] [stylesheet]")
                     break;
 
                 }
-                REQUIRE_THROWS_AS(csspp::parser::argify(component_value, w), csspp::csspp_exception_logic &);
+                CATCH_REQUIRE_THROWS_AS(csspp::parser::argify(component_value, w), csspp::csspp_exception_logic);
             }
         }
 
-        REQUIRE_ERRORS("");
+        VERIFY_ERRORS("");
     }
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
-
-// Local Variables:
-// mode: cpp
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// tab-width: 4
-// End:
 
 // vim: ts=4 sw=4 et

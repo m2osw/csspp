@@ -16,16 +16,19 @@
 # You should have received a copy of the GNU Lesser General Public License along
 # with this library; if not, write to the Free Software Foundation, Inc.,
 # 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA
-#
 
-find_package( Catch )
+##
+## CSS Pre-Processor Unit Tests
+##
+project(unittest)
 
-if(CATCH_FOUND)
+find_package(SnapCatch2)
 
-    project(unittest)
+if(SnapCatch2_FOUND)
 
-    add_executable( ${PROJECT_NAME}
-        catch_tests.cpp
+    add_executable(${PROJECT_NAME}
+        catch_main.cpp
+
         catch_assembler.cpp
         catch_color.cpp
         catch_compiler.cpp
@@ -52,11 +55,12 @@ if(CATCH_FOUND)
 
     target_include_directories(${PROJECT_NAME}
         PUBLIC
-            ${CATCH_INCLUDE_DIR}
+            ${SNAPCATCH2_INCLUDE_DIRS}
     )
 
     target_link_libraries(${PROJECT_NAME}
         csspp
+        ${SNAPCATCH2_LIBRARIES}
     )
 
     # You can use the --success command line option to see all the tests
@@ -64,16 +68,10 @@ if(CATCH_FOUND)
     # use it
     add_test(unittest ${PROJECT_NAME})
 
-else(CATCH_FOUND)
+else(SnapCatch2_FOUND)
 
-    # You may use 'apt-get install catch' under Ubuntu
-    message("No test will be created because you do not seem to have catch.hpp installed...")
+    message("snapcatch2 not found... no test will be built.")
 
-endif(CATCH_FOUND)
-
-# Local Variables:
-# indent-tabs-mode: nil
-# tab-width: 4
-# End:
+endif(SnapCatch2_FOUND)
 
 # vim: ts=4 sw=4 et

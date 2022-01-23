@@ -1,5 +1,7 @@
-// CSS Preprocessor -- Test Suite
-// Copyright (c) 2015-2021  Made to Order Software Corp.  All Rights Reserved
+// Copyright (c) 2015-2022  Made to Order Software Corp.  All Rights Reserved
+//
+// https://snapwebsites.org/project/csspp
+// contact@m2osw.com
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -11,9 +13,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 /** \file
  * \brief csspp main unit test.
@@ -26,15 +28,32 @@
 // Tell catch we want it to add the runner code in this file.
 #define CATCH_CONFIG_RUNNER
 
-#include "catch_tests.h"
+// self
+//
+#include    "catch_main.h"
 
-#include "csspp/csspp.h"
-#include "csspp/error.h"
-#include "csspp/node.h"
 
-#include <cstring>
+// csspp lib
+//
+#include    <csspp/csspp.h>
+#include    <csspp/error.h>
+#include    <csspp/node.h>
 
-#include <stdlib.h>
+
+// C++ lib
+//
+#include    <cstring>
+
+
+// C lib
+//
+#include    <stdlib.h>
+
+
+// last include
+//
+#include    <snapdev/poison.h>
+
 
 namespace csspp_test
 {
@@ -87,7 +106,7 @@ void trace_error::expected_error(std::string const & msg, char const * filename,
         // print a message otherwise filename & line get lost
         std::cerr << filename << "(" << line << "): error: error messages are not equal.\n"; // LCOV_EXCL_LINE
     }
-    REQUIRE(e == msg);
+    CATCH_REQUIRE(e == msg);
 }
 
 our_unicode_range_t::our_unicode_range_t(csspp::wide_char_t start, csspp::wide_char_t end)
@@ -157,7 +176,7 @@ void compare(std::string const & generated, std::string const & expected, char c
         {
             std::cerr << filename << "(" << line << "):error: compare trees: on line " << pos << ": \"" << gs << "\" != \"" << es << "\".\n"; // LCOV_EXCL_LINE
         }
-        REQUIRE(gs == es);
+        CATCH_REQUIRE(gs == es);
     }
 
     if(*g != '\0' && *e != '\0')
@@ -169,13 +188,13 @@ void compare(std::string const & generated, std::string const & expected, char c
     {
         std::cerr << filename << "(" << line << "):error: compare trees: on line " << pos << ": end of expected reached, still have \"" << g << "\" left in generated.\n"; // LCOV_EXCL_LINE
     }
-    REQUIRE(*g == '\0');
+    CATCH_REQUIRE(*g == '\0');
 
     if(*e != '\0')
     {
         std::cerr << filename << "(" << line << "):error: compare trees: on line " << pos << ": end of generated reached, still have \"" << e << "\" left in expected.\n"; // LCOV_EXCL_LINE
     }
-    REQUIRE(*e == '\0');
+    CATCH_REQUIRE(*e == '\0');
 }
 
 std::string get_script_path()
@@ -874,12 +893,5 @@ int main(int argc, char *argv[])
 
     return Catch::Session().run(argc, argv);
 }
-
-// Local Variables:
-// mode: cpp
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// tab-width: 4
-// End:
 
 // vim: ts=4 sw=4 et

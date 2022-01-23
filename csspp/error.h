@@ -1,5 +1,3 @@
-#ifndef CSSPP_ERROR_H
-#define CSSPP_ERROR_H
 // Copyright (c) 2015-2022  Made to Order Software Corp.  All Rights Reserved
 //
 // This program is free software; you can redistribute it and/or modify
@@ -15,11 +13,18 @@
 // You should have received a copy of the GNU General Public License along
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+#pragma once
 
-#include "csspp/position.h"
+// self
+//
+#include    "csspp/position.h"
 
-#include <istream>
-#include <sstream>
+
+// C++ lib
+//
+#include    <istream>
+#include    <sstream>
+
 
 namespace csspp
 {
@@ -126,15 +131,5 @@ private:
 } // namespace csspp
 
 std::ostream & operator << (std::ostream & out, csspp::error_mode_t const type);
-
-#endif
-// #ifndef CSSPP_LEXER_H
-
-// Local Variables:
-// mode: cpp
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// tab-width: 4
-// End:
 
 // vim: ts=4 sw=4 et

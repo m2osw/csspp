@@ -1,5 +1,7 @@
-// CSS Preprocessor -- Test Suite
-// Copyright (c) 2015-2021  Made to Order Software Corp.  All Rights Reserved
+// Copyright (c) 2015-2022  Made to Order Software Corp.  All Rights Reserved
+//
+// https://snapwebsites.org/project/csspp
+// contact@m2osw.com
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -11,9 +13,9 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+// You should have received a copy of the GNU General Public License along
+// with this program; if not, write to the Free Software Foundation, Inc.,
+// 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 /** \file
  * \brief Test the expression.cpp file: "<", "<=", ">", ">=" operators.
@@ -33,16 +35,31 @@
  * classes.
  */
 
-#include "catch_tests.h"
+// self
+//
+#include    "catch_main.h"
 
-#include "csspp/assembler.h"
-#include "csspp/compiler.h"
-#include "csspp/exceptions.h"
-#include "csspp/parser.h"
 
-#include <sstream>
+// csspp lib
+//
+#include    <csspp/assembler.h>
+#include    <csspp/compiler.h>
+#include    <csspp/exceptions.h>
+#include    <csspp/parser.h>
 
-TEST_CASE("Expression number <,<=,>,>= number", "[expression] [relational]")
+
+// C++ lib
+//
+#include    <sstream>
+
+
+// last include
+//
+#include    <snapdev/poison.h>
+
+
+
+CATCH_TEST_CASE("Expression number <,<=,>,>= number", "[expression] [relational]")
 {
     struct operator_results_t
     {
@@ -61,7 +78,7 @@ TEST_CASE("Expression number <,<=,>,>= number", "[expression] [relational]")
         { ">=",     false,      true    }
     };
 
-    SECTION("compare 10 ?? 3")
+    CATCH_START_SECTION("compare 10 ?? 3")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -90,7 +107,7 @@ TEST_CASE("Expression number <,<=,>,>= number", "[expression] [relational]")
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -111,16 +128,17 @@ TEST_CASE("Expression number <,<=,>,>= number", "[expression] [relational]")
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 3 ?? 10")
+    CATCH_START_SECTION("compare 3 ?? 10")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -149,7 +167,7 @@ std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -170,16 +188,17 @@ std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 10 ?? 10")
+    CATCH_START_SECTION("compare 10 ?? 10")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -208,7 +227,7 @@ std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -229,16 +248,17 @@ std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 10% ?? 3%")
+    CATCH_START_SECTION("compare 10% ?? 3%")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -267,7 +287,7 @@ std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -288,16 +308,17 @@ std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 3% ?? 10%")
+    CATCH_START_SECTION("compare 3% ?? 10%")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -326,7 +347,7 @@ std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -347,16 +368,17 @@ std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 10% ?? 10%")
+    CATCH_START_SECTION("compare 10% ?? 10%")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -385,7 +407,7 @@ std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -406,16 +428,17 @@ std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 10.5 ?? 3.15")
+    CATCH_START_SECTION("compare 10.5 ?? 3.15")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -444,7 +467,7 @@ std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -465,16 +488,17 @@ std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 3.15 ?? 10.5")
+    CATCH_START_SECTION("compare 3.15 ?? 10.5")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -503,7 +527,7 @@ std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -524,16 +548,17 @@ std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 10.5 ?? 10.5")
+    CATCH_START_SECTION("compare 10.5 ?? 10.5")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -562,7 +587,7 @@ std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -583,16 +608,17 @@ std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 10 ?? 3.15")
+    CATCH_START_SECTION("compare 10 ?? 3.15")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -621,7 +647,7 @@ std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -642,16 +668,17 @@ std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 3.15 ?? 10")
+    CATCH_START_SECTION("compare 3.15 ?? 10")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -680,7 +707,7 @@ std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -701,16 +728,17 @@ std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 10 ?? 10.0")
+    CATCH_START_SECTION("compare 10 ?? 10.0")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -739,7 +767,7 @@ std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -760,16 +788,17 @@ std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 10.5 ?? 3")
+    CATCH_START_SECTION("compare 10.5 ?? 3")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -798,7 +827,7 @@ std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -819,16 +848,17 @@ std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 3 ?? 10.5")
+    CATCH_START_SECTION("compare 3 ?? 10.5")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -857,7 +887,7 @@ std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -878,16 +908,17 @@ std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 10 ?? 10.0")
+    CATCH_START_SECTION("compare 10 ?? 10.0")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -916,7 +947,7 @@ std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -937,16 +968,17 @@ std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare true ?? false")
+    CATCH_START_SECTION("compare true ?? false")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -975,7 +1007,7 @@ std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -996,12 +1028,12 @@ std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
@@ -1031,7 +1063,7 @@ std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1052,12 +1084,12 @@ std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
@@ -1087,7 +1119,7 @@ std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1108,12 +1140,12 @@ std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
@@ -1143,7 +1175,7 @@ std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1164,16 +1196,17 @@ std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 'xyz' ?? 'abc'")
+    CATCH_START_SECTION("compare 'xyz' ?? 'abc'")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -1202,7 +1235,7 @@ std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1223,16 +1256,17 @@ std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 'abc' ?? 'xyz'")
+    CATCH_START_SECTION("compare 'abc' ?? 'xyz'")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -1261,7 +1295,7 @@ std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1282,16 +1316,17 @@ std::string("div{z-index:") + (!op[idx].f_different_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("compare 'abc' ?? 'abc'")
+    CATCH_START_SECTION("compare 'abc' ?? 'abc'")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -1320,7 +1355,7 @@ std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
             // test the root node here
             std::stringstream compiler_out;
             compiler_out << *n;
-            REQUIRE_TREES(compiler_out.str(),
+            VERIFY_TREES(compiler_out.str(),
 
 "LIST\n"
 + csspp_test::get_default_variables() +
@@ -1341,20 +1376,21 @@ std::string("div{z-index:") + (op[idx].f_different_result ? "9" : "5") + "}\n"
 
 //std::cerr << "----------------- Result is " << static_cast<csspp::output_mode_t>(i) << "\n[" << out.str() << "]\n";
 
-            REQUIRE(assembler_out.str() ==
+            CATCH_REQUIRE(assembler_out.str() ==
 std::string("div{z-index:") + (op[idx].f_equal_result ? "9" : "5") + "}\n"
 + csspp_test::get_close_comment()
                     );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Expression number/invalid <,<=,>,>= number/invalid", "[expression] [relational] [invalid]")
+CATCH_TEST_CASE("Expression number/invalid <,<=,>,>= number/invalid", "[expression] [relational] [invalid]")
 {
     char const * op[] =
     {
@@ -1364,7 +1400,7 @@ TEST_CASE("Expression number/invalid <,<=,>,>= number/invalid", "[expression] [r
         ">="
     };
 
-    SECTION("just ? is not a valid number")
+    CATCH_START_SECTION("just ? is not a valid number")
     {
         std::stringstream ss;
         ss << "div { border: ?; }";
@@ -1385,12 +1421,13 @@ TEST_CASE("Expression number/invalid <,<=,>,>= number/invalid", "[expression] [r
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-        REQUIRE_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
+        VERIFY_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
 
-        REQUIRE(c.get_root() == n);
+        CATCH_REQUIRE(c.get_root() == n);
     }
+    CATCH_END_SECTION()
 
-    SECTION("number ?? ? is invalid")
+    CATCH_START_SECTION("number ?? ? is invalid")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -1415,17 +1452,18 @@ TEST_CASE("Expression number/invalid <,<=,>,>= number/invalid", "[expression] [r
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-            REQUIRE_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
+            VERIFY_ERRORS("test.css(1): error: unsupported type CONDITIONAL as a unary expression token.\n");
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Relational expressions with invalid dimensions or decimal numbers", "[expression] [relational] [invalid]")
+CATCH_TEST_CASE("Relational expressions with invalid dimensions or decimal numbers", "[expression] [relational] [invalid]")
 {
     char const * op[] =
     {
@@ -1435,7 +1473,7 @@ TEST_CASE("Relational expressions with invalid dimensions or decimal numbers", "
         ">="
     };
 
-    SECTION("left and right must have the same dimension")
+    CATCH_START_SECTION("left and right must have the same dimension")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -1460,13 +1498,14 @@ TEST_CASE("Relational expressions with invalid dimensions or decimal numbers", "
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-            REQUIRE_ERRORS("test.css(1): error: incompatible types or dimensions between INTEGER and INTEGER for operator '=', '!=', '<', '<=', '>', '>=', '~=', '^=', '$=', '*=', or '|='.\n");
+            VERIFY_ERRORS("test.css(1): error: incompatible types or dimensions between INTEGER and INTEGER for operator '=', '!=', '<', '<=', '>', '>=', '~=', '^=', '$=', '*=', or '|='.\n");
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
-    SECTION("try again with a percent number")
+    CATCH_START_SECTION("try again with a percent number")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -1491,11 +1530,11 @@ TEST_CASE("Relational expressions with invalid dimensions or decimal numbers", "
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-            REQUIRE_ERRORS(
+            VERIFY_ERRORS(
                     "test.css(1): error: incompatible types or dimensions between INTEGER and PERCENT for operator '=', '!=', '<', '<=', '>', '>=', '~=', '^=', '$=', '*=', or '|='.\n"
                 );
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
@@ -1521,9 +1560,9 @@ TEST_CASE("Relational expressions with invalid dimensions or decimal numbers", "
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-            REQUIRE_ERRORS("test.css(1): error: incompatible types or dimensions between INTEGER and PERCENT for operator '=', '!=', '<', '<=', '>', '>=', '~=', '^=', '$=', '*=', or '|='.\n");
+            VERIFY_ERRORS("test.css(1): error: incompatible types or dimensions between INTEGER and PERCENT for operator '=', '!=', '<', '<=', '>', '>=', '~=', '^=', '$=', '*=', or '|='.\n");
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
@@ -1549,9 +1588,9 @@ TEST_CASE("Relational expressions with invalid dimensions or decimal numbers", "
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-            REQUIRE_ERRORS("test.css(1): error: incompatible types or dimensions between PERCENT and INTEGER for operator '=', '!=', '<', '<=', '>', '>=', '~=', '^=', '$=', '*=', or '|='.\n");
+            VERIFY_ERRORS("test.css(1): error: incompatible types or dimensions between PERCENT and INTEGER for operator '=', '!=', '<', '<=', '>', '>=', '~=', '^=', '$=', '*=', or '|='.\n");
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
 
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
@@ -1577,17 +1616,18 @@ TEST_CASE("Relational expressions with invalid dimensions or decimal numbers", "
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-            REQUIRE_ERRORS("test.css(1): error: incompatible types or dimensions between PERCENT and INTEGER for operator '=', '!=', '<', '<=', '>', '>=', '~=', '^=', '$=', '*=', or '|='.\n");
+            VERIFY_ERRORS("test.css(1): error: incompatible types or dimensions between PERCENT and INTEGER for operator '=', '!=', '<', '<=', '>', '>=', '~=', '^=', '$=', '*=', or '|='.\n");
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
 
-TEST_CASE("Relational expressions with colors fail", "[expression] [relational] [invalid]")
+CATCH_TEST_CASE("Relational expressions with colors fail", "[expression] [relational] [invalid]")
 {
     char const * op[] =
     {
@@ -1597,7 +1637,7 @@ TEST_CASE("Relational expressions with colors fail", "[expression] [relational] 
         ">="
     };
 
-    SECTION("color op color always fails")
+    CATCH_START_SECTION("color op color always fails")
     {
         for(size_t idx(0); idx < sizeof(op) / sizeof(op[0]); ++idx)
         {
@@ -1622,21 +1662,15 @@ TEST_CASE("Relational expressions with colors fail", "[expression] [relational] 
 
 //std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
 
-            REQUIRE_ERRORS("test.css(1): error: incompatible types between COLOR and COLOR for operator '<', '<=', '>', or '>='.\n");
+            VERIFY_ERRORS("test.css(1): error: incompatible types between COLOR and COLOR for operator '<', '<=', '>', or '>='.\n");
 
-            REQUIRE(c.get_root() == n);
+            CATCH_REQUIRE(c.get_root() == n);
         }
     }
+    CATCH_END_SECTION()
 
     // no error left over
-    REQUIRE_ERRORS("");
+    VERIFY_ERRORS("");
 }
-
-// Local Variables:
-// mode: cpp
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// tab-width: 4
-// End:
 
 // vim: ts=4 sw=4 et
