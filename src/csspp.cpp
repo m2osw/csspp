@@ -297,6 +297,14 @@ constexpr advgetopt::option g_options[] =
         nullptr
     },
     {
+        '\0',
+        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_FLAG,
+        "empty-on-undefined-variable",
+        nullptr,
+        "if accessing an undefined variable, return an empty string, otherwise generate an error",
+        nullptr
+    },
+    {
         'o',
         advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_SHOW_USAGE_ON_ERROR,
         "output",
@@ -356,6 +364,7 @@ advgetopt::options_environment const g_options_environment =
     .f_options = g_options,
     .f_options_files_directory = nullptr,
     .f_environment_variable_name = "CSSPPFLAGS",
+    .f_section_variables_name = nullptr,
     .f_configuration_files = nullptr,
     .f_configuration_filename = nullptr,
     .f_configuration_directories = nullptr,
@@ -530,7 +539,7 @@ int pp::compile()
         c.set_no_logo();
     }
 
-    if(f_opt->is_defined(""))
+    if(f_opt->is_defined("empty-on-undefined-variable"))
     {
         c.set_empty_on_undefined_variable(true);
     }
