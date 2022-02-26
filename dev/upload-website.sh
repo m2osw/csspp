@@ -39,3 +39,11 @@ scp doc/favicon.ico ${URL}:/var/www/csspp/public_html/favicon.ico
 scp doc/images/csspp-logo.png ${URL}:/var/www/csspp/public_html/images/csspp-logo.png
 scp doc/images/open-source-initiative-logo.png ${URL}:/var/www/csspp/public_html/images/open-source-initiative-logo.png
 
+if test -d ../../BUILD/Debug/dist/share/doc/csspp/html
+then
+	. dev/version
+	scp -r ../../BUILD/Debug/dist/share/doc/csspp/html ${URL}:/var/www/csspp/public_html/documentation/csspp-doc-${VERSION}
+else
+	echo "warning: documentation not found, it won't be uploaded."
+fi
+

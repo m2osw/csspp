@@ -1,3 +1,9 @@
+csspp (1.0.30.0~bionic) bionic; urgency=high
+
+  * The website upload now also uploads the documentation.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Sat, 26 Feb 2022 08:09:51 -0800
+
 csspp (1.0.29.1~bionic) bionic; urgency=high
 
   * Bumped build version to rebuild on Launchpad.
