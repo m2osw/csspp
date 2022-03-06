@@ -224,31 +224,40 @@
  * \endcode
  */
 
-// csspp lib
+// csspp
 //
-#include <csspp/assembler.h>
-#include <csspp/compiler.h>
-#include <csspp/exceptions.h>
-#include <csspp/parser.h>
+#include    <csspp/assembler.h>
+#include    <csspp/compiler.h>
+#include    <csspp/exceptions.h>
+#include    <csspp/parser.h>
 
-// advgetopt lib
-//
-#include <advgetopt/advgetopt.h>
-#include <advgetopt/exception.h>
 
-// boost lib
+// advgetopt
 //
-#include <boost/preprocessor/stringize.hpp>
+#include    <advgetopt/advgetopt.h>
+#include    <advgetopt/exception.h>
 
-// C++ lib
-//
-#include <cstdlib>
-#include <fstream>
-#include <iostream>
 
-// C lib
+// boost
 //
-#include <unistd.h>
+#include    <boost/preprocessor/stringize.hpp>
+
+
+// C++
+//
+#include    <cstdlib>
+#include    <fstream>
+#include    <iostream>
+
+
+// C
+//
+#include    <unistd.h>
+
+
+// last include
+//
+#include    <snapdev/poison.h>
 
 
 
@@ -264,94 +273,80 @@ void free_char(char * ptr)
 
 constexpr advgetopt::option g_options[] =
 {
-    {
-        'a',
-        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_REQUIRED | advgetopt::GETOPT_FLAG_MULTIPLE,
-        "args",
-        nullptr,
-        "define values in the $_csspp_args variable map",
-        nullptr
-    },
-    {
-        'd',
-        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_FLAG,
-        "debug",
-        nullptr,
-        "show all messages, including @debug messages",
-        nullptr
-    },
-    {
-        'I',
-        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_MULTIPLE,
-        "include",
-        nullptr,
-        "specify a path to various user defined CSS files; \"-\" to clear the list (i.e. \"-I -\")",
-        nullptr
-    },
-    {
-        '\0',
-        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_FLAG,
-        "no-logo",
-        nullptr,
-        "prevent the \"logo\" from appearing in the output file",
-        nullptr
-    },
-    {
-        '\0',
-        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_FLAG,
-        "empty-on-undefined-variable",
-        nullptr,
-        "if accessing an undefined variable, return an empty string, otherwise generate an error",
-        nullptr
-    },
-    {
-        'o',
-        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_SHOW_USAGE_ON_ERROR,
-        "output",
-        "out.css",
-        "save the results in the specified file",
-        nullptr
-    },
-    {
-        'p',
-        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_FLAG,
-        "precision",
-        nullptr,
-        "define the number of digits to use after the decimal point, defaults to 3; note that for percent values, the precision is always 2.",
-        nullptr
-    },
-    {
-        'q',
-        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_FLAG,
-        "quiet",
-        nullptr,
-        "suppress @info and @warning messages",
-        nullptr
-    },
-    {
-        's',
-        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_REQUIRED,
-        "style",
-        nullptr,
-        "output style: compressed, tidy, compact, expanded",
-        nullptr
-    },
-    {
-        '\0',
-        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_FLAG,
-        "Werror",
-        nullptr,
-        "make warnings count as errors",
-        nullptr
-    },
-    {
-        '\0',
-        advgetopt::GETOPT_FLAG_COMMAND_LINE | advgetopt::GETOPT_FLAG_MULTIPLE | advgetopt::GETOPT_FLAG_DEFAULT_OPTION | advgetopt::GETOPT_FLAG_SHOW_USAGE_ON_ERROR,
-        "--",
-        nullptr,
-        "[file.css ...]; use stdin if no filename specified",
-        nullptr
-    },
+    advgetopt::define_option(
+          advgetopt::Name("args")
+        , advgetopt::ShortName('a')
+        , advgetopt::Flags(advgetopt::command_flags<
+                  advgetopt::GETOPT_FLAG_REQUIRED
+                , advgetopt::GETOPT_FLAG_MULTIPLE>())
+        , nullptr
+        , "define values in the $_csspp_args variable map"
+        , nullptr
+    ),
+    advgetopt::define_option(
+          advgetopt::Name("debug")
+        , advgetopt::ShortName('d')
+        , advgetopt::Flags(advgetopt::standalone_command_flags<>())
+        , advgetopt::Help("show all messages, including @debug messages")
+    ),
+    advgetopt::define_option(
+          advgetopt::Name("include")
+        , advgetopt::ShortName('I')
+        , advgetopt::Flags(advgetopt::command_flags<
+                  advgetopt::GETOPT_FLAG_MULTIPLE>())
+        , advgetopt::Help("specify a path to various user defined CSS files; \"-\" to clear the list (i.e. \"-I -\")")
+    ),
+    advgetopt::define_option(
+          advgetopt::Name("no-logo")
+        , advgetopt::ShortName('\0')
+        , advgetopt::Flags(advgetopt::standalone_command_flags<>())
+        , advgetopt::Help("prevent the \"logo\" from appearing in the output file")
+    ),
+    advgetopt::define_option(
+          advgetopt::Name("empty-on-undefined-variable")
+        , advgetopt::ShortName('\0')
+        , advgetopt::Flags(advgetopt::standalone_command_flags<>())
+        , advgetopt::Help("if accessing an undefined variable, return an empty string, otherwise generate an error")
+    ),
+    advgetopt::define_option(
+          advgetopt::Name("output")
+        , advgetopt::ShortName('o')
+        , advgetopt::Flags(advgetopt::standalone_command_flags<
+                  advgetopt::GETOPT_FLAG_SHOW_USAGE_ON_ERROR>())
+        , advgetopt::DefaultValue("out.css")
+        , advgetopt::Help("save the results in the specified file")
+    ),
+    advgetopt::define_option(
+          advgetopt::Name("precision")
+        , advgetopt::ShortName('p')
+        , advgetopt::Flags(advgetopt::standalone_command_flags<>())
+        , advgetopt::Help("define the number of digits to use after the decimal point, defaults to 3; note that for percent values, the precision is always 2.")
+    ),
+    advgetopt::define_option(
+          advgetopt::Name("quiet")
+        , advgetopt::ShortName('q')
+        , advgetopt::Flags(advgetopt::standalone_command_flags<>())
+        , advgetopt::Help("suppress @info and @warning messages")
+    ),
+    advgetopt::define_option(
+          advgetopt::Name("style")
+        , advgetopt::ShortName('s')
+        , advgetopt::Flags(advgetopt::command_flags<advgetopt::GETOPT_FLAG_REQUIRED>())
+        , advgetopt::Help("output style: compressed, tidy, compact, expanded")
+    ),
+    advgetopt::define_option(
+          advgetopt::Name("Werror")
+        , advgetopt::Flags(advgetopt::standalone_command_flags<>())
+        , advgetopt::Help("make warnings count as errors")
+    ),
+    advgetopt::define_option(
+          advgetopt::Name("--")
+        , advgetopt::Flags(advgetopt::command_flags<
+                  advgetopt::GETOPT_FLAG_MULTIPLE
+                , advgetopt::GETOPT_FLAG_DEFAULT_OPTION
+                , advgetopt::GETOPT_FLAG_SHOW_USAGE_ON_ERROR>())
+        , advgetopt::Help("[file.css ...]; use stdin if no filename specified")
+    ),
     advgetopt::end_options()
 };
 
@@ -364,6 +359,7 @@ advgetopt::options_environment const g_options_environment =
     .f_options = g_options,
     .f_options_files_directory = nullptr,
     .f_environment_variable_name = "CSSPPFLAGS",
+    .f_environment_variable_intro = nullptr,
     .f_section_variables_name = nullptr,
     .f_configuration_files = nullptr,
     .f_configuration_filename = nullptr,

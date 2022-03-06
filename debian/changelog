@@ -1,3 +1,10 @@
+csspp (1.0.31.0~bionic) bionic; urgency=high
+
+  * Updated the advgetopt options to use the new scheme so it compiles.
+  * Added the Environment Variable Into.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Sat, 05 Mar 2022 21:11:14 -0800
+
 csspp (1.0.30.0~bionic) bionic; urgency=high
 
   * The website upload now also uploads the documentation.
