@@ -1,3 +1,9 @@
+csspp (1.0.31.1~bionic) bionic; urgency=high
+
+  * Fixed compat version to v10.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Sat, 21 May 2022 08:56:52 -0700
+
 csspp (1.0.31.0~bionic) bionic; urgency=high
 
   * Updated the advgetopt options to use the new scheme so it compiles.
