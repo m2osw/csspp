@@ -44,12 +44,12 @@
 
 // C++
 //
-#include <sstream>
+#include    <sstream>
 
 
 // C
 //
-#include <string.h>
+#include    <string.h>
 
 
 // last include

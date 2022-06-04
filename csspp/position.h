@@ -22,7 +22,7 @@
 
 // C++ lib
 //
-#include <memory>
+#include    <memory>
 
 
 namespace csspp

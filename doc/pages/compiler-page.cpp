@@ -184,8 +184,8 @@
 //! currently supported by csspp.
 //!
 //! \code
-//!     #include <csspp/compiler.h>
-//!     #include <csspp/parser.h>
+//!     #include    <csspp/compiler.h>
+//!     #include    <csspp/parser.h>
 //!
 //!     std::ifstream in;
 //!     if(!in.open("my-file.scss"))
