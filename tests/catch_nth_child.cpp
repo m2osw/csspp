@@ -24,17 +24,17 @@
  * implementation to ensure full coverage.
  */
 
+// csspp
+//
+#include    "csspp/nth_child.h"
+
+
 // self
 //
 #include    "catch_main.h"
 
 
-// csspp lib
-//
-#include    "csspp/nth_child.h"
-
-
-// C++ lib
+// C++
 //
 #include    <sstream>
 

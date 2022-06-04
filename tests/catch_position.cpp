@@ -24,12 +24,7 @@
  * implementation to ensure full coverage.
  */
 
-// self
-//
-#include    "catch_main.h"
-
-
-// csspp lib
+// csspp
 //
 #include    <csspp/error.h>
 #include    <csspp/exceptions.h>
@@ -37,12 +32,17 @@
 #include    <csspp/unicode_range.h>
 
 
-// C++ lib
+// self
+//
+#include    "catch_main.h"
+
+
+// C++
 //
 #include    <sstream>
 
 
-// C lib
+// C
 //
 #include    <string.h>
 

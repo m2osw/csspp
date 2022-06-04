@@ -28,24 +28,34 @@
 // Tell catch we want it to add the runner code in this file.
 #define CATCH_CONFIG_RUNNER
 
-// self
-//
-#include    "catch_main.h"
-
-
-// csspp lib
+// csspp
 //
 #include    <csspp/csspp.h>
 #include    <csspp/error.h>
 #include    <csspp/node.h>
 
 
-// C++ lib
+// self
+//
+#include    "catch_main.h"
+
+
+// libexcept
+//
+#include    <libexcept/exception.h>
+
+
+// snapdev
+//
+#include    <snapdev/not_used.h>
+
+
+// C++
 //
 #include    <cstring>
 
 
-// C lib
+// C
 //
 #include    <stdlib.h>
 
@@ -62,13 +72,7 @@ namespace csspp_test
 namespace
 {
 
-char * g_progname;
-
 trace_error * g_trace_error;
-
-std::string g_script_path;
-
-std::string g_version_script_path;
 
 time_t const g_now(1435871798); // 07/02/2015 14:16:38
 
@@ -197,14 +201,30 @@ void compare(std::string const & generated, std::string const & expected, char c
     CATCH_REQUIRE(*e == '\0');
 }
 
+
+inline std::string & g_script_path()
+{
+    static std::string script_path = std::string();
+
+    return script_path;
+}
+
 std::string get_script_path()
 {
-    return g_script_path;
+    return g_script_path();
+}
+
+
+inline std::string & g_version_script_path()
+{
+    static std::string version_script_path = std::string();
+
+    return version_script_path;
 }
 
 std::string get_version_script_path()
 {
-    return g_version_script_path;
+    return g_version_script_path();
 }
 
 std::string get_default_variables(default_variables_flags_t const flags)
@@ -780,118 +800,58 @@ time_t get_now()
     return g_now;
 }
 
+inline bool & g_show_errors()
+{
+    static bool show_errors = false;
+
+    return show_errors;
+}
+
+Catch::Clara::Parser add_command_line_options(Catch::Clara::Parser const & cli)
+{
+    return cli
+         | Catch::Clara::Opt(g_show_errors())
+            ["--show-errors"]
+            ("make the csspp compile more verbose, which means printing all errors.")
+         | Catch::Clara::Opt(g_script_path(), "scripts")
+            ["--scripts"]
+            ("specify the location of the CSS Preprocessor system scripts.")
+         | Catch::Clara::Opt(g_version_script_path(), "version-script")
+            ["--version-script"]
+            ("define the path to the version script.")
+         ;
+}
+
+int init_test(Catch::Session & session)
+{
+    snapdev::NOT_USED(session);
+
+    // unless we get a loop going forever, we should never hit this limit
+    //
+    csspp::node::limit_nodes_to(1'000'000);
+
+    csspp::error::instance().set_verbose(g_show_errors());
+
+    // before running we need to initialize the error tracker
+    //
+    snapdev::NOT_USED(csspp_test::trace_error::instance());
+
+    return 0;
+}
+
 } // csspp_test namespace
 
 int main(int argc, char *argv[])
 {
-    // define program name
-    csspp_test::g_progname = argv[0];
-    char *e(strrchr(csspp_test::g_progname, '/'));
-    if(e)
-    {
-        csspp_test::g_progname = e + 1; // LCOV_EXCL_LINE
-    }
-    e = strrchr(csspp_test::g_progname, '\\');
-    if(e)
-    {
-        csspp_test::g_progname = e + 1; // LCOV_EXCL_LINE
-    }
-
-    unsigned int seed(static_cast<unsigned int>(time(nullptr)));
-    bool help(false);
-    for(int i(1); i < argc;)
-    {
-        if(strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0)
-        {
-            help = true; // LCOV_EXCL_LINE
-            ++i;
-        }
-        else if(strcmp(argv[i], "--seed") == 0)
-        {
-            if(i + 1 >= argc) // LCOV_EXCL_LINE
-            {
-                std::cerr << "error: --seed need to be followed by the actual seed." << std::endl; // LCOV_EXCL_LINE
-                exit(1); // LCOV_EXCL_LINE
-            }
-            seed = atoll(argv[i + 1]); // LCOV_EXCL_LINE
-            // remove the --seed and <value>
-            argc -= 2; // LCOV_EXCL_LINE
-            for(int j(i); j < argc; ++j) // LCOV_EXCL_LINE
-            {
-                argv[j] = argv[j + 2]; // LCOV_EXCL_LINE
-            }
-        }
-        else if(strcmp(argv[i], "--show-errors") == 0)
-        {
-            csspp::error::instance().set_verbose(true);
-            argc -= 1; // LCOV_EXCL_LINE
-            for(int j(i); j < argc; ++j) // LCOV_EXCL_LINE
-            {
-                argv[j] = argv[j + 1]; // LCOV_EXCL_LINE
-            }
-        }
-        else if(strcmp(argv[i], "--scripts") == 0)
-        {
-            if(i + 1 >= argc)
-            {
-                std::cerr << "error: --scripts need to be followed by a path." << std::endl; // LCOV_EXCL_LINE
-                exit(1); // LCOV_EXCL_LINE
-            }
-            csspp_test::g_script_path = argv[i + 1];
-            // remove the --scripts and <value>
-            argc -= 2; // LCOV_EXCL_LINE
-            for(int j(i); j < argc; ++j) // LCOV_EXCL_LINE
-            {
-                argv[j] = argv[j + 2]; // LCOV_EXCL_LINE
-            }
-        }
-        else if(strcmp(argv[i], "--version-script") == 0)
-        {
-            if(i + 1 >= argc)
-            {
-                std::cerr << "error: --version-script need to be followed by a path." << std::endl; // LCOV_EXCL_LINE
-                exit(1); // LCOV_EXCL_LINE
-            }
-            csspp_test::g_version_script_path = argv[i + 1];
-            // remove the --version-script and <value>
-            argc -= 2; // LCOV_EXCL_LINE
-            for(int j(i); j < argc; ++j) // LCOV_EXCL_LINE
-            {
-                argv[j] = argv[j + 2]; // LCOV_EXCL_LINE
-            }
-        }
-        else if(strcmp(argv[i], "--version") == 0)
-        {
-            std::cout << CSSPP_VERSION << std::endl;
-            exit(0);
-        }
-        else
-        {
-            ++i;
-        }
-    }
-    srand(seed);
-    std::cout << csspp_test::g_progname << "[" << getpid() << "]" << ": version " << CSSPP_VERSION << ", seed is " << seed << std::endl;
-
-    // unless we get a loop going forever, we should never hit this limit
-    csspp::node::limit_nodes_to(1000000);
-
-    if(help)
-    {
-        std::cout << std::endl // LCOV_EXCL_LINE
-                  << "WARNING: at this point we hack the main() to add the following options:" << std::endl // LCOV_EXCL_LINE
-                  << "  --scripts <path>          a path to the system scripts to run against the tests" << std::endl // LCOV_EXCL_LINE
-                  << "  --seed <seed>             to force the seed at the start of the process to a specific value (i.e. to reproduce the exact same test over and over again)" << std::endl // LCOV_EXCL_LINE
-                  << "  --show-errors             request for the errors to always be printed in std::cerr" << std::endl // LCOV_EXCL_LINE
-                  << "  --version                 print out the version of this test and exit with 0" << std::endl // LCOV_EXCL_LINE
-                  << "  --version-script <path>   a path to the system version script" << std::endl // LCOV_EXCL_LINE
-                  << std::endl; // LCOV_EXCL_LINE
-    }
-
-    // before running we need to initialize the error tracker
-    static_cast<void>(csspp_test::trace_error::instance());
-
-    return Catch::Session().run(argc, argv);
+    return SNAP_CATCH2_NAMESPACE::snap_catch2_main(
+              "eventdispatcher"
+            , CSSPP_VERSION
+            , argc
+            , argv
+            , []() { libexcept::set_collect_stack(libexcept::collect_stack_t::COLLECT_STACK_NO); }
+            , &csspp_test::add_command_line_options
+            , &csspp_test::init_test
+        );
 }
 
 // vim: ts=4 sw=4 et

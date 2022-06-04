@@ -28,26 +28,26 @@
  * UTF-8 as input.
  */
 
-// self
-//
-#include    "catch_main.h"
-
-
-// csspp lib
+// csspp
 //
 #include    <csspp/exceptions.h>
 #include    <csspp/lexer.h>
 #include    <csspp/unicode_range.h>
 
 
-// C++ lib
+// self
+//
+#include    "catch_main.h"
+
+
+// C++
 //
 #include    <iomanip>
 #include    <iostream>
 #include    <sstream>
 
 
-// C lib
+// C
 //
 #include    <math.h>
 #include    <string.h>

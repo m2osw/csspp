@@ -55,11 +55,14 @@ if(SnapCatch2_FOUND)
 
     target_include_directories(${PROJECT_NAME}
         PUBLIC
+            ${SNAPDEV_INCLUDE_DIRS}
+            ${LIBEXCEPT_INCLUDE_DIRS}
             ${SNAPCATCH2_INCLUDE_DIRS}
     )
 
     target_link_libraries(${PROJECT_NAME}
         csspp
+        ${LIBEXCEPT_LIBRARIES}
         ${SNAPCATCH2_LIBRARIES}
     )
 

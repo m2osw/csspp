@@ -31,23 +31,23 @@
  * is not known at the time the parser returns.
  */
 
-// self
-//
-#include    "catch_main.h"
-
-
-// csspp lib
+// csspp
 //
 #include    <csspp/exceptions.h>
 #include    <csspp/parser.h>
 
 
-// C++ lib
+// self
+//
+#include    "catch_main.h"
+
+
+// C++
 //
 #include <sstream>
 
 
-// C lib
+// C
 //
 #include <string.h>
 

@@ -34,17 +34,18 @@
  * classes.
  */
 
+// csspp lib
+//
+#include    <csspp/compiler.h>
+
+#include    <csspp/assembler.h>
+#include    <csspp/exceptions.h>
+#include    <csspp/parser.h>
+
+
 // self
 //
 #include    "catch_main.h"
-
-
-// csspp lib
-//
-#include    <csspp/assembler.h>
-#include    <csspp/compiler.h>
-#include    <csspp/exceptions.h>
-#include    <csspp/parser.h>
 
 
 // C++ lib

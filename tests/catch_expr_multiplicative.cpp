@@ -31,12 +31,7 @@
  * classes.
  */
 
-// self
-//
-#include    "catch_main.h"
-
-
-// csspp lib
+// csspp
 //
 #include    <csspp/assembler.h>
 #include    <csspp/compiler.h>
@@ -44,7 +39,12 @@
 #include    <csspp/parser.h>
 
 
-// C++ lib
+// self
+//
+#include    "catch_main.h"
+
+
+// C++
 //
 #include    <sstream>
 

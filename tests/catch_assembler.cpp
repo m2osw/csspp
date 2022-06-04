@@ -24,17 +24,18 @@
  * full coverage and many edge cases of CSS encoding.
  */
 
-// self
-//
-#include    "catch_main.h"
-
-
 // csspp lib
 //
 #include    <csspp/assembler.h>
+
 #include    <csspp/compiler.h>
 #include    <csspp/exceptions.h>
 #include    <csspp/parser.h>
+
+
+// self
+//
+#include    "catch_main.h"
 
 
 // C++ lib
@@ -2519,7 +2520,7 @@ CATCH_TEST_CASE("Assemble C++ comment", "[assembler] [comment]")
 
         case csspp::output_mode_t::TIDY:
             CATCH_REQUIRE(out.str() ==
-"/* Copyright (c) 2015-2021  Made to Order Software Corp.  All Rights Reserved. -- Assembler Test Version" CSSPP_VERSION " -- @preserve */\n"
+"/* Copyright (c) 2015-2021  Made to Order Software Corp.  All Rights Reserved. -- Assembler Test Version " CSSPP_VERSION " -- @preserve */\n"
 "body.error{color:red}\n"
 + csspp_test::get_close_comment()
                 );

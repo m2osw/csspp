@@ -24,19 +24,20 @@
  * implementation to ensure full coverage.
  */
 
+// css
+//
+#include    <csspp/lexer.h>
+
+#include    <csspp/exceptions.h>
+#include    <csspp/unicode_range.h>
+
+
 // self
 //
 #include    "catch_main.h"
 
 
-// css lib
-//
-#include    <csspp/exceptions.h>
-#include    <csspp/lexer.h>
-#include    <csspp/unicode_range.h>
-
-
-// C++ lib
+// C++
 //
 #include    <sstream>
 

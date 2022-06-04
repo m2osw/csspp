@@ -25,14 +25,14 @@
  * that all the tests access, such as the snapcatch2.hpp header file.
  */
 
-// catch2 lib
-//
-#include    <catch2/snapcatch2.hpp>
-
-
-// csspp lib
+// csspp
 //
 #include    <csspp/unicode_range.h>
+
+
+// catch2
+//
+#include    <catch2/snapcatch2.hpp>
 
 
 

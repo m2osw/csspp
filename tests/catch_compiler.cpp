@@ -25,26 +25,27 @@
  * CSS Preprocessor extensions.
  */
 
+// csspp
+//
+#include    <csspp/compiler.h>
+
+#include    <csspp/exceptions.h>
+#include    <csspp/parser.h>
+
+
 // self
 //
 #include    "catch_main.h"
 
 
-// csspp lib
-//
-#include    <csspp/compiler.h>
-#include    <csspp/exceptions.h>
-#include    <csspp/parser.h>
-
-
-// C++ lib
+// C++
 //
 #include    <fstream>
 #include    <iostream>
 #include    <sstream>
 
 
-// C lib
+// C
 //
 #include    <string.h>
 #include    <unistd.h>
@@ -6913,7 +6914,8 @@ CATCH_TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        VERIFY_ERRORS("test.css(1): info: found an #id entry which is not at the beginning of the list of selectors; unless your HTML changes that much, #id should be the first selector only.\n");
+        //VERIFY_ERRORS("test.css(1): info: found an #id entry which is not at the beginning of the list of selectors; unless your HTML changes that much, #id should be the first selector only.\n");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
@@ -6973,10 +6975,11 @@ CATCH_TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        VERIFY_ERRORS(
-                "test.css(1): info: found an #id entry which is not at the beginning of the list of selectors; unless your HTML changes that much, #id should be the first selector only.\n"
-                "test.css(1): info: found an #id entry which is not at the beginning of the list of selectors; unless your HTML changes that much, #id should be the first selector only.\n"
-            );
+        //VERIFY_ERRORS(
+        //        "test.css(1): info: found an #id entry which is not at the beginning of the list of selectors; unless your HTML changes that much, #id should be the first selector only.\n"
+        //        "test.css(1): info: found an #id entry which is not at the beginning of the list of selectors; unless your HTML changes that much, #id should be the first selector only.\n"
+        //    );
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;
@@ -7047,7 +7050,8 @@ CATCH_TEST_CASE("Advanced variables", "[compiler] [variable]")
 
 //std::cerr << "Result is: [" << *c.get_root() << "]\n";
 
-        VERIFY_ERRORS("test.css(1): info: found an #id entry which is not at the beginning of the list of selectors; unless your HTML changes that much, #id should be the first selector only.\n");
+        //VERIFY_ERRORS("test.css(1): info: found an #id entry which is not at the beginning of the list of selectors; unless your HTML changes that much, #id should be the first selector only.\n");
+        VERIFY_ERRORS("");
 
         std::stringstream out;
         out << *n;

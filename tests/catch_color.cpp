@@ -24,16 +24,17 @@
  * implementation to ensure full coverage.
  */
 
+// csspp lib
+//
+#include    <csspp/color.h>
+
+#include    <csspp/exceptions.h>
+#include    <csspp/lexer.h>
+
+
 // self
 //
 #include    "catch_main.h"
-
-
-// csspp lib
-//
-#include    <csspp/exceptions.h>
-#include    <csspp/color.h>
-#include    <csspp/lexer.h>
 
 
 // C++ lib
