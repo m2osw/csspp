@@ -1,17 +1,18 @@
 Source: csspp
 Priority: extra
-Maintainer: R. Douglas Barbieri <doug@dooglio.net>
+Maintainer: Alexis Wilke <alexis@m2osw.com>
 Build-Depends: catch (>= 1.0),
     cmake,
     debhelper,
     doxygen,
     graphviz,
-    libadvgetopt-dev (>= 2.0.14.0~xenial),
+    libadvgetopt-dev (>= 2.0.14.0~bionic),
     libboost-dev,
-    libexcept-dev (>= 1.0.5.0~xenial),
-    libutf8-dev (>= 1.0.6.0~xenial),
-    snapcmakemodules (>= 1.0.35.3~xenial),
-    snapdev (>= 1.1.2.0~xenial)
+    libexcept-dev (>= 1.0.5.0~bionic),
+    libutf8-dev (>= 1.0.6.0~bionic),
+    snapcatch2 (>= 2.9.1.0~bionic),
+    snapcmakemodules (>= 1.0.35.3~bionic),
+    snapdev (>= 1.1.2.0~bionic)
 Standards-Version: 3.9.4
 Section: libs
 Homepage: https://snapwebsites.org/
