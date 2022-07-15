@@ -1,3 +1,9 @@
+csspp (1.0.31.4~bionic) bionic; urgency=high
+
+  * Retry build with newer advgetopt fix.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Fri, 15 Jul 2022 05:39:17 -0700
+
 csspp (1.0.31.3~bionic) bionic; urgency=high
 
   * Updated the doxy file, just in case.
