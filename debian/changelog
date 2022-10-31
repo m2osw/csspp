@@ -1,3 +1,9 @@
+csspp (1.0.31.5~bionic) bionic; urgency=high
+
+  * Rebuild against newer dependencies.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Mon, 31 Oct 2022 14:47:09 -0700
+
 csspp (1.0.31.4~bionic) bionic; urgency=high
 
   * Retry build with newer advgetopt fix.
