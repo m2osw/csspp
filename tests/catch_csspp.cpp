@@ -28,7 +28,7 @@
 //
 #include    <csspp/lexer.h>
 
-#include    <csspp/exceptions.h>
+#include    <csspp/exception.h>
 #include    <csspp/unicode_range.h>
 
 

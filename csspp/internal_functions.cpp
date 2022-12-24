@@ -25,7 +25,6 @@
 
 #include    "csspp/expression.h"
 
-#include    "csspp/exceptions.h"
 #include    "csspp/parser.h"
 
 #include    <algorithm>

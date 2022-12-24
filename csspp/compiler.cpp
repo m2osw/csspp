@@ -23,17 +23,32 @@
  * \sa \ref compiler_reference
  */
 
+// self
+//
 #include    "csspp/compiler.h"
 
-#include    "csspp/exceptions.h"
+#include    "csspp/exception.h"
 #include    "csspp/nth_child.h"
 #include    "csspp/parser.h"
 
+
+// C++
+//
 #include    <cmath>
 #include    <fstream>
 #include    <iostream>
 
+
+// C
+//
 #include    <unistd.h>
+
+
+// last include
+//
+#include    <snapdev/poison.h>
+
+
 
 namespace csspp
 {

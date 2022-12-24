@@ -27,13 +27,25 @@
  * into in string as small as possible (i.e. compress colors.)
  */
 
+// self
+//
 #include    "csspp/lexer.h"
 
-#include    "csspp/exceptions.h"
+#include    "csspp/exception.h"
 
+
+// C++
+//
 #include    <cmath>
 #include    <iomanip>
 #include    <iostream>
+
+
+// last include
+//
+#include    <snapdev/poison.h>
+
+
 
 namespace csspp
 {

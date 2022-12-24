@@ -28,14 +28,26 @@
  * \sa \ref lexer_rules
  */
 
+// self
+//
 #include    <csspp/node.h>
 
-#include    <csspp/exceptions.h>
+#include    <csspp/exception.h>
 #include    <csspp/nth_child.h>
 #include    <csspp/unicode_range.h>
 
+
+// C++
+//
 #include    <algorithm>
 #include    <iostream>
+
+
+// last include
+//
+#include    <snapdev/poison.h>
+
+
 
 namespace csspp
 {

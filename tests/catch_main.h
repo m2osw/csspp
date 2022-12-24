@@ -30,7 +30,7 @@
 #include    <csspp/unicode_range.h>
 
 
-// catch2
+// snapcatch2
 //
 #include    <catch2/snapcatch2.hpp>
 

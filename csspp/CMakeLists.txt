@@ -82,7 +82,7 @@ install(
         compiler.h
         ${CMAKE_CURRENT_BINARY_DIR}/csspp.h
         error.h
-        exceptions.h
+        exception.h
         expression.h
         lexer.h
         node.h

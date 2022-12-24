@@ -33,7 +33,7 @@
 
 // csspp
 //
-#include    <csspp/exceptions.h>
+#include    <csspp/exception.h>
 #include    <csspp/parser.h>
 
 

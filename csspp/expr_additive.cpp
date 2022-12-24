@@ -23,15 +23,26 @@
  * \sa \ref expression_rules
  */
 
+// self
+//
 #include    "csspp/expression.h"
 
-#include    "csspp/exceptions.h"
+#include    "csspp/exception.h"
 #include    "csspp/parser.h"
 #include    "csspp/unicode_range.h"
 
+
+// C++
+//
 #include    <algorithm>
 #include    <cmath>
 #include    <iostream>
+
+// last include
+//
+#include    <snapdev/poison.h>
+
+
 
 namespace csspp
 {

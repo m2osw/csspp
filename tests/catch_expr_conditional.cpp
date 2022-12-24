@@ -34,12 +34,12 @@
  * classes.
  */
 
-// csspp lib
+// csspp
 //
 #include    <csspp/compiler.h>
 
 #include    <csspp/assembler.h>
-#include    <csspp/exceptions.h>
+#include    <csspp/exception.h>
 #include    <csspp/parser.h>
 
 
@@ -48,7 +48,7 @@
 #include    "catch_main.h"
 
 
-// C++ lib
+// C++
 //
 #include    <sstream>
 

@@ -24,15 +24,27 @@
  * \sa \ref lexer_rules
  */
 
+// self
+//
 #include    "csspp/csspp.h"
 
-#include    "csspp/exceptions.h"
+#include    "csspp/exception.h"
 
+
+// C++
+//
 #include    <cmath>
 #include    <cfloat>
 #include    <iomanip>
 #include    <sstream>
 #include    <iostream>
+
+
+// last include
+//
+#include    <snapdev/poison.h>
+
+
 
 /** \brief The namespace of all the classes in the CSS Preprocessor.
  *

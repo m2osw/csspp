@@ -29,7 +29,7 @@
 //
 #include    <csspp/compiler.h>
 
-#include    <csspp/exceptions.h>
+#include    <csspp/exception.h>
 #include    <csspp/parser.h>
 
 

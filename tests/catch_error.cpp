@@ -24,11 +24,11 @@
  * implementation to ensure full coverage.
  */
 
-// csspp lib
+// csspp
 //
 #include    <csspp/error.h>
 
-#include    <csspp/exceptions.h>
+#include    <csspp/exception.h>
 #include    <csspp/lexer.h>
 #include    <csspp/unicode_range.h>
 
@@ -38,12 +38,12 @@
 #include    "catch_main.h"
 
 
-// C++ lib
+// C++
 //
 #include    <sstream>
 
 
-// C lib
+// C
 //
 #include    <string.h>
 
