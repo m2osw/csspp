@@ -202,30 +202,22 @@ void compare(std::string const & generated, std::string const & expected, char c
 }
 
 
-inline std::string & g_script_path()
-{
-    static std::string script_path = std::string();
+std::string g_script_path;
+std::string g_version_script_path;
+bool        g_show_errors;
 
-    return script_path;
-}
 
 std::string get_script_path()
 {
-    return g_script_path();
+    return g_script_path;
 }
 
-
-inline std::string & g_version_script_path()
-{
-    static std::string version_script_path = std::string();
-
-    return version_script_path;
-}
 
 std::string get_version_script_path()
 {
-    return g_version_script_path();
+    return g_version_script_path;
 }
+
 
 std::string get_default_variables(default_variables_flags_t const flags)
 {
@@ -800,23 +792,16 @@ time_t get_now()
     return g_now;
 }
 
-inline bool & g_show_errors()
-{
-    static bool show_errors = false;
-
-    return show_errors;
-}
-
 Catch::Clara::Parser add_command_line_options(Catch::Clara::Parser const & cli)
 {
     return cli
-         | Catch::Clara::Opt(g_show_errors())
+         | Catch::Clara::Opt(g_show_errors)
             ["--show-errors"]
             ("make the csspp compile more verbose, which means printing all errors.")
-         | Catch::Clara::Opt(g_script_path(), "scripts")
+         | Catch::Clara::Opt(g_script_path, "scripts")
             ["--scripts"]
             ("specify the location of the CSS Preprocessor system scripts.")
-         | Catch::Clara::Opt(g_version_script_path(), "version-script")
+         | Catch::Clara::Opt(g_version_script_path, "version-script")
             ["--version-script"]
             ("define the path to the version script.")
          ;
@@ -830,7 +815,7 @@ int init_test(Catch::Session & session)
     //
     csspp::node::limit_nodes_to(1'000'000);
 
-    csspp::error::instance().set_verbose(g_show_errors());
+    csspp::error::instance().set_verbose(g_show_errors);
 
     // before running we need to initialize the error tracker
     //
