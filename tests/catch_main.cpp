@@ -28,6 +28,12 @@
 // Tell catch we want it to add the runner code in this file.
 #define CATCH_CONFIG_RUNNER
 
+// There seem to be a conflict between our csspp headers and the catch
+// environment which ends up throwing an error about a missing noexcept
+//
+#pragma GCC diagnostic ignored "-Wnoexcept"
+
+
 // csspp
 //
 #include    <csspp/csspp.h>
