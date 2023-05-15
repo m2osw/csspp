@@ -1,8 +1,7 @@
 Source: csspp
 Priority: extra
 Maintainer: Alexis Wilke <alexis@m2osw.com>
-Build-Depends: catch (>= 1.0),
-    cmake,
+Build-Depends: cmake,
     debhelper,
     doxygen,
     graphviz,
