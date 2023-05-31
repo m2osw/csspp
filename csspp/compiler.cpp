@@ -1930,9 +1930,7 @@ void compiler::remove_empty_rules(node::pointer_t n)
             f_state.get_previous_parent()->remove_child(n);
             return;
         }
-#if __cplusplus >= 201700
         [[fallthrough]];
-#endif
     case node_type_t::AT_KEYWORD:
     //case node_type_t::ARG:
     case node_type_t::DECLARATION:
@@ -2220,7 +2218,7 @@ void compiler::replace_variable(node::pointer_t parent, node::pointer_t n, size_
             }
         }
 
-        compiler c(&c.f_state);
+        compiler c(f_compiler_validating);
         c.set_root(root);
         c.f_state.set_paths(f_state);
         c.f_state.set_empty_on_undefined_variable(f_state.get_empty_on_undefined_variable());
