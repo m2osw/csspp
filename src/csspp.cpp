@@ -293,8 +293,9 @@ constexpr advgetopt::option g_options[] =
           advgetopt::Name("include")
         , advgetopt::ShortName('I')
         , advgetopt::Flags(advgetopt::command_flags<
-                  advgetopt::GETOPT_FLAG_MULTIPLE>())
-        , advgetopt::Help("specify a path to various user defined CSS files; \"-\" to clear the list (i.e. \"-I -\")")
+                  advgetopt::GETOPT_FLAG_REQUIRED
+                , advgetopt::GETOPT_FLAG_MULTIPLE>())
+        , advgetopt::Help("specify one or more paths to various user defined CSS files; \"-\" to clear the list (i.e. \"-I -\")")
     ),
     advgetopt::define_option(
           advgetopt::Name("no-logo")
@@ -306,38 +307,39 @@ constexpr advgetopt::option g_options[] =
           advgetopt::Name("empty-on-undefined-variable")
         , advgetopt::ShortName('\0')
         , advgetopt::Flags(advgetopt::standalone_command_flags<>())
-        , advgetopt::Help("if accessing an undefined variable, return an empty string, otherwise generate an error")
+        , advgetopt::Help("if accessing an undefined variable, return an empty string, otherwise generate an error.")
     ),
     advgetopt::define_option(
           advgetopt::Name("output")
         , advgetopt::ShortName('o')
-        , advgetopt::Flags(advgetopt::standalone_command_flags<
-                  advgetopt::GETOPT_FLAG_SHOW_USAGE_ON_ERROR>())
-        , advgetopt::DefaultValue("out.css")
-        , advgetopt::Help("save the results in the specified file")
+        , advgetopt::Flags(advgetopt::command_flags<
+                  advgetopt::GETOPT_FLAG_REQUIRED>())
+        , advgetopt::Help("save the results in the specified file if specified; otherwise send output to stdout.")
     ),
     advgetopt::define_option(
           advgetopt::Name("precision")
         , advgetopt::ShortName('p')
-        , advgetopt::Flags(advgetopt::standalone_command_flags<>())
+        , advgetopt::Flags(advgetopt::command_flags<
+                  advgetopt::GETOPT_FLAG_REQUIRED>())
         , advgetopt::Help("define the number of digits to use after the decimal point, defaults to 3; note that for percent values, the precision is always 2.")
     ),
     advgetopt::define_option(
           advgetopt::Name("quiet")
         , advgetopt::ShortName('q')
         , advgetopt::Flags(advgetopt::standalone_command_flags<>())
-        , advgetopt::Help("suppress @info and @warning messages")
+        , advgetopt::Help("suppress @info and @warning messages.")
     ),
     advgetopt::define_option(
           advgetopt::Name("style")
         , advgetopt::ShortName('s')
-        , advgetopt::Flags(advgetopt::command_flags<advgetopt::GETOPT_FLAG_REQUIRED>())
-        , advgetopt::Help("output style: compressed, tidy, compact, expanded")
+        , advgetopt::Flags(advgetopt::command_flags<
+                  advgetopt::GETOPT_FLAG_REQUIRED>())
+        , advgetopt::Help("output style: compressed, tidy, compact, expanded.")
     ),
     advgetopt::define_option(
           advgetopt::Name("Werror")
         , advgetopt::Flags(advgetopt::standalone_command_flags<>())
-        , advgetopt::Help("make warnings count as errors")
+        , advgetopt::Help("make warnings count as errors.")
     ),
     advgetopt::define_option(
           advgetopt::Name("--")
@@ -345,7 +347,7 @@ constexpr advgetopt::option g_options[] =
                   advgetopt::GETOPT_FLAG_MULTIPLE
                 , advgetopt::GETOPT_FLAG_DEFAULT_OPTION
                 , advgetopt::GETOPT_FLAG_SHOW_USAGE_ON_ERROR>())
-        , advgetopt::Help("[file.css ...]; use stdin if no filename specified")
+        , advgetopt::Help("[file.css ...]; use stdin if no filename specified.")
     ),
     advgetopt::end_options()
 };
@@ -382,36 +384,37 @@ advgetopt::options_environment const g_options_environment =
 class pp
 {
 public:
-                                        pp(int argc, char * argv[]);
+                        pp(int argc, char * argv[]);
 
-    int                                 compile();
+    int                 compile();
 
 private:
-    std::shared_ptr<advgetopt::getopt>  f_opt;
-    int                                 f_precision = 3;
+    advgetopt::getopt   f_opt;
+    int                 f_precision = 3;
 };
 
+
 pp::pp(int argc, char * argv[])
-    : f_opt(new advgetopt::getopt(g_options_environment, argc, argv))
+    : f_opt(g_options_environment, argc, argv)
 {
-    if(f_opt->is_defined("quiet"))
+    if(f_opt.is_defined("quiet"))
     {
         csspp::error::instance().set_hide_all(true);
     }
 
-    if(f_opt->is_defined("debug"))
+    if(f_opt.is_defined("debug"))
     {
         csspp::error::instance().set_show_debug(true);
     }
 
-    if(f_opt->is_defined("Werror"))
+    if(f_opt.is_defined("Werror"))
     {
         csspp::error::instance().set_count_warnings_as_errors(true);
     }
 
-    if(f_opt->is_defined("precision"))
+    if(f_opt.is_defined("precision"))
     {
-        f_precision = f_opt->get_long("precision");
+        f_precision = f_opt.get_long("precision");
     }
 }
 
@@ -423,12 +426,12 @@ int pp::compile()
 
     csspp::safe_precision_t safe_precision(f_precision);
 
-    if(f_opt->is_defined("--"))
+    if(f_opt.is_defined("--"))
     {
         // one or more filename specified
-        int const arg_count(f_opt->size("--"));
+        int const arg_count(f_opt.size("--"));
         if(arg_count == 1
-        && f_opt->get_string("--") == "-")
+        && f_opt.get_string("--") == "-")
         {
             // user asked for stdin
             pos.reset(new csspp::position("-"));
@@ -442,7 +445,7 @@ int pp::compile()
             for(int idx(0); idx < arg_count; ++idx)
             {
                 // full paths so the -I have no effects on those files
-                std::string filename(f_opt->get_string("--", idx));
+                std::string filename(f_opt.get_string("--", idx));
                 if(filename.empty())
                 {
                     csspp::error::instance() << *pos
@@ -495,13 +498,13 @@ int pp::compile()
     wrapper->add_child(array);
     csspp_args->add_child(args_var);
     csspp_args->add_child(wrapper);
-    if(f_opt->is_defined("args"))
+    if(f_opt.is_defined("args"))
     {
-        int const count(f_opt->size("args"));
+        int const count(f_opt.size("args"));
         for(int idx(0); idx < count; ++idx)
         {
             csspp::node::pointer_t arg(new csspp::node(csspp::node_type_t::STRING, root->get_position()));
-            arg->set_string(f_opt->get_string("args", idx));
+            arg->set_string(f_opt.get_string("args", idx));
             array->add_child(arg);
         }
     }
@@ -513,12 +516,12 @@ int pp::compile()
     c.set_date_time_variables(time(nullptr));
 
     // add paths to the compiler (i.e. for the user and system @imports)
-    if(f_opt->is_defined("I"))
+    if(f_opt.is_defined("include"))
     {
-        int const count(f_opt->size("I"));
-        for(int idx(0); idx < count; ++idx)
+        std::size_t const count(f_opt.size("include"));
+        for(std::size_t idx(0); idx < count; ++idx)
         {
-            std::string const path(f_opt->get_string("I", idx));
+            std::string const path(f_opt.get_string("include", idx));
             if(path == "-")
             {
                 c.clear_paths();
@@ -530,12 +533,12 @@ int pp::compile()
         }
     }
 
-    if(f_opt->is_defined("no-logo"))
+    if(f_opt.is_defined("no-logo"))
     {
         c.set_no_logo();
     }
 
-    if(f_opt->is_defined("empty-on-undefined-variable"))
+    if(f_opt.is_defined("empty-on-undefined-variable"))
     {
         c.set_empty_on_undefined_variable(true);
     }
@@ -546,11 +549,10 @@ int pp::compile()
         return 1;
     }
 
-//std::cerr << "Compiler result is: [" << *c.get_root() << "]\n";
     csspp::output_mode_t output_mode(csspp::output_mode_t::COMPRESSED);
-    if(f_opt->is_defined("style"))
+    if(f_opt.is_defined("style"))
     {
-        std::string const mode(f_opt->get_string("style"));
+        std::string const mode(f_opt.get_string("style"));
         if(mode == "compressed")
         {
             output_mode = csspp::output_mode_t::COMPRESSED;
@@ -578,11 +580,17 @@ int pp::compile()
         }
     }
 
-    std::ostream * out;
-    if(f_opt->is_defined("output")
-    && f_opt->get_string("output") != "-")
+    std::ostream * out(nullptr);
+    bool user_output(false);
+    std::string output_filename;
+    if(f_opt.is_defined("output"))
     {
-        out = new std::ofstream(f_opt->get_string("output"));
+        output_filename = f_opt.get_string("output");
+        user_output = output_filename != "-";
+    }
+    if(user_output)
+    {
+        out = new std::ofstream(output_filename);
     }
     else
     {
@@ -590,8 +598,7 @@ int pp::compile()
     }
     csspp::assembler a(*out);
     a.output(c.get_root(), output_mode);
-    if(f_opt->is_defined("output")
-    && f_opt->get_string("output") != "-")
+    if(user_output)
     {
         delete out;
     }

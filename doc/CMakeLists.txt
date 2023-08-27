@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2022  Made to Order Software Corp.  All Rights Reserved
+# Copyright (c) 2015-2023  Made to Order Software Corp.  All Rights Reserved
 #
 # https://snapwebsites.org/project/csspp
 # contact@m2osw.com
@@ -39,12 +39,15 @@ if(DOXYGEN_FOUND)
     
         set(CSSPP_TOOL csspp-tool)
     
+        # The following uses an LD_LIBRARY_PATH because the debian build
+        # fails without it
         add_custom_target(sample.css
             DEPENDS ${CSSPP_TOOL}
-            COMMAND ${CSSPP_TOOL}
-                -I ${CMAKE_SOURCE_DIR}/scripts ${CMAKE_BINARY_DIR}/scripts
-                --debug --style expanded --output sample.css
-                ${CMAKE_CURRENT_SOURCE_DIR}/sample.scss
+            COMMAND ${CMAKE_COMMAND} -E env "LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/csspp"
+                ${CMAKE_BINARY_DIR}/src/csspp
+                    -I ${CMAKE_SOURCE_DIR}/scripts ${CMAKE_BINARY_DIR}/scripts
+                    --debug --style expanded --output sample.css
+                    ${CMAKE_CURRENT_SOURCE_DIR}/sample.scss
         )
         #
         # Somehow cmake doesn't recognize the CSSPP_TOOL variable if it's

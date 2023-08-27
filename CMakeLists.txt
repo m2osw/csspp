@@ -37,9 +37,9 @@ find_package(LibUtf8          REQUIRED)
 find_package(SnapCMakeModules REQUIRED)
 find_package(SnapDev          REQUIRED)
 
-SnapGetVersion( CSSPP ${CMAKE_CURRENT_SOURCE_DIR} )
+SnapGetVersion(CSSPP ${CMAKE_CURRENT_SOURCE_DIR})
 
-if( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
     message("Debug is in effect for csspp!")
     add_definitions(-DDEBUG -D_DEBUG)
 else()
