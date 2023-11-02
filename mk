@@ -5,7 +5,9 @@
 
 if test -x ../../cmake/scripts/mk
 then
-	export TEST_OPTIONS="--scripts scripts --version-script ../../BUILD/Debug/contrib/csspp/scripts --show-errors"
+	SCRIPTS=`cd scripts; pwd`
+	VERSION_SCRIPT=`cd ../../BUILD/Debug/contrib/csspp/scripts; pwd`
+	export TEST_OPTIONS="--scripts ${SCRIPTS} --version-script ${VERSION_SCRIPT} --show-errors"
 	../../cmake/scripts/mk $*
 else
 	echo "error: could not locate the cmake mk script"

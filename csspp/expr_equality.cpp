@@ -92,7 +92,7 @@ bool match(node_type_t op, node::pointer_t lhs, node::pointer_t rhs)
         s = "-" + s + "-";
         break;
 
-    default:
+    default: // LCOV_EXCL_LINE
         throw csspp_exception_logic("expression.cpp:include_match(): called with an invalid operator."); // LCOV_EXCL_LINE
 
     }
@@ -269,7 +269,7 @@ node::pointer_t expression::equality()
                 boolean_result = match(op, result, rhs);
                 break;
 
-            default:
+            default: // LCOV_EXCL_LINE
                 throw csspp_exception_logic("expression.cpp:equality(): unexpected operator in 'op'."); // LCOV_EXCL_LINE
 
             }

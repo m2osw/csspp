@@ -291,7 +291,7 @@ node::pointer_t add(node::pointer_t lhs, node::pointer_t rhs, bool subtract)
         }
         break;
 
-    default:
+    default: // LCOV_EXCL_LINE
         throw csspp_exception_logic("expression.cpp:add(): 'type' set to a value which is not handled here."); // LCOV_EXCL_LINE
 
     }

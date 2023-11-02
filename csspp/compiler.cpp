@@ -1147,7 +1147,7 @@ void compiler::compile_declaration_values(node::pointer_t declaration)
                            << component->get_type()                         // LCOV_EXCL_LINE
                            << ", expected a LIST.";                         // LCOV_EXCL_LINE
                     throw csspp_exception_logic(errmsg.str());              // LCOV_EXCL_LINE
-                }
+                }                                                           // LCOV_EXCL_LINE
                 if(j < item->size()
                 && component == item->get_child(j))
                 {
@@ -4128,7 +4128,7 @@ void compiler::expand_nested_declarations(std::string const & name, node::pointe
         }
         break;
 
-    case node_type_t::AT_KEYWORD:
+    case node_type_t::AT_KEYWORD: // LCOV_EXCL_LINE
         // we may have to handle declarations within an @-keyword, but
         // it is not a sub-expand-nested-declaration
         throw csspp_exception_logic("compiler.cpp:compiler::expand_nested_declarations(): @-keyword cannot appear within a declaration."); // LCOV_EXCL_LINE

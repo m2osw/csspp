@@ -745,17 +745,17 @@ void assembler::output_component_value(node::pointer_t n)
             std::stringstream ss;                                                                           // LCOV_EXCL_LINE
             ss << "assembler.cpp: expected all direct children of COMPONENT_VALUE to be ARG instead of "    // LCOV_EXCL_LINE
                << c->get_type()                                                                             // LCOV_EXCL_LINE
-               << " on line "
-               << c->get_position().get_line()
-               << " in \""
-               << c->get_position().get_filename()
+               << " on line "                                                                               // LCOV_EXCL_LINE
+               << c->get_position().get_line()                                                              // LCOV_EXCL_LINE
+               << " in \""                                                                                  // LCOV_EXCL_LINE
+               << c->get_position().get_filename()                                                          // LCOV_EXCL_LINE
                << "\".";                                                                                    // LCOV_EXCL_LINE
-            if(c->is(node_type_t::IDENTIFIER))
+            if(c->is(node_type_t::IDENTIFIER))                                                              // LCOV_EXCL_LINE
             {
-                ss << " (identifier is \"" << escape_id(c->get_string()) << "\")";
+                ss << " (identifier is \"" << escape_id(c->get_string()) << "\")";                          // LCOV_EXCL_LINE
             }
             throw csspp_exception_logic(ss.str());                                                          // LCOV_EXCL_LINE
-        }
+        }                                                                                                   // LCOV_EXCL_LINE
         else if(c->empty() || !c->get_last_child()->is(node_type_t::PLACEHOLDER))
         {
             // TODO: if we compile out PLACEHOLDER nodes in the compiler

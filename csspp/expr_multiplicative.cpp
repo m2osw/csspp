@@ -497,7 +497,7 @@ color_multiplicative:
                 alpha = fmod(alpha, bf);
                 break;
 
-            default:
+            default: // LCOV_EXCL_LINE
                 throw csspp_exception_logic("expression.cpp:multiply(): unexpected operator."); // LCOV_EXCL_LINE
 
             }
@@ -577,7 +577,7 @@ color_multiplicative:
                 lalpha = fmod(lalpha , ralpha);
                 break;
 
-            default:
+            default: // LCOV_EXCL_LINE
                 throw csspp_exception_logic("expression.cpp:multiply(): unexpected operator."); // LCOV_EXCL_LINE
 
             }
@@ -682,7 +682,7 @@ color_multiplicative:
             result->set_string(multiplicative_dimension(lhs->get_position(), ldim, op, rdim));
             break;
 
-        default:
+        default: // LCOV_EXCL_LINE
             // that should never happen
             throw csspp_exception_logic("expression.cpp:multiply(): unexpected operator."); // LCOV_EXCL_LINE
 
@@ -720,7 +720,7 @@ color_multiplicative:
             result->set_integer(ai % bi);
             break;
 
-        default:
+        default: // LCOV_EXCL_LINE
             throw csspp_exception_logic("expression.cpp:multiply(): unexpected operator."); // LCOV_EXCL_LINE
 
         }
@@ -762,13 +762,13 @@ color_multiplicative:
             result->set_decimal_number(fmod(af, bf));
             break;
 
-        default:
+        default: // LCOV_EXCL_LINE
             throw csspp_exception_logic("expression.cpp:multiply(): unexpected operator."); // LCOV_EXCL_LINE
 
         }
         break;
 
-    default:
+    default: // LCOV_EXCL_LINE
         throw csspp_exception_logic("expression.cpp:multiply(): 'type' set to a value which is not handled here."); // LCOV_EXCL_LINE
 
     }

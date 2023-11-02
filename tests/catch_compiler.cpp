@@ -7371,6 +7371,12 @@ CATCH_TEST_CASE("Advanced variables", "[compiler] [variable]")
 
             CATCH_REQUIRE(c.get_root() == n);
         }
+
+        delete start[0];
+        delete start[1];
+        delete start[2];
+        delete start[3];
+        delete start[4];
     }
 
     // test $var with @mixin definition
