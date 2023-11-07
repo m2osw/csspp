@@ -1062,7 +1062,10 @@ node::pointer_t expression::internal_function__max(node::pointer_t func)
             {
                 if(n->is(node_type_t::PERCENT))
                 {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wrestrict"
                     dimension = "%";
+#pragma GCC diagnostic pop
                 }
                 else
                 {
@@ -1121,7 +1124,10 @@ node::pointer_t expression::internal_function__min(node::pointer_t func)
             {
                 if(n->is(node_type_t::PERCENT))
                 {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wrestrict"
                     dimension = "%";
+#pragma GCC diagnostic pop
                 }
                 else
                 {

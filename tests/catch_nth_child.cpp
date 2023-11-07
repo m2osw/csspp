@@ -153,6 +153,8 @@ CATCH_TEST_CASE("Simple nth child", "[nth-child] [basics]")
                 // try all combos with spaces
                 for(int k(0); k < (1 << 6); ++k)
                 {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-overflow"
                     a.parse(
                               std::string((k & (1 << 0)) ? " " : "")
                             + (i >= 0 ? (rand() % 5 == 0 ? "+" : "") : "-")
@@ -166,6 +168,7 @@ CATCH_TEST_CASE("Simple nth child", "[nth-child] [basics]")
                             + std::to_string(abs(j))
                             + ((k & (1 << 5)) ? " " : "")
                         );
+#pragma GCC diagnostic pop
 
                     CATCH_REQUIRE(a.get_a() == i);
                     CATCH_REQUIRE(a.get_b() == j);
@@ -178,6 +181,8 @@ CATCH_TEST_CASE("Simple nth child", "[nth-child] [basics]")
                 {
                     for(int k(0); k < (1 << 3); ++k)
                     {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-overflow"
                         a.parse(
                                   std::string((k & (1 << 0)) ? " " : "")
                                 + (j >= 0 ? (rand() % 5 <= 2 ? "+" : "") : "-")
@@ -185,6 +190,7 @@ CATCH_TEST_CASE("Simple nth child", "[nth-child] [basics]")
                                 + std::to_string(abs(j))
                                 + ((k & (1 << 2)) ? " " : "")
                             );
+#pragma GCC diagnostic pop
 
                         CATCH_REQUIRE(a.get_a() == i);
                         CATCH_REQUIRE(a.get_b() == j);

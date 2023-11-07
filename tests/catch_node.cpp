@@ -621,7 +621,10 @@ CATCH_TEST_CASE("Node flags", "[node] [flag]")
 
         for(int i(-10); i <= 10; ++i)
         {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wrestrict"
             std::string nb("t" + std::to_string(i));
+#pragma GCC diagnostic pop
 
             n->set_flag(nb, true);
             CATCH_REQUIRE(n->get_flag(nb));
@@ -634,7 +637,10 @@ CATCH_TEST_CASE("Node flags", "[node] [flag]")
         // check contents again
         for(int i(-10); i <= 10; ++i)
         {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wrestrict"
             std::string nb("t" + std::to_string(i));
+#pragma GCC diagnostic pop
 
             CATCH_REQUIRE(n->get_flag(nb));
         }
@@ -644,7 +650,10 @@ CATCH_TEST_CASE("Node flags", "[node] [flag]")
         // all are gone now!
         for(int i(-10); i <= 10; ++i)
         {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wrestrict"
             std::string nb("t" + std::to_string(i));
+#pragma GCC diagnostic pop
 
             CATCH_REQUIRE_FALSE(n->get_flag(nb));
         }
