@@ -153,22 +153,24 @@ CATCH_TEST_CASE("Simple nth child", "[nth-child] [basics]")
                 // try all combos with spaces
                 for(int k(0); k < (1 << 6); ++k)
                 {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstrict-overflow"
+//#pragma GCC diagnostic push
+//#pragma GCC diagnostic ignored "-Wstrict-overflow"
+                    unsigned int const i_abs(abs(i));
+                    unsigned int const j_abs(abs(j));
                     a.parse(
                               std::string((k & (1 << 0)) ? " " : "")
                             + (i >= 0 ? (rand() % 5 == 0 ? "+" : "") : "-")
                             + ((k & (1 << 1)) ? " " : "")
-                            + std::to_string(abs(i))
+                            + std::to_string(i_abs)
                             + ((k & (1 << 2)) ? " " : "")  // this one should be illegal, we may enforce it later
                             + "n"
                             + ((k & (1 << 3)) ? " " : "")
                             + (j >= 0 ? "+" : "-")
                             + ((k & (1 << 4)) ? " " : "")
-                            + std::to_string(abs(j))
+                            + std::to_string(j_abs)
                             + ((k & (1 << 5)) ? " " : "")
                         );
-#pragma GCC diagnostic pop
+//#pragma GCC diagnostic pop
 
                     CATCH_REQUIRE(a.get_a() == i);
                     CATCH_REQUIRE(a.get_b() == j);
@@ -181,16 +183,17 @@ CATCH_TEST_CASE("Simple nth child", "[nth-child] [basics]")
                 {
                     for(int k(0); k < (1 << 3); ++k)
                     {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstrict-overflow"
+//#pragma GCC diagnostic push
+//#pragma GCC diagnostic ignored "-Wstrict-overflow"
+                        unsigned int const j_abs(abs(j));
                         a.parse(
                                   std::string((k & (1 << 0)) ? " " : "")
                                 + (j >= 0 ? (rand() % 5 <= 2 ? "+" : "") : "-")
                                 + ((k & (1 << 1)) ? " " : "")
-                                + std::to_string(abs(j))
+                                + std::to_string(j_abs)
                                 + ((k & (1 << 2)) ? " " : "")
                             );
-#pragma GCC diagnostic pop
+//#pragma GCC diagnostic pop
 
                         CATCH_REQUIRE(a.get_a() == i);
                         CATCH_REQUIRE(a.get_b() == j);
