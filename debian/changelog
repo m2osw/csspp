@@ -1,3 +1,9 @@
+csspp (1.0.32.1~jammy) jammy; urgency=high
+
+  * Changed test to use unsigned int where the abs() gets used.
+
+ -- Alexis Wilke <alexis@m2osw.com>  Sat, 11 Nov 2023 11:52:08 -0800
+
 csspp (1.0.32.0~jammy) jammy; urgency=high
 
   * Renamed exceptions.h without the 's': exception.h.
