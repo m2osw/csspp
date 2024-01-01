@@ -1,4 +1,4 @@
-# Copyright (c) 2015-2023  Made to Order Software Corp.  All Rights Reserved
+# Copyright (c) 2015-2024  Made to Order Software Corp.  All Rights Reserved
 #
 # https://snapwebsites.org/project/csspp
 # contact@m2osw.com
