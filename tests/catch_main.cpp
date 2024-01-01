@@ -798,10 +798,9 @@ time_t get_now()
     return g_now;
 }
 
-Catch::Clara::Parser add_command_line_options(Catch::Clara::Parser const & cli)
+void add_command_line_options(Catch::Clara::Parser & cli)
 {
-    return cli
-         | Catch::Clara::Opt(g_show_errors)
+    cli |= Catch::Clara::Opt(g_show_errors)
             ["--show-errors"]
             ("make the csspp compile more verbose, which means printing all errors.")
          | Catch::Clara::Opt(g_script_path, "scripts")
