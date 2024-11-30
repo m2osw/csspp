@@ -21,7 +21,7 @@ additional features:
   we may end up with what looks like an invalid expression even if it is
   not. By first parsing everything and creating a tree, we could 100%
   avoid calculating what is going to be simplified in the first place.
-  In the case of the ?: oeprator, that means only the true or false
+  In the case of the ?: operator, that means only the true or false
   tree is taken in account. The other tree is completely ignored.
 
 
@@ -107,6 +107,10 @@ additional features:
 
 . Write a test to make sure that the MasterCMakeLists.txt is valid in
   the final tarball.
+
+
+. Look at fixing the ./mk script so it works for all versions (only Debug
+  is properly supported at the moment)
 
 
 vim: tw=2 sw=2 et

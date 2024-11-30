@@ -5,6 +5,7 @@
 
 if test -x ../../cmake/scripts/mk
 then
+	echo "warning: with this version, tests are specifically setup for the Debug version only."
 	SCRIPTS=`cd scripts; pwd`
 	VERSION_SCRIPT=`cd ../../BUILD/Debug/contrib/csspp/scripts; pwd`
 	export TEST_OPTIONS="--scripts ${SCRIPTS} --version-script ${VERSION_SCRIPT} --show-errors"
