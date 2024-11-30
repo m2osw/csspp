@@ -77,4 +77,18 @@ else(SnapCatch2_FOUND)
 
 endif(SnapCatch2_FOUND)
 
+if(SnapCatch2_FOUND)
+
+    find_package(SnapTestRunner)
+    AddUnitTestsTarget(
+        PROJECT_NAME
+            rununittests
+        PROJECT_TEST_ARGS
+            --scripts "${CMAKE_SOURCE_DIR}/scripts"
+            --version-script "${CMAKE_BINARY_DIR}/scripts"
+            --show-errors
+    )
+
+endif(SnapCatch2_FOUND)
+
 # vim: ts=4 sw=4 et
