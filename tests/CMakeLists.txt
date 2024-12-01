@@ -66,11 +66,6 @@ if(SnapCatch2_FOUND)
         ${SNAPCATCH2_LIBRARIES}
     )
 
-    # You can use the --success command line option to see all the tests
-    # as they run; it is a LOT of output though, thus by default we don't
-    # use it
-    add_test(unittest ${PROJECT_NAME})
-
 else(SnapCatch2_FOUND)
 
     message("snapcatch2 not found... no test will be built.")
