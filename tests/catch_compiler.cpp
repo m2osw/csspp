@@ -63,13 +63,19 @@ void free_char(char * ptr)
     free(ptr);
 }
 
-CATCH_TEST_CASE("Compile set_date_time_variables() called too soon", "[compiler] [invalid]")
+
+CATCH_TEST_CASE("invalid_state", "[compiler][invalid]")
 {
+    CATCH_START_SECTION("Compile set_date_time_variables() called too soon")
+    {
         csspp::compiler c;
         CATCH_REQUIRE_THROWS_AS(c.set_date_time_variables(csspp_test::get_now()), csspp::csspp_exception_logic);
+    }
+    CATCH_END_SECTION()
 }
 
-CATCH_TEST_CASE("Compile simple stylesheets", "[compiler] [stylesheet] [attribute]")
+
+CATCH_TEST_CASE("compile_simple_stylesheets", "[compiler][stylesheet][attribute]")
 {
     // with many spaces
     {
