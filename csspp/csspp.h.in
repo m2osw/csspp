@@ -20,7 +20,7 @@
 #include    "csspp/exception.h"
 
 
-// C++ lib
+// C++
 //
 #include    <cstdint>
 #include    <string>

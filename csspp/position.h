@@ -20,7 +20,7 @@
 #include    "csspp/csspp.h"
 
 
-// C++ lib
+// C++
 //
 #include    <memory>
 

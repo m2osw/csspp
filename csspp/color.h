@@ -15,7 +15,7 @@
 // 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #pragma once
 
-// C++ lib
+// C++
 //
 #include    <cstdint>
 #include    <string>

@@ -21,7 +21,7 @@
 #include    "csspp/error.h"
 
 
-// C++ lib
+// C++
 //
 #include    <map>
 #include    <vector>

@@ -42,7 +42,7 @@
 #include    <sstream>
 
 
-// C lib
+// C
 //
 #include    <string.h>
 

@@ -20,7 +20,7 @@
 #include    "csspp/position.h"
 
 
-// C++ lib
+// C++
 //
 #include    <istream>
 #include    <sstream>
