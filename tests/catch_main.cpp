@@ -80,7 +80,7 @@ namespace
 
 trace_error * g_trace_error;
 
-time_t const g_now(1435871798); // 07/02/2015 14:16:38
+time_t const g_now(1435871798); // 07/02/2015 21:16:38 UTC
 
 }
 
@@ -244,7 +244,7 @@ std::string() +
 "    V:_csspp_hour\n"
 "      LIST\n"
 "        VARIABLE \"_csspp_hour\"\n"
-"        STRING \"14\"\n"
+"        STRING \"21\"\n"
 "    V:_csspp_ln10e\n"
 "      LIST\n"
 "        VARIABLE \"_csspp_ln10e\"\n"
@@ -304,7 +304,7 @@ std::string() +
 "    V:_csspp_time\n"
 "      LIST\n"
 "        VARIABLE \"_csspp_time\"\n"
-"        STRING \"14:16:38\"\n"
+"        STRING \"21:16:38\"\n"
 "    V:_csspp_usdate\n"
 "      LIST\n"
 "        VARIABLE \"_csspp_usdate\"\n"

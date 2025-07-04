@@ -442,7 +442,7 @@ void compiler::set_date_time_variables(time_t now)
 
     // convert date/time in a string
     struct tm t;
-    localtime_r(&now, &t);
+    gmtime_r(&now, &t);
     char buf[20];
     strftime(buf, sizeof(buf), "%m/%d/%Y%T", &t);
 
