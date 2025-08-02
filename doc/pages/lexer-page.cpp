@@ -83,14 +83,14 @@
  * error if an invalid character is found. Characters that are considered
  * invalid are:
  *
- * \li \0 -- the NULL terminator; the lexer can still parse strings, only
+ * \li \\0 -- the NULL terminator; the lexer can still parse strings, only
  *             you have to write such strings in an I/O buffer first and
  *             you just should not include the NULL terminator in that buffer;
  *             (see example below)
- * \li \xFFFD -- the INVALID character; in CSS 3, this character represents
+ * \li \\xFFFD -- the INVALID character; in CSS 3, this character represents
  *               the EOF of a stream; in CSS Preprocessor, it is just viewed
  *               as an error
- * \li \x??FFFE and \x??FFFF -- any character that ends with FFFE or FFFF
+ * \li \\x??FFFE and \\x??FFFF -- any character that ends with FFFE or FFFF
  *                              is viewed as invalid and generates an error
  *
  * Note that the parsing will continue after such errors. However, if one
@@ -132,7 +132,7 @@
  * A valid character is any character code point defined between 0x000000
  * and 0x10FFFF inclusive.
  *
- * The \ref input-stream defines a small set of characters within that range
+ * The \ref input_stream defines a small set of characters within that range
  * that are considered invalid in CSS Preprocessor streams. Any character
  * considered invalid is replaced by the 0xFFFD code point so the rest of
  * the implementation does not have to check for invalid characters each
@@ -361,7 +361,7 @@
  * CSS Preprocessor also counts the total number of lines and pages in a
  * separate counter.
  *
- * The line number is used to print out errors. If you use paging (\f),
+ * The line number is used to print out errors. If you use paging (\\f),
  * you may have a harder time to find your errors in the current version.
  *
  * Note that line counting also happens in C++ and C-like comments.
@@ -633,7 +633,7 @@
  * code points that are considered valid from the input stream are
  * considered valid in an escape sequence. This means any character
  * between 0 and 0x10FFFF except those marked as invalid in the
- * \ref input-stream section.
+ * \ref input_stream section.
  *
  * \note
  * Contrary to the CSS 3 definition, this definition clearly shows that
@@ -847,7 +847,7 @@
  * \endcode
  *
  * \warning
- * The placeholder token and rules are supported as expected. The @extend
+ * The placeholder token and rules are supported as expected. The \@extend
  * is not yet supported in version 1.0.0 of CSS Preprocessor.
  *
  * \section variable Variable "VARIABLE" (CSS Preprocessor Extension)
@@ -1161,7 +1161,8 @@
  *      "... \" or \22 ..."
  * \endcode
  *
- * Of course, you can use ' in a string quoted with " and vice versa.
+ * Of course, you can use an apostrophe in a string quoted with a
+ * double quote and vice versa.
  *
  * Strings accept the backslashed followed by a newline to insert a
  * newline in the string and write that string on multiple lines. In
@@ -1822,13 +1823,13 @@
  *
  * \note
  * The lexer makes use of the csspp::unicode_range_t class to record these
- * values in a \ref unicode-range "UNICODE_RANGE" node. The range is
+ * values in a \ref unicode_range "UNICODE_RANGE" node. The range is
  * then compressed and saved in one 64 bit number.
  *
- * A Unicode range is used by @font-face definitions to limit the number
+ * A Unicode range is used by \@font-face definitions to limit the number
  * of characters to be loaded for a page.
  *
- * \section include_match Include Match "INCLUDE_MATCH" (CSS 3)
+ * \section lexer_include_match Include Match "INCLUDE_MATCH" (CSS 3)
  *
  * \htmlonly
  *  <div class="railroad">
@@ -1855,7 +1856,7 @@
  *      a[class ~= "green"]   // equivalent to a.green
  * \endcode
  *
- * \section dash_match Dash Match "DASH_MATCH" (CSS 3)
+ * \section lexer_dash_match Dash Match "DASH_MATCH" (CSS 3)
  *
  * \htmlonly
  *  <div class="railroad">
@@ -1881,7 +1882,7 @@
  *      [lang |= "en"]   // match lang="en-US"
  * \endcode
  *
- * \section prefix_match Prefix Match "PREFIX_MATCH" (CSS 3)
+ * \section lexer_prefix_match Prefix Match "PREFIX_MATCH" (CSS 3)
  *
  * \htmlonly
  *  <div class="railroad">
@@ -1906,7 +1907,7 @@
  *      a[entity ^= 'blue']  // match entity="blue-laggoon"
  * \endcode
  *
- * \section suffix_match Suffix Match "SUFFIX_MATCH" (CSS 3)
+ * \section lexer_suffix_match Suffix Match "SUFFIX_MATCH" (CSS 3)
  *
  * \htmlonly
  *  <div class="railroad">
@@ -1931,7 +1932,7 @@
  *      a[entity $= 'laggoon']  // match entity="blue-laggoon"
  * \endcode
  *
- * \section substring_match Substring Match "SUBSTRING_MATCH" (CSS 3)
+ * \section lexer_substring_match Substring Match "SUBSTRING_MATCH" (CSS 3)
  *
  * \htmlonly
  *  <div class="railroad">
@@ -1992,7 +1993,7 @@
  * The OR operator takes two boolean value. If at least one of these
  * boolean value is true, then the result is true, otherwise it is false.
  *
- * You may also use the 'or' identifier.
+ * You may also use the `or` identifier.
  *
  * \code{.scss}
  *      width: $bool1 || $bool2 ? $left-column : $right-column;
@@ -2022,7 +2023,7 @@
  * The '&&' operator is the logical AND operator. It returns true when
  * its left and right handsides are both set to true.
  *
- * You may also use the 'and' identifier.
+ * You may also use the `and` identifier.
  *
  * \code{.scss}
  *      width: $bool1 && $bool2 ? $left-column : $right-column;
@@ -2110,7 +2111,7 @@
  *  </div>
  * \endhtmlonly
  *
- * We added the ':=' operator to allow one to set a variable within an
+ * We added the `:=` operator to allow one to set a variable within an
  * expression. For example, you could write an assignment of a long
  * expression, then reuse that value many times in the rest of the
  * expression:
@@ -2268,10 +2269,10 @@
  *  </div>
  * \endhtmlonly
  *
- * The <a href="#delimiter">DELIMITER</a> is activated for any character
+ * The \ref delimiter is activated for any character
  * that does not activate any other lexer rule.
  *
- * For example, a period that is not followed by a <a href="#digit">DIGIT</a>
+ * For example, a period that is not followed by a \ref digit
  * is returned as itself. The grammar generally shows delimiters using a
  * simple quoted string rather than its node_type_t name.
  *
@@ -2292,7 +2293,7 @@
  * \li { -- OPEN_CURVLYBRACKET
  * \li } -- CLOSE_CURVLYBRACKET
  * \li . -- PERIOD
- * \li & -- REFERENCE
+ * \li &amp; -- REFERENCE
  * \li &lt; -- LESS
  * \li + -- ADD
  * \li - -- SUBTRACT (if by itself or at least not followed by an identifier)
@@ -2323,9 +2324,9 @@
  *
  * \note
  * The lexer cannot know what to do with the DIVIDE. The compiler,
- * however, knows at the time it runs the expression since it
- * has the name of the field name 'font'. In that case it tells the
- * expression class to handle the DIVIDE as a CSS 3 separator. That
+ * however, knows at the time it processes the expression since it
+ * has access the name of the field: `font: ...`. In that case it tells
+ * the expression class to handle the DIVIDE as a CSS 3 separator. That
  * mean the sequence \<number> / \<number> will generate the token
  * FONT_METRICS.
  *
@@ -2342,12 +2343,5 @@
  *      font: ($height / 32) / 1.3em helvetica;
  * \endcode
  */
-
-// Local Variables:
-// mode: cpp
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// tab-width: 4
-// End:
 
 // vim: ts=4 sw=4 et syntax=doxygen

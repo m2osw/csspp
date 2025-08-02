@@ -38,6 +38,7 @@
 #include    <cmath>
 #include    <iostream>
 
+
 // last include
 //
 #include    <snapdev/poison.h>
@@ -339,12 +340,4 @@ node::pointer_t expression::additive()
 }
 
 } // namespace csspp
-
-// Local Variables:
-// mode: cpp
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// tab-width: 4
-// End:
-
 // vim: ts=4 sw=4 et

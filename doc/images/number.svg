@@ -1,0 +1,595 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   class="railroad-diagram"
+   viewbox="0 0 713 179"
+   width="713"
+   height="179"
+   version="1.1"
+   id="svg25"
+   sodipodi:docname="a.svg"
+   inkscape:version="1.4.2 (2aeb623e1d, 2025-05-12)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs74" />
+  <sodipodi:namedview
+     id="namedview74"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="0.87867687"
+     inkscape:cx="130.30956"
+     inkscape:cy="-106.40999"
+     inkscape:window-width="1920"
+     inkscape:window-height="945"
+     inkscape:window-x="0"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g72" />
+  <g
+     transform="translate(.5 .5)"
+     id="g74">
+    <path
+       d="M 20 50 v 20 m 10 -20 v 20 m -10 -10 h 20.5"
+       id="path1"
+       style="fill:none;stroke:#000000;stroke-opacity:1" />
+    <g
+       id="g8">
+      <path
+         d="M40.0 60a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"
+         id="path2"
+         style="fill:none;stroke:#000000;stroke-opacity:1" />
+      <g
+         id="g2"
+         style="fill:none;stroke:#000000;stroke-opacity:1">
+        <rect
+           height="22"
+           rx="10"
+           ry="10"
+           width="28"
+           x="60"
+           y="29"
+           id="rect2"
+           style="fill:none;stroke:#000000;stroke-opacity:1" />
+        <text
+           x="70"
+           y="44"
+           id="text2"
+           style="fill:none;stroke:#000000;stroke-opacity:1"><tspan
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#000000;fill-opacity:1;stroke:none"
+             id="tspan74">+</tspan></text>
+      </g>
+      <path
+         d="M88 40a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"
+         id="path3"
+         style="fill:none;stroke:#000000;stroke-opacity:1" />
+      <path
+         d="M40 60h20"
+         id="path4" />
+      <g
+         id="g5">
+        <path
+           d="M60 60h28"
+           id="path5" />
+      </g>
+      <path
+         d="M88 60h20"
+         id="path6" />
+      <path
+         d="M40 60a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"
+         id="path7"
+         style="stroke:#000000;stroke-opacity:1;fill:none" />
+      <g
+         id="g7">
+        <rect
+           height="22"
+           rx="10"
+           ry="10"
+           width="28"
+           x="60"
+           y="69"
+           id="rect7"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <text
+           x="72"
+           y="84"
+           id="text7"><tspan
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';stroke:none;stroke-opacity:1"
+             id="tspan75">-</tspan></text>
+      </g>
+      <path
+         d="M88.0 80a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"
+         id="path8"
+         style="stroke:#000000;stroke-opacity:1;fill:none" />
+    </g>
+    <g
+       id="g48">
+      <path
+         d="M108.0 60a10 10 0 0 1 10 10v58a10 10 0 0 0 10 10"
+         id="path36"
+         style="fill:none;stroke:#000000;stroke-opacity:1" />
+      <path
+         d="M108.0 60h20"
+         id="path9"
+         style="fill:none;stroke:#000000;stroke-opacity:1" />
+      <g
+         id="g25">
+        <path
+           d="M128.0 60h10"
+           id="path10"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <g
+           id="g15">
+          <path
+             d="m 138,60 h 10"
+             id="path11"
+             style="fill:none;stroke:#000000;stroke-opacity:1" />
+          <path
+             d="m 208,60 h 10"
+             id="path12"
+             style="fill:none;stroke:#000000;stroke-opacity:1" />
+          <g
+             id="g14" />
+        </g>
+        <path
+           d="M218.0 60h10"
+           id="path16"
+           style="fill:none;stroke:#000000;stroke-opacity:1" />
+        <path
+           d="M228.0 60h10"
+           id="path17"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <g
+           id="g17">
+          <rect
+             height="22"
+             rx="10"
+             ry="10"
+             width="28"
+             x="238"
+             y="49"
+             id="rect17"
+             style="fill:none;stroke:#000000;stroke-opacity:1" />
+          <text
+             x="250"
+             y="64"
+             id="text17"><tspan
+               style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold'"
+               id="tspan77">.</tspan></text>
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:192px;font-family:Sans;-inkscape-font-specification:'Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-opacity:1"
+             x="170"
+             y="30.56772"
+             id="text87"><tspan
+               sodipodi:role="line"
+               id="tspan87"></tspan></text>
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12px;font-family:Sans;-inkscape-font-specification:'Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-opacity:1"
+             x="157.13867"
+             y="64.368164"
+             id="text88"><tspan
+               sodipodi:role="line"
+               id="tspan88"
+               x="157.13867"
+               y="64.368164"
+               style="font-size:12px">DIGIT*</tspan></text>
+          <rect
+             height="22"
+             rx="10"
+             ry="10"
+             width="61"
+             x="147.5"
+             y="49"
+             id="rect17-6"
+             style="fill:none;stroke:#000000;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12px;font-family:Sans;-inkscape-font-specification:'Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-opacity:1"
+             x="254.13867"
+             y="142.40625"
+             id="text88-0"><tspan
+               sodipodi:role="line"
+               id="tspan88-9"
+               x="254.13867"
+               y="142.40625"
+               style="font-size:12px">DIGIT*</tspan></text>
+          <rect
+             height="22"
+             rx="10"
+             ry="10"
+             width="61"
+             x="245.5"
+             y="127"
+             id="rect17-6-3"
+             style="fill:none;stroke:#000000;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12px;font-family:Sans;-inkscape-font-specification:'Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-opacity:1"
+             x="231.13867"
+             y="102.86816"
+             id="text88-9"><tspan
+               sodipodi:role="line"
+               id="tspan88-1"
+               x="231.13867"
+               y="102.86816"
+               style="font-size:12px">DIGIT*</tspan></text>
+          <rect
+             height="22"
+             rx="10"
+             ry="10"
+             width="61"
+             x="221.5"
+             y="87.5"
+             id="rect17-6-2"
+             style="fill:none;stroke:#000000;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12px;font-family:Sans;-inkscape-font-specification:'Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-opacity:1"
+             x="305.13867"
+             y="63.830078"
+             id="text88-3"><tspan
+               sodipodi:role="line"
+               id="tspan88-5"
+               x="305.13867"
+               y="63.830078"
+               style="font-size:12px">DIGIT*</tspan></text>
+          <rect
+             height="22"
+             rx="10"
+             ry="10"
+             width="61"
+             x="295.5"
+             y="48.461914"
+             id="rect17-6-6"
+             style="fill:none;stroke:#000000;stroke-opacity:1" />
+          <text
+             xml:space="preserve"
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:12px;font-family:Sans;-inkscape-font-specification:'Sans Bold';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-opacity:1"
+             x="580.13867"
+             y="111.90625"
+             id="text88-0-0"><tspan
+               sodipodi:role="line"
+               id="tspan88-9-6"
+               x="580.13867"
+               y="111.90625"
+               style="font-size:12px">DIGIT*</tspan></text>
+          <rect
+             height="22"
+             rx="10"
+             ry="10"
+             width="61"
+             x="571.5"
+             y="97"
+             id="rect17-6-3-2"
+             style="fill:none;stroke:#000000;stroke-opacity:1" />
+        </g>
+        <path
+           d="M266.0 60h10"
+           id="path18"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <path
+           d="M276.0 60h10"
+           id="path19"
+           style="fill:none;stroke:#000000;stroke-opacity:1" />
+        <g
+           id="g24">
+          <path
+             d="M286.0 60h10"
+             id="path20"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <path
+             d="M356.0 60h10"
+             id="path21"
+             style="fill:none;stroke:#000000;stroke-opacity:1" />
+          <g
+             id="g23">
+            <path
+               d="M296.0 80h60"
+               id="path23" />
+          </g>
+        </g>
+        <path
+           d="M366.0 60h10"
+           id="path25"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+      </g>
+      <path
+         d="M376.0 60h20"
+         id="path26"
+         style="fill:none;stroke:#000000;stroke-opacity:1" />
+      <path
+         d="M108.0 60a10 10 0 0 1 10 10v19a10 10 0 0 0 10 10"
+         id="path27"
+         style="stroke:#000000;stroke-opacity:1;fill:none" />
+      <g
+         id="g34">
+        <path
+           d="M128.0 99h84.0"
+           id="path28"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <path
+           d="M292.0 99h84.0"
+           id="path29"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <path
+           d="M212.0 99h10"
+           id="path30"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <path
+           d="M282.0 99h10"
+           id="path31"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <g
+           id="g33">
+          <path
+             d="M222.0 119h60"
+             id="path33" />
+        </g>
+      </g>
+      <path
+         d="M376.0 99a10 10 0 0 0 10 -10v-19a10 10 0 0 1 10 -10"
+         id="path35"
+         style="fill:none;stroke:#000000;stroke-opacity:1" />
+      <g
+         id="g47">
+        <path
+           d="M128 138h50"
+           id="path37"
+           style="fill:none;stroke:#000000;stroke-opacity:1" />
+        <path
+           d="M326.0 138h50.0"
+           id="path38"
+           style="fill:none;fill-opacity:1;stroke:#000000;stroke-opacity:1" />
+        <path
+           d="M178.0 138h10"
+           id="path39"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <g
+           id="g39">
+          <rect
+             height="22"
+             rx="10"
+             ry="10"
+             width="28"
+             x="188"
+             y="127"
+             id="rect39"
+             style="fill:none;stroke:#000000;stroke-opacity:1" />
+          <text
+             x="200"
+             y="142"
+             id="text39"><tspan
+               style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold'"
+               id="tspan80">.</tspan></text>
+        </g>
+        <path
+           d="M216.0 138h10"
+           id="path40"
+           style="fill:none;stroke:#000000;stroke-opacity:1" />
+        <path
+           d="M226.0 138h10"
+           id="path41"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <g
+           id="g46">
+          <path
+             d="M236.0 138h10"
+             id="path42"
+             style="fill:none;stroke:#000000;stroke-opacity:1" />
+          <path
+             d="M306.0 138h10"
+             id="path43"
+             style="fill:none;stroke:#000000;stroke-opacity:1" />
+          <g
+             id="g45">
+            <path
+               d="M246.0 158h60"
+               id="path45" />
+          </g>
+        </g>
+        <path
+           d="M316.0 138h10"
+           id="path47"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+      </g>
+      <path
+         d="M376.0 138a10 10 0 0 0 10 -10v-58a10 10 0 0 1 10 -10"
+         id="path48"
+         style="stroke:#000000;stroke-opacity:1;fill:none" />
+    </g>
+    <g
+       id="g73">
+      <path
+         d="M396.0 60h20"
+         id="path49"
+         style="stroke:#000000;stroke-opacity:1;fill:none" />
+      <g
+         id="g50">
+        <path
+           d="M416.0 60h236"
+           id="path50"
+           style="fill:none;stroke:#000000;stroke-opacity:1" />
+      </g>
+      <path
+         d="M652.0 60h20"
+         id="path51"
+         style="stroke:#000000;stroke-opacity:1;fill:none" />
+      <path
+         d="M396.0 60a10 10 0 0 1 10 10v28a10 10 0 0 0 10 10"
+         id="path52"
+         style="stroke:#000000;stroke-opacity:1;fill:none" />
+      <g
+         id="g72">
+        <g
+           id="g58">
+          <path
+             d="M416.0 108h20"
+             id="path53"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <g
+             id="g55">
+            <path
+               d="M436.0 108h0.0"
+               id="path54" />
+            <path
+               d="M464.0 108h0.0"
+               id="path55" />
+            <rect
+               height="22"
+               rx="10"
+               ry="10"
+               width="28"
+               x="436"
+               y="97"
+               id="rect55"
+               style="fill:none;stroke:#000000;stroke-opacity:1" />
+            <text
+               x="446"
+               y="112"
+               id="text55"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold'"
+                 id="tspan82">e</tspan></text>
+          </g>
+          <path
+             d="M464.0 108h20"
+             id="path56"
+             style="fill:none;stroke:#000000;stroke-opacity:1" />
+          <path
+             d="M416.0 108a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"
+             id="path57"
+             style="fill:none;stroke:#000000;stroke-opacity:1" />
+          <g
+             id="g57">
+            <rect
+               height="22"
+               rx="10"
+               ry="10"
+               width="28"
+               x="436"
+               y="127"
+               id="rect57"
+               style="stroke:#000000;stroke-opacity:1;fill:none" />
+            <text
+               x="446"
+               y="142"
+               id="text57"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold'"
+                 id="tspan83">E</tspan></text>
+          </g>
+          <path
+             d="M464.0 138a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"
+             id="path58"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+        </g>
+        <g
+           id="g65">
+          <path
+             d="M484.0 108a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"
+             id="path59"
+             style="fill:none;stroke:#000000;stroke-opacity:1" />
+          <g
+             id="g59">
+            <rect
+               height="22"
+               rx="10"
+               ry="10"
+               width="28"
+               x="504"
+               y="77"
+               id="rect59"
+               style="fill:none;stroke:#000000;stroke-opacity:1" />
+            <text
+               x="513.22852"
+               y="92"
+               id="text59"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold'"
+                 id="tspan84">+</tspan></text>
+          </g>
+          <path
+             d="M532.0 88a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"
+             id="path60"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <path
+             d="M484.0 108h20"
+             id="path61" />
+          <g
+             id="g62">
+            <path
+               d="M504.0 108h28"
+               id="path62" />
+          </g>
+          <path
+             d="M532.0 108h20"
+             id="path63" />
+          <path
+             d="M484.0 108a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"
+             id="path64"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <g
+             id="g64">
+            <rect
+               height="22"
+               rx="10"
+               ry="10"
+               width="28"
+               x="504"
+               y="117"
+               id="rect64"
+               style="stroke:#000000;stroke-opacity:1;fill:none;fill-opacity:1" />
+            <text
+               x="514.84961"
+               y="132"
+               id="text64"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold'"
+                 id="tspan85">-</tspan></text>
+          </g>
+          <path
+             d="M532.0 128a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"
+             id="path65"
+             style="fill:none;stroke:#000000;stroke-opacity:1" />
+        </g>
+        <path
+           d="M552.0 108h10"
+           id="path66"
+           style="fill:none;stroke:#000000;stroke-opacity:1" />
+        <g
+           id="g71">
+          <path
+             d="M562.0 108h10"
+             id="path67"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <path
+             d="M632.0 108h10"
+             id="path68"
+             style="fill:none;stroke:#000000;stroke-opacity:1" />
+          <g
+             id="g70">
+            <path
+               d="M572.0 128h60"
+               id="path70" />
+          </g>
+        </g>
+        <path
+           d="M642.0 108h10"
+           id="path72"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+      </g>
+      <path
+         d="M652.0 108a10 10 0 0 0 10 -10v-28a10 10 0 0 1 10 -10"
+         id="path73"
+         style="stroke:#000000;stroke-opacity:1;fill:none" />
+    </g>
+    <path
+       d="M 672 60 h 20 m -10 -10 v 20 m 10 -20 v 20"
+       id="path74"
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-opacity:1" />
+  </g>
+</svg>

@@ -83,7 +83,7 @@
  *
  * \section expression_with_unicode_ranges Unicode Ranges
  *
- * The @font-face keyword accepts a field named unicode-range which
+ * The \@font-face keyword accepts a field named unicode-range which
  * accepts ranges of Unicode character code points.
  *
  * These ranges can be intersected between each others uing * operator.
@@ -439,9 +439,9 @@
  * \li color || color -- true if one of the colors is not black
  * \li color && color -- true if both colors are not black
  * \li color == color -- true if both colors are the same (compared after
- *     conversion to #aabbggrr)
+ *     conversion to \#aabbggrr)
  * \li color != color -- true if both colors are different (compared after
- *     conversion to #aabbggrr)
+ *     conversion to \#aabbggrr)
  *
  * \note
  * The color +/- number is expected to be used with a decimal number.

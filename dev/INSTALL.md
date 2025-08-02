@@ -36,7 +36,7 @@ cygwin since the DLL appears along the EXE, but I don't think it still compiles
 on Win32). You may, however, immediately test the binary without installing
 to a final destination with:
 
-    BUILD/csspp/src/csspp --help
+    BUILD/csspp/tools/csspp --help
 
 The dist directory is otherwise ready to be installed under `/usr`. Many files
 are not really required, but that's up to you to decide how to handle that

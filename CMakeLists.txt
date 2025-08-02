@@ -62,8 +62,8 @@ include_directories(
 ##
 add_subdirectory(csspp)         # csspp library
 add_subdirectory(cmake)         # cmake include files
-add_subdirectory(scripts)       # command line tools as scripts
-add_subdirectory(src)           # command line tools as binaries
+add_subdirectory(scripts)       # csspp system & validation scripts
+add_subdirectory(tools)         # command line tools
 add_subdirectory(tests)         # tests
 add_subdirectory(doc)           # library API documentation
 

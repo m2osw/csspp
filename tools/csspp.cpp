@@ -82,7 +82,7 @@
  * \subsection include -I -- specify paths to include files
  *
  * Specify paths to user defined directories that include SCSS scripts
- * one can include using the @import command.
+ * one can include using the \@import command.
  *
  * By default the system looks for system defined scripts (i.e. the
  * default validation, version, and other similar scripts) under
@@ -99,7 +99,7 @@
  * under a sub-directory named "validation".
  *
  * There are no specific rules for where include files will be found.
- * The @import can use a full path or a local path. When a local path
+ * The \@import can use a full path or a local path. When a local path
  * is used, then all the specified -I paths are prepended until a
  * file matches. The first match is used.
  *

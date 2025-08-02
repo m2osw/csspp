@@ -20,7 +20,17 @@
  * The CSS Preprocessor expression class is used to reduce a list
  * of nodes by applying expressions to the various values.
  *
- * \sa \ref expression_rules
+ * \section expression_rules Expression Rules
+ *
+ * The expression rules are as follow:
+ *
+ * \code
+ *     expr '+' expr
+ *   | expr '*' expr
+ *   | ...
+ * \endcode
+ *
+ * TODO: determine what I meant to include in this section.
  */
 
 // self
@@ -148,12 +158,4 @@ void expression::next()
 }
 
 } // namespace csspp
-
-// Local Variables:
-// mode: cpp
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// tab-width: 4
-// End:
-
 // vim: ts=4 sw=4 et

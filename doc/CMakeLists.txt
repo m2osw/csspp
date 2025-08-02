@@ -44,7 +44,7 @@ if(DOXYGEN_FOUND)
         add_custom_target(sample.css
             DEPENDS ${CSSPP_TOOL}
             COMMAND ${CMAKE_COMMAND} -E env "LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}/csspp"
-                ${CMAKE_BINARY_DIR}/src/csspp
+                ${CMAKE_BINARY_DIR}/tools/csspp
                     -I ${CMAKE_SOURCE_DIR}/scripts ${CMAKE_BINARY_DIR}/scripts
                     --debug --style expanded --output sample.css
                     ${CMAKE_CURRENT_SOURCE_DIR}/sample.scss
@@ -59,8 +59,8 @@ if(DOXYGEN_FOUND)
         # (It is not required to have these to build locally, only to build
         # on a build system with the debuild environment.)
         #
-        #   COMMAND ldd ${CMAKE_BINARY_DIR}/src/csspp
-        #   COMMAND LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.2 ${CMAKE_BINARY_DIR}/src/csspp
+        #   COMMAND ldd ${CMAKE_BINARY_DIR}/tools/csspp
+        #   COMMAND LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.2 ${CMAKE_BINARY_DIR}/tools/csspp
         #
         # Note: the ldd command is used to determine the full path to the libasan.so library
         #

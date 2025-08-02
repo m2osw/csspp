@@ -42,7 +42,7 @@
  * which I think is one of the most powerful feature of the CSS
  * Preprocessor.
  *
- * \include doc/sample.scss
+ * \include sample.scss
  *
  * First there is the command line used to process the file (assuming
  * you installed the package as expected by default). As we can see,
@@ -56,11 +56,11 @@
  *
  * The following is the resulting output:
  *
- * \include doc/sample.css
+ * \include sample.css
  *
  * \section csspreprocessor_references CSS Preprocessor References
  *
- * The command line tool is documented in src/csspp.cpp (make sure to click
+ * The command line tool is documented in tools/csspp.cpp (make sure to click
  * on the More... link to see all the details.)
  *
  * The supported CSS extensions are defined in the \ref compiler_reference.

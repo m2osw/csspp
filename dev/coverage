@@ -238,7 +238,7 @@ lcov --capture --no-external --directory $DIRNAME --base-directory $SOURCE_PATH 
 mkdir -p ${DIRNAME}_html
 genhtml --legend --demangle-cpp --no-branch-coverage --show-details coverage.info --output-directory ${DIRNAME}_html
 
-# gprof -q -I ../../../include -I ../../../lib -I ../../../src -I ../../../tests ../csspp_coverage_assembler/tests/csspp_tests | less -S
+# gprof -q -I ../../../include -I ../../../lib -I ../../../tools -I ../../../tests ../csspp_coverage_assembler/tests/csspp_tests | less -S
 #   only gprof does NOT profile anything outside of the binary (so csspp_test but not the library!) So unless we link statically
 # sprof would normally work on .so but that's complicated (by default it fails loading)
 # oprofile would work on the entire system, but that requires a peculiar setup of the machine...
@@ -253,7 +253,7 @@ echo "<html><head><title>csspp $FULL_VERSION statistics</title></head><body>" >$
 echo "<h3>Statistics of the csspp $FULL_VERSION code</h3>" >>${DIRNAME}_html/statistics.html
 echo "<p>Back to <a href=\"..\">CSS Preprocessor Coverage Data</a>.</p>" >>${DIRNAME}_html/statistics.html
 echo "<pre>" >>${DIRNAME}_html/statistics.html
-cloc --autoconf --by-file-by-lang $SOURCE_PATH/include/ $SOURCE_PATH/lib/ $SOURCE_PATH/src/ >>${DIRNAME}_html/statistics.html
+cloc --autoconf --by-file-by-lang $SOURCE_PATH/csspp/ $SOURCE_PATH/tools/ >>${DIRNAME}_html/statistics.html
 echo "</pre><h3>Statistics of the csspp $FULL_VERSION tests</h3><pre>" >>${DIRNAME}_html/statistics.html
 cloc --autoconf --by-file-by-lang $SOURCE_PATH/tests/ >>${DIRNAME}_html/statistics.html
 echo "</pre></body></html>" >>${DIRNAME}_html/statistics.html

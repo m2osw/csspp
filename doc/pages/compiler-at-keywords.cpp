@@ -1,4 +1,3 @@
-// CSS Preprocessor
 // Copyright (c) 2015-2025  Made to Order Software Corp.  All Rights Reserved
 //
 // This program is free software; you can redistribute it and/or modify
@@ -17,24 +16,10 @@
 
 // Documentation only file
 
-// WARNING:
-//   We show C-like comments in this block so we use //! as the introducer
-//   in order to keep everything looking like a comment even when we have
-//   a */ in the comment.
-//
-//   If you use gvim, you may want to change your comment setup to:
-//
-//      set comments=s1:/*,mb:*,ex:*/,b://,b://!
-//
-//   in order to include the //! introducer (assuming you don't already
-//   have it in there!) You could also include ///
-//
-
-
 /** \page at_keywords CSS Preprocessor &At;-keywords
  * \tableofcontents
  *
- * \section at_charset @charset "utf-8";
+ * \section at_charset \@charset "utf-8";
  *
  * The csspp compiler accepts the \@charset keyword, but only if it
  * specifies UTF-8. At this time the compiler does not check whether
@@ -47,7 +32,7 @@
  * is also generated (i.e. the \@charset must be followed by a
  * string.)
  *
- * \section at_debug @debug \<string> ;
+ * \section at_debug \@debug \<string> ;
  *
  * Print out a debug message (i.e. \<string>). By default a system
  * should not display debug messages. The csspp command line tool
@@ -56,7 +41,7 @@
  *
  * If the message is somehow empty, then a default message is printed.
  *
- * \section at_else @else { code }
+ * \section at_else \@else { code }
  *
  * The \@else command offers a way to run code when all \ref at_if "\@if"
  * and \ref at_else_if "\@else if" preceeding this \@else have a false
@@ -77,7 +62,7 @@
  *     }
  * \endcode
  *
- * \section at_else_if @else if \<expression> { code }
+ * \section at_else_if \@else if \<expression> { code }
  *
  * The \@else if command offers a way to verify another expression
  * and execute code only if all previous \ref at_if "\@if" and \@else
@@ -96,7 +81,7 @@
  *     }
  * \endcode
  *
- * \section at_error @error \<string> ;
+ * \section at_error \@error \<string> ;
  *
  * Print out an error message (i.e. \<string>). If the message is somehow
  * empty, print out a default error message.
@@ -104,7 +89,7 @@
  * The error is counted just like any other errors, so a tool, such as
  * the csspp compiler, will return with an exit code of 1.
  *
- * \section at_if @if \<expression> { code }
+ * \section at_if \@if \<expression> { code }
  *
  * The \@if command adds the possibility to write code that gets
  * compiled only when the expression is true.
@@ -122,7 +107,7 @@
  *     }
  * \endcode
  *
- * \section at_import @import \<string> ;
+ * \section at_import \@import \<string> ;
  *
  * The \@import command includes another .scss or .css file in place.
  * This allows you to create libraries of CSS rules that you can
@@ -155,7 +140,7 @@
  * to include \em complex variables when the simple $\<varname> is not
  * going to work right.
  *
- * \section at_include @include \<identifier\> ;
+ * \section at_include \@include \<identifier\> ;
  *
  * This \@include is used to insert a variable in place. In some
  * circumstance you may want to insert a rather complex variable
@@ -205,7 +190,7 @@
  * If you wanted to include another CSS or SCSS file in your SCSS file,
  * you were looking for \ref at_import "\@import" and not the \@include.
  *
- * \section at_message @message \<string> ; or @info \<string> ;
+ * \section at_message \@message \<string> ; or @info \<string> ;
  *
  * Print out an informational message (i.e. \<string>). If the message
  * is empty, then a default message gets written.
@@ -213,7 +198,7 @@
  * The error and warning counters do not get touched when an informational
  * message is output.
  *
- * \section at_mixin @mixin \<identifier> { ... }
+ * \section at_mixin \@mixin \<identifier> { ... }
  *
  * The \@mixin comes from SASS. It is a way to declare a \em complex
  * variable. Although csspp does not require it, we have it to be
@@ -239,9 +224,9 @@
  *
  * To be more SASS compatible, we also support the \ref at_include "\@include".
  *
- * \section at_return @return \<expression> ;
+ * \section at_return \@return \<expression> ;
  *
- * When defining \ref at_mixin functions, the result of the function
+ * When defining \ref at_mixin "\@mixin" functions, the result of the function
  * can be returned using the \@return keyword.
  *
  * The \@return keyword is expected to be used last in the list of commands
@@ -267,7 +252,7 @@
  *  div { z-index: opacity($color); }
  * \endcode
  *
- * \section at_warning @warning \<string> ;
+ * \section at_warning \@warning \<string> ;
  *
  * Print out a warning message (i.e. \<string>). If the message is
  * somehow empty, print out a default warning message.
@@ -276,12 +261,5 @@
  * user requested that warnings be managed like errors, an error
  * is printed and counted as expected.
  */
-
-// Local Variables:
-// mode: cpp
-// indent-tabs-mode: nil
-// c-basic-offset: 4
-// tab-width: 4
-// End:
 
 // vim: ts=4 sw=4 et syntax=doxygen

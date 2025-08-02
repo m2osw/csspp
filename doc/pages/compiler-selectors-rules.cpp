@@ -25,7 +25,7 @@
  * making it easier to find potential errors in your source CSS files.
  *
  * The supported selectors are all the selected supported in CSS 3 and
- * the %<name> selector which is used to allow for optional rules
+ * the %\<name> selector which is used to allow for optional rules
  * defined in CSS libraries.
  *
  * Source:

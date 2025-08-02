@@ -152,7 +152,8 @@ FULL_PATH_NAMES        = YES
 # will be relative from the directory where doxygen is started.
 # This tag requires that the tag FULL_PATH_NAMES is set to YES.
 
-STRIP_FROM_PATH        = @CMAKE_CURRENT_SOURCE_DIR@
+STRIP_FROM_PATH        = @CMAKE_BINARY_DIR@ \
+                         @CMAKE_SOURCE_DIR@
 
 # The STRIP_FROM_INC_PATH tag can be used to strip a user-defined part of the
 # path mentioned in the documentation of a class, which tells the reader which
@@ -780,11 +781,11 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = @csspp_project_SOURCE_DIR@/lib \
-                         @csspp_project_SOURCE_DIR@/src \
-                         @csspp_project_SOURCE_DIR@/include/csspp \
-                         @csspp_project_BINARY_DIR@/include/csspp/csspp.h \
-                         @csspp_project_SOURCE_DIR@/doc/pages
+# The doc/pages include additional pages of documentation
+INPUT                  = @CMAKE_BINARY_DIR@/csspp/csspp.h \
+                         @CMAKE_SOURCE_DIR@/csspp \
+                         @CMAKE_SOURCE_DIR@/doc/pages \
+                         @CMAKE_SOURCE_DIR@/tools
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
@@ -809,8 +810,10 @@ INPUT_ENCODING         = UTF-8
 # *.m, *.markdown, *.md, *.mm, *.dox, *.py, *.pyw, *.f90, *.f95, *.f03, *.f08,
 # *.f, *.for, *.tcl, *.vhd, *.vhdl, *.ucf and *.qsf.
 
-FILE_PATTERNS          = *.h \
-                         *.cpp
+FILE_PATTERNS          = *.c \
+                         *.cpp \
+                         *.h \
+                         *.sh
 
 # The RECURSIVE tag can be used to specify whether or not subdirectories should
 # be searched for input files as well.
@@ -858,15 +861,17 @@ EXCLUDE_SYMBOLS        =
 # that contain example code fragments that are included (see the \include
 # command).
 
-EXAMPLE_PATH           = @CMAKE_SOURCE_DIR@ \
-                         @CMAKE_BINARY_DIR@
+EXAMPLE_PATH           = @CMAKE_CURRENT_BINARY_DIR@ \
+                         @CMAKE_CURRENT_SOURCE_DIR@
 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
 # EXAMPLE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp and
 # *.h) to filter out the source-files in the directories. If left blank all
 # files are included.
 
-EXAMPLE_PATTERNS       =
+EXAMPLE_PATTERNS       = *.c \
+                         *.cpp \
+                         *.h
 
 # If the EXAMPLE_RECURSIVE tag is set to YES then subdirectories will be
 # searched for input files to be used with the \include or \dontinclude commands
@@ -1662,7 +1667,7 @@ COMPACT_LATEX          = NO
 # The default value is: a4.
 # This tag requires that the tag GENERATE_LATEX is set to YES.
 
-PAPER_TYPE             = a4wide
+PAPER_TYPE             = a4
 
 # The EXTRA_PACKAGES tag can be used to specify one or more LaTeX package names
 # that should be included in the LaTeX output. The package can be specified just

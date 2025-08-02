@@ -1,0 +1,601 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   class="railroad-diagram"
+   viewbox="0 0 600 222"
+   width="600"
+   height="222"
+   version="1.1"
+   id="svg25"
+   sodipodi:docname="a.svg"
+   inkscape:version="1.4.2 (2aeb623e1d, 2025-05-12)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs61" />
+  <sodipodi:namedview
+     id="namedview61"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.4766667"
+     inkscape:cx="328.10384"
+     inkscape:cy="89.051919"
+     inkscape:window-width="1920"
+     inkscape:window-height="945"
+     inkscape:window-x="0"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g60" />
+  <g
+     transform="translate(.5 .5)"
+     id="g61">
+    <path
+       d="M 20 21 v 20 m 10 -20 v 20 m -10 -10 h 20.5"
+       id="path1"
+       style="fill:none;fill-opacity:1;stroke:#000000;stroke-opacity:1" />
+    <g
+       id="g5"
+       style="fill:none;stroke:#000000;stroke-opacity:1">
+      <path
+         d="M40.0 31h20"
+         id="path2"
+         style="fill:none;stroke:#000000;stroke-opacity:1" />
+      <g
+         id="g2"
+         style="fill:none;stroke:#000000;stroke-opacity:1">
+        <rect
+           height="22"
+           rx="10"
+           ry="10"
+           width="28"
+           x="60"
+           y="20"
+           id="rect2"
+           style="fill:none;stroke:#000000;stroke-opacity:1" />
+        <text
+           x="69.398438"
+           y="35"
+           id="text2"
+           style="fill:none;stroke:#000000;stroke-opacity:1"><tspan
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#000000;fill-opacity:1;stroke:none"
+             id="tspan61">U</tspan></text>
+      </g>
+      <path
+         d="M88.0 31h20"
+         id="path3"
+         style="fill:none;stroke:#000000;stroke-opacity:1" />
+      <path
+         d="M40.0 31a10 10 0 0 1 10 10v10a10 10 0 0 0 10 10"
+         id="path4"
+         style="fill:none;stroke:#000000;stroke-opacity:1" />
+      <g
+         id="g4"
+         style="fill:none;stroke:#000000;stroke-opacity:1">
+        <rect
+           height="22"
+           rx="10"
+           ry="10"
+           width="28"
+           x="60"
+           y="50"
+           id="rect4"
+           style="fill:none;stroke:#000000;stroke-opacity:1" />
+        <text
+           x="70"
+           y="65"
+           id="text4"
+           style="fill:none;stroke:#000000;stroke-opacity:1"><tspan
+             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#000000;fill-opacity:1;stroke:none"
+             id="tspan62">u</tspan></text>
+      </g>
+      <path
+         d="M88.0 61a10 10 0 0 0 10 -10v-10a10 10 0 0 1 10 -10"
+         id="path5"
+         style="fill:none;stroke:#000000;stroke-opacity:1" />
+    </g>
+    <path
+       d="M108 31h10"
+       id="path6"
+       style="stroke:#000000;stroke-opacity:1;fill:none" />
+    <g
+       id="g6"
+       style="stroke:#000000;stroke-opacity:1;fill:none">
+      <rect
+         height="22"
+         rx="10"
+         ry="10"
+         width="28"
+         x="118"
+         y="20"
+         id="rect6"
+         style="stroke:#000000;stroke-opacity:1;fill:none" />
+      <text
+         x="126.72852"
+         y="35"
+         id="text6"
+         style="fill:none;stroke:#000000;stroke-opacity:1"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#000000;fill-opacity:1;stroke:none"
+           id="tspan63">+</tspan></text>
+    </g>
+    <path
+       d="M146 31h10"
+       id="path7"
+       style="stroke:#000000;stroke-opacity:1;fill:none" />
+    <g
+       id="g60"
+       style="stroke:#000000;stroke-opacity:1;fill:none">
+      <path
+         d="M156.0 31h20"
+         id="path8"
+         style="stroke:#000000;stroke-opacity:1;fill:none" />
+      <g
+         id="g16"
+         style="stroke:#000000;stroke-opacity:1;fill:none">
+        <path
+           d="M176.0 31h125.5"
+           id="path9"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <path
+           d="M413.5 31h125.5"
+           id="path10"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <path
+           d="M301.5 31h10"
+           id="path11"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <g
+           id="g11"
+           style="stroke:#000000;stroke-opacity:1;fill:none">
+          <rect
+             height="22"
+             width="92"
+             x="311.5"
+             y="20"
+             id="rect11"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <a
+             xlink:href="#hexdigit"
+             id="a11"
+             style="stroke:#000000;stroke-opacity:1;fill:none">
+            <text
+               x="324.39844"
+               y="35"
+               id="text11"
+               style="fill:none;stroke:#000000;stroke-opacity:1"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#000000;fill-opacity:1;stroke:none"
+                 id="tspan64">HEXDIGIT</tspan></text>
+          </a>
+        </g>
+        <path
+           d="M403.5 31h10"
+           id="path12"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <path
+           d="M311.5 31a10 10 0 0 0 -10 10v10a10 10 0 0 0 10 10"
+           id="path13"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <g
+           id="g15"
+           style="stroke:#000000;stroke-opacity:1;fill:none">
+          <path
+             d="M311.5 61h9.5"
+             id="path14"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <path
+             d="M394.0 61h9.5"
+             id="path15"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <text
+             class="comment"
+             x="325.5"
+             y="64"
+             id="text15"
+             style="fill:none;stroke:#000000;stroke-opacity:1"><tspan
+               style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#000000;fill-opacity:1;stroke:none"
+               id="tspan65">1-6 times</tspan></text>
+        </g>
+        <path
+           d="M403.5 61a10 10 0 0 0 10 -10v-10a10 10 0 0 0 -10 -10"
+           id="path16"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+      </g>
+      <path
+         d="M539.0 31h20"
+         id="path17"
+         style="stroke:#000000;stroke-opacity:1;fill:none" />
+      <path
+         d="M156.0 31a10 10 0 0 1 10 10v50a10 10 0 0 0 10 10"
+         id="path18"
+         style="stroke:#000000;stroke-opacity:1;fill:none" />
+      <g
+         id="g37"
+         style="stroke:#000000;stroke-opacity:1;fill:none">
+        <g
+           id="g29"
+           style="stroke:#000000;stroke-opacity:1;fill:none">
+          <path
+             d="M176.0 101a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"
+             id="path19"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <g
+             id="g20"
+             style="stroke:#000000;stroke-opacity:1;fill:none">
+            <path
+               d="M196.0 81h112"
+               id="path20"
+               style="stroke:#000000;stroke-opacity:1;fill:none" />
+          </g>
+          <path
+             d="M308.0 81a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"
+             id="path21"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <path
+             d="M176.0 101h20"
+             id="path22"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <g
+             id="g28"
+             style="stroke:#000000;stroke-opacity:1;fill:none">
+            <path
+               d="M196.0 101h10"
+               id="path23"
+               style="stroke:#000000;stroke-opacity:1;fill:none" />
+            <g
+               id="g23"
+               style="stroke:#000000;stroke-opacity:1;fill:none">
+              <rect
+                 height="22"
+                 width="92"
+                 x="206.0"
+                 y="90"
+                 id="rect23"
+                 style="stroke:#000000;stroke-opacity:1;fill:none" />
+              <a
+                 xlink:href="#hexdigit"
+                 id="a23"
+                 style="stroke:#000000;stroke-opacity:1;fill:none">
+                <text
+                   x="218"
+                   y="105"
+                   id="text23"
+                   style="fill:none;stroke:#000000;stroke-opacity:1"><tspan
+                     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#000000;fill-opacity:1;stroke:none"
+                     id="tspan66">HEXDIGIT</tspan></text>
+              </a>
+            </g>
+            <path
+               d="M298.0 101h10"
+               id="path24"
+               style="stroke:#000000;stroke-opacity:1;fill:none" />
+            <path
+               d="M206.0 101a10 10 0 0 0 -10 10v10a10 10 0 0 0 10 10"
+               id="path25"
+               style="stroke:#000000;stroke-opacity:1;fill:none" />
+            <g
+               id="g27"
+               style="stroke:#000000;stroke-opacity:1;fill:none">
+              <path
+                 d="M206.0 131h9.5"
+                 id="path26"
+                 style="stroke:#000000;stroke-opacity:1;fill:none" />
+              <path
+                 d="M288.5 131h9.5"
+                 id="path27"
+                 style="stroke:#000000;stroke-opacity:1;fill:none" />
+              <text
+                 class="comment"
+                 x="220"
+                 y="134"
+                 id="text27"
+                 style="fill:none;stroke:#000000;stroke-opacity:1"><tspan
+                   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#000000;fill-opacity:1;stroke:none"
+                   id="tspan67">1-5 times</tspan></text>
+            </g>
+            <path
+               d="M298.0 131a10 10 0 0 0 10 -10v-10a10 10 0 0 0 -10 -10"
+               id="path28"
+               style="stroke:#000000;stroke-opacity:1;fill:none" />
+          </g>
+          <path
+             d="M308.0 101h20"
+             id="path29"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+        </g>
+        <path
+           d="M328.0 101h10"
+           id="path30"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <g
+           id="g36"
+           style="stroke:#000000;stroke-opacity:1;fill:none">
+          <path
+             d="M338.0 101h10"
+             id="path31"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <g
+             id="g33"
+             style="stroke:#000000;stroke-opacity:1;fill:none">
+            <path
+               d="M348.0 101h71.5"
+               id="path32"
+               style="stroke:#000000;stroke-opacity:1;fill:none" />
+            <path
+               d="M447.5 101h71.5"
+               id="path33"
+               style="stroke:#000000;stroke-opacity:1;fill:none" />
+            <rect
+               height="22"
+               rx="10"
+               ry="10"
+               width="28"
+               x="419"
+               y="90"
+               id="rect33"
+               style="stroke:#000000;stroke-opacity:1;fill:none" />
+            <text
+               x="429.5"
+               y="105"
+               id="text33"
+               style="fill:none;stroke:#000000;stroke-opacity:1"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#000000;fill-opacity:1;stroke:none"
+                 id="tspan71">?</tspan></text>
+          </g>
+          <path
+             d="M519.0 101h10"
+             id="path34"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <path
+             d="M348.0 101a10 10 0 0 0 -10 10v10a10 10 0 0 0 10 10"
+             id="path35"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <g
+             id="g35"
+             style="stroke:#000000;stroke-opacity:1;fill:none">
+            <text
+               class="comment"
+               x="361.14648"
+               y="134"
+               id="text35"
+               style="fill:none;stroke:#000000;stroke-opacity:1"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#000000;fill-opacity:1;stroke:none"
+                 id="tspan72">1 to (6 - digits) times</tspan></text>
+          </g>
+          <path
+             d="M519.0 131a10 10 0 0 0 10 -10v-10a10 10 0 0 0 -10 -10"
+             id="path36"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <g
+             id="g27-6"
+             style="fill:none;stroke:#000000;stroke-opacity:1"
+             transform="translate(141.14648)">
+            <path
+               d="m 206,131 h 9.5"
+               id="path26-7"
+               style="fill:none;stroke:#000000;stroke-opacity:1" />
+            <path
+               d="M 368.5,131 H 378"
+               id="path27-5"
+               style="fill:none;stroke:#000000;stroke-opacity:1" />
+            <text
+               class="comment"
+               x="220"
+               y="134"
+               id="text27-3"
+               style="fill:none;stroke:#000000;stroke-opacity:1"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#000000;fill-opacity:1;stroke:none"
+                 id="tspan67-5" /></text>
+          </g>
+        </g>
+        <path
+           d="M529.0 101h10"
+           id="path37"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+      </g>
+      <path
+         d="M539.0 101a10 10 0 0 0 10 -10v-50a10 10 0 0 1 10 -10"
+         id="path38"
+         style="stroke:#000000;stroke-opacity:1;fill:none" />
+      <path
+         d="M156.0 31a10 10 0 0 1 10 10v120a10 10 0 0 0 10 10"
+         id="path39"
+         style="stroke:#000000;stroke-opacity:1;fill:none" />
+      <g
+         id="g59"
+         style="stroke:#000000;stroke-opacity:1;fill:none">
+        <path
+           d="M176.0 171h25.5"
+           id="path40"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <path
+           d="M513.5 171h25.5"
+           id="path41"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <path
+           d="M201.5 171h10"
+           id="path42"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <g
+           id="g48"
+           style="stroke:#000000;stroke-opacity:1;fill:none">
+          <path
+             d="M211.5 171h10"
+             id="path43"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <g
+             id="g43"
+             style="stroke:#000000;stroke-opacity:1;fill:none">
+            <rect
+               height="22"
+               width="92"
+               x="221.5"
+               y="160"
+               id="rect43"
+               style="stroke:#000000;stroke-opacity:1;fill:none" />
+            <a
+               xlink:href="#hexdigit"
+               id="a43"
+               style="stroke:#000000;stroke-opacity:1;fill:none">
+              <text
+                 x="235.5"
+                 y="175"
+                 id="text43"
+                 style="fill:none;stroke:#000000;stroke-opacity:1"><tspan
+                   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#000000;fill-opacity:1;stroke:none"
+                   id="tspan68">HEXDIGIT</tspan></text>
+            </a>
+          </g>
+          <path
+             d="M313.5 171h10"
+             id="path44"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <path
+             d="M221.5 171a10 10 0 0 0 -10 10v10a10 10 0 0 0 10 10"
+             id="path45"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <g
+             id="g47"
+             style="stroke:#000000;stroke-opacity:1;fill:none">
+            <path
+               d="M221.5 201h9.5"
+               id="path46"
+               style="stroke:#000000;stroke-opacity:1;fill:none" />
+            <path
+               d="M304.0 201h9.5"
+               id="path47"
+               style="stroke:#000000;stroke-opacity:1;fill:none" />
+            <text
+               class="comment"
+               x="235.5"
+               y="205.11719"
+               id="text47"
+               style="fill:none;stroke:#000000;stroke-opacity:1"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#000000;fill-opacity:1;stroke:none"
+                 id="tspan69">1-6 times</tspan></text>
+          </g>
+          <path
+             d="M313.5 201a10 10 0 0 0 10 -10v-10a10 10 0 0 0 -10 -10"
+             id="path48"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+        </g>
+        <path
+           d="M323.5 171h10"
+           id="path49"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <path
+           d="M333.5 171h10"
+           id="path50"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <g
+           id="g50"
+           style="stroke:#000000;stroke-opacity:1;fill:none">
+          <rect
+             height="22"
+             rx="10"
+             ry="10"
+             width="28"
+             x="343"
+             y="160"
+             id="rect50"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <text
+             x="354.84961"
+             y="175"
+             id="text50"
+             style="fill:none;stroke:#000000;stroke-opacity:1"><tspan
+               style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#000000;fill-opacity:1;stroke:none"
+               id="tspan70">-</tspan></text>
+        </g>
+        <path
+           d="M371.5 171h10"
+           id="path51"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <path
+           d="M381.5 171h10"
+           id="path52"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+        <g
+           id="g58"
+           style="stroke:#000000;stroke-opacity:1;fill:none">
+          <path
+             d="M391.5 171h10"
+             id="path53"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <g
+             id="g53"
+             style="stroke:#000000;stroke-opacity:1;fill:none">
+            <rect
+               height="22"
+               width="92"
+               x="401.5"
+               y="160"
+               id="rect53"
+               style="stroke:#000000;stroke-opacity:1;fill:none" />
+            <a
+               xlink:href="#hexdigit"
+               id="a53"
+               style="stroke:#000000;stroke-opacity:1;fill:none">
+              <text
+                 x="415.5"
+                 y="175"
+                 id="text53"
+                 style="fill:none;stroke:#000000;stroke-opacity:1"><tspan
+                   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#000000;fill-opacity:1;stroke:none"
+                   id="tspan73">HEXDIGIT</tspan></text>
+            </a>
+          </g>
+          <path
+             d="M493.5 171h10"
+             id="path54"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <path
+             d="M401.5 171a10 10 0 0 0 -10 10v10a10 10 0 0 0 10 10"
+             id="path55"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+          <g
+             id="g57"
+             style="stroke:#000000;stroke-opacity:1;fill:none">
+            <path
+               d="M401.5 201h9.5"
+               id="path56"
+               style="stroke:#000000;stroke-opacity:1;fill:none" />
+            <path
+               d="M484.0 201h9.5"
+               id="path57"
+               style="stroke:#000000;stroke-opacity:1;fill:none" />
+            <text
+               class="comment"
+               x="416.14648"
+               y="204.61719"
+               id="text57"
+               style="fill:none;stroke:#000000;stroke-opacity:1"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Sans;-inkscape-font-specification:'Sans Bold';fill:#000000;fill-opacity:1;stroke:none"
+                 id="tspan74">1-6 times</tspan></text>
+          </g>
+          <path
+             d="M493.5 201a10 10 0 0 0 10 -10v-10a10 10 0 0 0 -10 -10"
+             id="path58"
+             style="stroke:#000000;stroke-opacity:1;fill:none" />
+        </g>
+        <path
+           d="M503.5 171h10"
+           id="path59"
+           style="stroke:#000000;stroke-opacity:1;fill:none" />
+      </g>
+      <path
+         d="M539.0 171a10 10 0 0 0 10 -10v-120a10 10 0 0 1 10 -10"
+         id="path60"
+         style="stroke:#000000;stroke-opacity:1;fill:none" />
+    </g>
+    <path
+       d="M 559 31 h 20 m -10 -10 v 20 m 10 -20 v 20"
+       id="path61"
+       style="stroke:#000000;stroke-opacity:1;fill:none" />
+  </g>
+</svg>

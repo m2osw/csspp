@@ -149,7 +149,7 @@
 //!
 //! \subsection command_line_tool csspp in your shell
 //!
-//! You may use the \ref src/csspp.cpp "CSS Preprocessor command line tool" to compile your
+//! You may use the \ref tools/csspp.cpp "CSS Preprocessor command line tool" to compile your
 //! SCSS files. It is very similar to using a compiler:
 //!
 //! \code{.sh}
@@ -172,7 +172,7 @@
 //!
 //! Then look at the <a href="annotated.html">API documentation</a>
 //! for details on how to use the csspp objects. You may  check out
-//! the src/csspp.cpp file as an example of use of the CSS Preprocessor
+//! the tools/csspp.cpp file as an example of use of the CSS Preprocessor
 //! library.
 //!
 //! In general, you want to open a file, give it to a lexer object.
