@@ -343,7 +343,7 @@
  * Similarly, you can convert a value to another as in:
  *
  * \code{.scss}
- *      15px * 0.33em\/px = 5em
+ *      15px * 0.33em/px = 5em
  *
  *               or
  *
